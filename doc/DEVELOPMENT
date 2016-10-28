@@ -17,14 +17,14 @@ Setup for Python 2:
 
     $ virtualenv -p python venv2
     $ . venv3/bin/activate
-    $ pip install Flask nose pylint
+    $ pip install Flask nose pylint sphinx
     $ deactivate
 
 Setup for Python 3:
 
     $ virtualenv -p python3 venv3
     $ . venv2/bin/activate
-    $ pip install Flask nose pylint
+    $ pip install Flask nose pylint sphinx
     $ deactivate
 
 
