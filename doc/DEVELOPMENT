@@ -1,0 +1,127 @@
+Development environment
+=======================
+
+Setup
+-----
+
+For development, I make use of Python virtualenv for setting up my
+development environment. This is in line with the recommended way for
+working with Flask. Some advantages are that the dependencies are not
+added to the system-wide Python installation (keeping that environment
+clean) and that it is possible to switch between different versions
+of Python.
+
+    $ sudo apt-get install python python3 python-pip python-virtualenv
+
+Setup for Python 2:
+
+    $ virtualenv -p python venv2
+    $ . venv3/bin/activate
+    $ pip install Flask nose pylint
+    $ deactivate
+
+Setup for Python 3:
+
+    $ virtualenv -p python3 venv3
+    $ . venv2/bin/activate
+    $ pip install Flask nose pylint
+    $ deactivate
+
+
+Tests
+-----
+
+The tests can be run in two ways.
+Either using setuptools:
+
+    $ python setup.py test
+
+Or using the Nose utility:
+
+    $ nosetests
+
+The Makefile provides two targets for running tests:
+
+    $ make test         to perform a single test run
+    $ make test-watch   to perform continuous test runs
+
+
+Linting
+-------
+
+It is possible to check the code using PyLint.
+A suitable .pylintrc configuration is included.
+Simple move to the base directory and run:
+
+    $ pylint flask_micron
+
+I do not perform linting on the tests/ directory. 
+
+The Makefile provides two targets for running linting:
+
+    $ make lint         to perform a single lint run
+    $ make lint-watch   to perform continuous lint runs
+
+
+My tools
+--------
+
+Below, I will describe some of the tools that I use for development.
+It is just some information on what I use, not on what anybody should
+use. I don't want to start any holy wars here. But maybe there is some
+useful info that you didn't know about.
+
+* Shell
+
+    My shell of choice is Bash. There are many good things to say about
+    Bash, but I'll leave that up to the fan sites. One useful tip, specific
+    to Python coding, is to add the following alias in your profile:
+    
+	alias ls='ls --hide=*.pyc --hide=*.egg-info --hide=__pycache__'
+    
+    It will automatically hide dynamic python files and folders that are
+    not part of the source code. It is still possible to see them, by using
+    the ls -a option.
+
+* Editor
+
+    For editing my code, I mostly use Vim (but Emacs is a wonderful
+    editor as well).
+    
+    http://www.vim.org/
+
+    Here's a minimal ~/.vimrc that I use for development:
+
+        set ts=4
+        set sw=4
+        set expandtab
+        set ai
+
+    For navigating a project, I make use of NERDTree. I like apt-vim best
+    for installing it. 
+
+    https://github.com/egalpin/apt-vim
+    https://github.com/scrooloose/nerdtree
+
+* Terminal
+
+    I am a big fan of tmux, a terminal multiplexer like Gnu Screen, only
+    soooo much better. I am a heavy user of tmux' panels (split screen).
+    I mostly have a editor running in one panel, while running a continous
+    testing loop in another panel. That allows me to quickly move forward
+    using test driven development (TDD, highly recommended). I write a test,
+    save the file, a few seconds later, a test error appears automatically.
+    Then I move to the implementation file and write some code to fix
+    the test. Rinse and repeat!
+    
+    https://tmux.github.io/
+
+* Searching
+
+    For searching through the code, I don't use grep. Instead, I use
+    ack-grep. One of its biggest features for me, is that it knows about
+    version control systems (VCS) and automatically skips VCS files and
+    folders when traversing the code tree. This makes searching a lot
+    faster.
+    
+    http://beyondgrep.com/

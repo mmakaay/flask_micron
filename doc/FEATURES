@@ -1,0 +1,261 @@
+Micron Features
+===============
+
+In this document, you'll find a description of some of the features of
+Micron, as well as the rationale for certain design choices.
+Features that will be described are:
+
+  - Built on top of Flask
+  - Method-oriented (SOAP-y), not Resource-oriented (REST, CRUD)
+  - A simple POST-only JSON protocol, based on conventions
+  - A simple error handling mechanism
+  - Business logic is separated from request handling
+  - Built-in normalization of request data
+  - Built-in CSRF protection
+
+
+Built on top of Flask
+---------------------
+
+What can I say? Flask rules big times!
+
+Micron extends flask, making all Flask features readily available for Micron
+as well. Note that it is possible to mix standard Flask code with Micron
+code because of this. This means that the jQuery example from the Flask
+package could be rewritten as:
+
+  from flask import Flask, render_template
+  from flask_micron import Micron
+  app = Flask(__name__)
+  micron = Micron(app, csrf=False)
+
+
+  @micron.method('/_add_numbers')
+  def add_numbers(args):
+      """Add two numbers server side, ridiculous but well..."""
+      a = args.get('a', 0)
+      if !isinstance(a, int):
+          a = 0
+      b = args.get('b', 0)
+      if !isinstance(b, int):
+          b = 0
+      return a + b
+
+
+  @app.route('/')
+  def index():
+      return render_template('index.html')
+
+
+Method-oriented (SOAP-y), not Resource-oriented (REST, CRUD)
+------------------------------------------------------------
+ 
+Let's first state: I agree, there are applications for which REST is the
+perfect style for its back-end services. For business applications however
+(which Micron is targeting), I highly prefer using method-oriented services.
+
+A quick comparison of method-oriented:
+
+  POST /user/create     { name: 'Bill Billderberg', email: 'bill@example.com' }
+                         Returns the new user_id: 1234
+  POST /user/get        { user_id: 1234 }
+  POST /user/set_name   { user_id: 1234, name: 'John Dorkingson' }
+  POST /user/set_email  { user_id: 1234, email: 'john@example.com' }
+
+versus resource-oriented:
+
+  PUT /user/1234        { name: 'Bill Billderberg', email: 'bill@example.com' }
+  GET /user/1234
+  PATCH /user/1234      { name: 'John Dorkingson' }
+  PATCH /user/1234      { email: 'john@example.com' }
+  PATCH /user/1234      { name: 'John Dorkingson', email: 'john@example.com' }
+
+Using methods instead of resources has some big advantages.
+Here are a few big ones for me:
+
+  - When designed with care, services that are composed out of methods will
+    always be aware of the intent of a caller's request. A request is not
+    about 'I want to update random data for a customer', but for example
+    about 'I want to update the customer's e-mail address'.
+
+  - Intent lives on in log messages. When reading the log messages for a
+    given client, one can pretty much follow the business operations that
+    this client has performed. A little comparison:
+
+    GET /user/1234       POST /user/get
+    PATCH /user/1234     POST /user/set_name
+    PATCH /user/1234     POST /user/set_email
+     
+  - This becomes especially useful when an audit trail is required for an
+    application: you don't only know what was changed, you also have a
+    pretty clear idea about why it was done.
+
+  - It is possible to apply the Single Responsibility Princple (SRP) and
+    the Interface Seggregation Principle (ISP) to the service API's.
+    We want those for internal code API's, don't we? So why not for our
+    service API's as well?
+
+  - One does not have to worry about a client accidentally sending more
+    data than intended in a PATCH request, e.g. for a case where only a
+    name change was intended, but the email property was sent along by
+    accident as null, resetting the email address for the user unintendedly:
+
+    PATCH /user/1234    { name: 'John Dough', email: null }
+ 
+
+A simple POST-only JSON protocol, based on conventions
+------------------------------------------------------
+
+An important reason for using a simple protocol, is to make it feasible and
+easy to write a generic client library to talk to a Micron service.
+
+POST-only was chosen to make sure that data is never embedded in GET URLs
+and to make attacks like CSRF one jumpable hoop less convenient for attackers.
+
+For a full description of the protocol see the file 'PROTOCOL'.
+
+
+A simple error handling mechanism
+---------------------------------
+
+Micron does not use a wide range of HTTP status codes to communicate
+a response status to its clients. It only uses "200 OK" for successful
+requests and "500 SERVER ERROR" for failed requests.
+
+Wow, that takes away a lot of expressiveness!!
+
+Not really... In case of a failed request, the response includes details
+about the error. Therefore, a client that receives an error response can get
+hold of a lot more information than what can normally be communicated
+through an HTTP status code alone. If you have any experience with SOAP web
+services, then you might understand what inspired me.
+
+A big plus for using this kind of error response is that I won't risk
+stepping into religious discussions about the correct HTTP status code for a
+given scenario :-)
+I've seen quite some discussion on this. E.g. for a request that is denied
+because the client is not sending some auth token: should we return 400
+because the request is bad, 401 because authentication is needed, 403
+because we deny permission to the method...?
+
+When you need to send an error response from your own code, then you can
+raise an exception derived from MicronClientError or MicronServerError.
+Micron will take care of the rest for you. It will use the exception class
+name as the error code and the doc string as the error description. E.g.
+
+  class FlaskIsHalfEmpty(MicronClientError):
+      """Permission denied to pessimists, please consider the
+      Flask half full before continuing.
+      """
+
+  @micron.method():
+  def get_flask():
+      if g.user.is_pessimistic:
+          raise FlaskIsHalfEmpty()
+      return 'Here's your half full flask, sir!'
+
+When you want to include more information about the error that occurred,
+you can pass these details to the raised error. The information will be
+automatically included in the response (in a "details" property).
+
+    raise FlaskIsHalfEmpty({
+        "reason": "user is a pessimist",
+        "source": "the mother told us"
+    })
+
+When the flask application has debugging enabled, the the response message
+will also contain a backtrace of the error that occurred.
+
+    app = Flask(__name__)
+    app.debug = True
+
+
+Business logic is separated from request handling
+-------------------------------------------------
+
+Micron allows you to let the implementation of a function and tests for that
+function be totally unaware of the surrounding application and framework
+(except maybe for request handling, for which Micron dictates the use of
+error classes that are derived from MicronError).
+
+This means that you could start by writing some business logic function:
+
+  class NoSuchEntityError(MicronClientError):
+      """A requested entity was not found in the database."""
+
+  def get_product(id):
+      data = ProductDB().get_product(id)
+      if not data:
+          raise NoSuchEntityError('product, id = %s' % id)
+      return data
+
+After which tests can be written for it:
+
+  def test_GivenExistingId_GetProductReturnsProductData(self):
+      ProductDB().add_product(id='CSWP', name='Chicken Soup with Pees')
+      data = get_product('CSWP')
+      self.assertEquals({id: 'CSWP', name='Chicken Soup with Pees'})
+
+  def test_GivenNonExistingId_GetProductRaisesException(self):
+      with self.assertRaises(NoSuchEntityError):
+          get_product('NONO')
+
+Up to this point, there is no need to already hook the function into Flask
+by making it a Micron method. This can be done after the previous business
+logic-level steps. Here an example where CSRF checking is enabled and
+some authorization plugin must check if the user has the role of
+'product_reader'.
+
+  @micron.method(auth_role='product_reader', csrf=True)
+  def get_product(id):
+      ...
+      ...
+
+I normally will refrain from writing full stack unit test (e.g. using Flask
+testing utilities like app_context() and test_client()) to check for example
+if the method is actually protected with the role 'product_reader'. In my
+opinion, you are integration testing the framework at that point, and not
+your code.
+
+For one scenario, this is not that big of an issue, but when you're
+developing using TDD (Test Driven Development), the number of scenarios and
+tests might grow fast and having to write full stack tests everytime will
+grow boring pretty fast.
+
+Once you have tested the functionality of the auth_role configuration option
+in other tests (the tests for the auth plugin that is used), I see the
+definition of the @micron.method as configuration / declaration and not als
+code. At that point, the auth_role is a proven configuration building block.
+
+Of course, feel free to write integration tests if you find them valuable,
+these were just my $0.02.
+
+
+Built-in normalization of request data
+--------------------------------------
+
+In the request data, leading and trailing whitespace are automatically removed
+from string values. String values that are empty strings are normalized to
+None. This is the setup as enabled by default.
+
+When you do not want to make use of these normalization features, then it is
+possible to configure different behaviour in the Micron() object or the
+@micron.method decorator. Take a look at the normalize_input plugin
+documentation.
+
+
+Built-in CSRF protection
+------------------------
+
+When not protected, CSRF (Cross Site Request Forgery) attacks are very
+dangerous for a website / service. A malicous person can trick a trusted
+browser into performing operations on your website / service, on behalf of a
+user, without the user even being aware of it.
+
+Flask-Micron comes bundled with a CSRF protection plugin and protection is
+enabled by default for all requests. It is possible to disable protection on
+a per method base, but note that I strongly advice against that.
+
+Take a look at the PROTOCOL document and the CSRF plugin documentation for
+information on how a client must behave, in order to keep the CSRF checking
+happy.

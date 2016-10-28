@@ -1,0 +1,39 @@
+What is Flask-Micron?
+---------------------
+
+A method-oriented microservice JSON framework on top of the excellent
+Flask package, focusing on security and productivity.
+
+Basic features:
+
+- Business logic is separated from request handling.
+- Requests automatically use JSON for both input and output.
+- Security features like POST-only requests and CSRF protection
+
+For more information about the features of Micron, take a look at
+the FEATURES document.
+
+
+copyright: (c) 2016 by Stichting Fiber Overal
+license: BSD, see LICENSE for more details.
+
+
+What does the name stand for?
+-----------------------------
+
+Micron was chosen for a couple of reasons:
+
+ - I admit... primarily it simply was the coolest name from a bunch of
+   names that I was able to come up with.
+
+ - Micron is a contraction of the words "Microservice" and "JSON".
+
+ - I started out with "JsonAPI", but that would have implied an
+   implementation of the protocol as described by jsonapi.org, which
+   this is not.
+
+ - Where would any UNIX hacker be without a recursive acronym?
+   "Micron Is Communicating Restless Object Notation"
+
+ - I liked that it refers to both Flask being a micro framework and
+   the concept of microservices.

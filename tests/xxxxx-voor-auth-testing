@@ -1,0 +1,124 @@
+    def test_RequireAuth_WithoutActiveAuthSession(self):
+        """Checks if an error is raised when authentication is required,
+        but no auth session is active.
+        """
+        call = MicronMethod(Micron(), hello).configure(auth=True, csrf=False)
+        (response, data) = self._execute(call)
+        self.assertEqual(500, response.status_code)
+        self.assertEqual('AuthenticationRequired', data['code'])
+
+    def test_RequireRole_WithoutAuthorizationForRole(self):
+        """Checks if an error is raised when an authorization role is
+        required, but the auth session does not have that role.
+        """
+        auth_session.start(roles=['fish'])
+        call = MicronMethod(Micron(), hello)
+        call.configure(role='mister', csrf=False)
+        (response, data) = self._execute(call)
+        print(data)
+        self.assertEqual(500, response.status_code)
+        self.assertEqual('AuthorizationRequired', data['code'])
+from flask_micron import auth_session
+from flask_micron import config
+from flask_micron.errors import AuthenticationRequired
+from flask_micron.errors import AuthorizationRequired
+from flask_micron.method.auth_checker import execute
+import unittest
+
+
+class Tests(unittest.TestCase):
+
+    def setUp(self):
+        config.SESSION_INTERFACE = {}
+        auth_session.TTL = 60
+        auth_session.stop()
+
+    def test_GivenNoActiveSession_RequireAuthCheckFails(self):
+        with self.assertRaises(AuthenticationRequired):
+            execute(auth=True, role=None)
+
+    def test_GivenActiveSession_RequireAuthCheckSucceeds(self):
+        auth_session.start()
+        execute(auth=True, role=None)
+
+    def test_GivenNoActiveSession_RequireRoleCheckFails(self):
+        with self.assertRaises(AuthenticationRequired):
+            execute(auth=False, role='owner')
+
+    def test_GivenActiveSessionWithoutRoles_RequireRoleCheckFails(self):
+        auth_session.start()
+        with self.assertRaises(AuthorizationRequired):
+            execute(auth=False, role='owner')
+
+    def test_GivenActiveSessionWithoutReqRole_RequireRoleCheckFails(self):
+        auth_session.start(roles=['loser'])
+        with self.assertRaises(AuthorizationRequired):
+            execute(auth=False, role='owner')
+
+    def test_GivenActiveSessionWithReqRole_RequireRoleCheckSucceeds(self):
+        auth_session.start(roles=['owner', 'happy'])
+        execute(auth=False, role='owner')
+
+    def test_GivenExpiredSession_RequireAuthCheckFails(self):
+        auth_session.TTL = -1
+        auth_session.start()
+        with self.assertRaises(AuthenticationRequired):
+            execute(auth=True, role=None)
+"""This module provides functionality for performing authentication and
+authorization checks for a request.
+"""
+
+from flask_micron import auth_session
+from flask_micron.errors import AuthenticationRequired
+from flask_micron.errors import AuthorizationRequired
+from flask_micron.errors import ImplementationError
+
+
+def execute(auth, role):
+    """Checks the authentication and authorization for a request.
+
+    Args:
+        auth: Whether or not authentication is required.
+        role: The role that is required or None if no role is required.
+
+    When role is used, then auth is implied to be True.
+    """
+    _check_authentication(auth, role)
+    _check_authorization(role)
+
+
+def _check_authentication(auth, role):
+    if auth or role:
+        if not auth_session.is_active():
+            raise AuthenticationRequired()
+
+
+def _check_authorization(role):
+    if role is None:
+        return
+    if not isinstance(role, str):
+        raise ImplementationError(
+            "role must be None or a role name string")
+    if not auth_session.has_role(role):
+        raise AuthorizationRequired()
+from flask_micron import auth_session
+from flask_micron import config
+import unittest
+
+
+class Tests(unittest.TestCase):
+
+    def setUp(self):
+        config.SESSION_INTERFACE = {}
+        auth_session.TTL = 60
+        auth_session.stop()
+
+    def test_GivenNoActiveSession_ExecuteDoesNothing(self):
+        auth_session.keep_alive()
+        self.assertFalse(auth_session.is_active())
+
+    def test_GivenActiveSession_ExecuteUpdatesSessionExpirationTime(self):
+        valid_until1 = auth_session.start(1)['valid_until']
+        auth_session.TTL = 30
+        valid_until2 = auth_session.keep_alive()['valid_until']
+        self.assertAlmostEqual(valid_until1-30, valid_until2, delta=1)
