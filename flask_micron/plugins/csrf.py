@@ -118,7 +118,6 @@ Usage:
 """
 
 import uuid
-from flask import json
 from flask import request
 from flask import session
 from flask_micron.errors import MicronClientError
@@ -251,9 +250,8 @@ def _store_token(token, session):
     while len(tokens) > MAX_NUMBER_OF_CSRF_TOKENS_TO_STORE:
         tokens.pop(0)
 
-    session[SESSION_KEY] = json.dumps(tokens)
+    session[SESSION_KEY] = tokens
 
 
 def _get_tokens(session):
-    stored = session.get(SESSION_KEY, '[]')
-    return json.loads(stored)
+    return session.get(SESSION_KEY, [])

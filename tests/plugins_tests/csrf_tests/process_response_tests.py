@@ -1,6 +1,7 @@
 from flask_micron.plugins import csrf
 from flask import session
 from tests import MicronTestCase
+import json
 
 
 class Tests(MicronTestCase):

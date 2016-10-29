@@ -1,4 +1,3 @@
-from flask import json
 from flask_micron.plugins import csrf
 from tests import MicronTestCase
 
@@ -49,4 +48,4 @@ class Tests(MicronTestCase):
 
     def _add_csrf_tokens_to_session(self, tokens):
         with self.editable_session() as session:
-            session[csrf.SESSION_KEY] = json.dumps(tokens)
+            session[csrf.SESSION_KEY] = tokens

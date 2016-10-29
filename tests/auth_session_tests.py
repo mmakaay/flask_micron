@@ -1,5 +1,5 @@
 from time import time
-from flask import json, session
+from flask import session
 from flask_micron import auth_session
 from tests import MicronTestCase
 
@@ -64,7 +64,7 @@ class Tests(MicronTestCase):
     def test_GivenActiveSession_KeepAliveUpdatesValidUntil(self):
         data = auth_session.start()
         data['valid_until'] += 100
-        session[auth_session.SESSION_KEY] = json.dumps(data)
+        session[auth_session.SESSION_KEY] = data
         self.assertEqual(
             data['valid_until'],
             auth_session.get()['valid_until'])

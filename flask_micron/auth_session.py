@@ -1,7 +1,6 @@
 """This module provides functionality for managing an auth session."""
 
 from time import time
-from flask import json
 from flask import session
 
 
@@ -89,8 +88,7 @@ def _load_from_session():
     Returns:
         The session data or None when no data is stored.
     """
-    data = session.get(SESSION_KEY, 'null')
-    return None if data is None else json.loads(data)
+    return session.get(SESSION_KEY, None)
 
 
 def _store_in_session(data):
@@ -102,7 +100,7 @@ def _store_in_session(data):
     Returns:
         The data that was stored in the session.
     """
-    session[SESSION_KEY] = json.dumps(data)
+    session[SESSION_KEY] = data
     return data
 
 
