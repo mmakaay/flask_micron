@@ -33,7 +33,7 @@ class Tests(unittest.TestCase):
         self.assertEqual('y', f.config.option1)
         self.assertEqual('z', f.config.option2)
 
-    def test_SettingsCanBeOverridddenInDecorator(self):
+    def test_SettingsCanBeOverriddenInDecorator(self):
         micron = Micron(Flask('TestApp'))
         micron.configure(csrf='x', option1='y', option2='z')
 

@@ -165,7 +165,7 @@ class Micron(object):
                     'the Micron class is linked to a Flask app')
             micron_method = MicronMethod(self, func).configure(**configuration)
             _add_micron_method_to_flask_app(self.app, micron_method, rule)
-            return micron_method
+            return func
         return decorator
 
 
