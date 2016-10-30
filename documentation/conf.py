@@ -175,7 +175,20 @@ html_static_path = ['_static']
 
 # Custom sidebar templates, maps document names to template names.
 #
-# html_sidebars = {}
+html_sidebars = {
+    'index': [
+        'sidebarintro.html',
+        'sourcelink.html',
+        'searchbox.html'
+    ],
+    '**': [
+        'sidebarlogo.html',
+        'localtoc.html',
+        'relations.html',
+        'sourcelink.html',
+        'searchbox.html'
+    ]
+}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
@@ -337,3 +350,5 @@ texinfo_documents = [
 # If true, do not generate a @detailmenu in the "Top" node's menu.
 #
 # texinfo_no_detailmenu = False
+
+rst_prolog = open('global.rst.inc', 'r').read()

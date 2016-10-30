@@ -1,0 +1,7 @@
+#!/bin/bash
+
+. ../../venv/bin/activate
+make clean
+make html
+cd _build/html
+exec python -m http.server 8080

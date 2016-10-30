@@ -1,22 +1,38 @@
-.. Flask-Micron documentation master file, created by
-   sphinx-quickstart on Fri Oct 28 17:35:10 2016.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+Welcome to Flask-Micron
+=======================
 
-Welcome to Flask-Micron's documentation!
-========================================
+Introduction
+------------
 
-Contents:
+Flask-Micron is a method-oriented API framework for Python, focusing on
+security and productivity. It is built on top of the excellent `Flask`_
+microframework.
+
+The main goal for the project is to make it really simple for developers to
+write microservice-style JSON webservices, honoring best practices for
+security, and without having to pollute business logic code with HTTP
+request handling knowledge.
+
+Users Guide
+-----------
 
 .. toctree::
    :maxdepth: 2
 
+   quickstart
 
+API Reference
+-------------
 
-Indices and tables
-==================
+.. toctree::
+   :maxdepth: 2
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+Additional Notes
+----------------
 
+.. toctree::
+   :maxdepth: 2
+
+   why_that_name
+   dependencies
+   license
