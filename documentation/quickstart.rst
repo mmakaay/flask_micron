@@ -38,55 +38,55 @@ for making the greeting more personal. The greeting should only say 'World',
 when no other name is known.
 
 Based on this, the tech team worked out their design:
-- A JSON-based webservice, to facilitate integration with all platforms.
-- Clients can POST a name JSON-serialized to the API.
-- The server will strip leading and trailing whitespace from the name 
-- The server will use 'World' as the name, when no name is provided.
-- The server produces the result data, a friendly greeting.
-- The server will send the result data JSON-serialized to the client.
+  - A JSON-based webservice, to facilitate integration with all platforms.
+  - Clients can POST a name JSON-serialized to the API.
+  - The server will strip leading and trailing whitespace from the name 
+  - The server will use 'World' as the name, when no name is provided.
+  - The server produces the result data, a friendly greeting.
+  - The server will send the result data JSON-serialized to the client.
 
 Okay, nothing to difficult! Flask has everything on board to implement
 this new and ground breaking API::
 
-	from flask import Flask, json, jsonify, request
-	app = Flask(__name__)
+    from flask import Flask, json, jsonify, request
+    app = Flask(__name__)
 
-	@app.route('/', methods=['POST'])
-	def hello_world():
-		name = json.loads(request.data)
+    @app.route('/', methods=['POST'])
+    def hello_world():
+        name = json.loads(request.data)
         if isinstance(name, str):
             name = name.strip()
-		if name is None or name == '':
-			name = 'World'
-		result = 'Hello, %s!' % name
-		return jsonify(result)
+        if name is None or name == '':
+            name = 'World'
+        result = 'Hello, %s!' % name
+        return jsonify(result)
 
 And here are the accompanying unit tests::
 
-	import unittest
-	from hello import app
-	from flask import json, request
+    import unittest
+    from hello import app
+    from flask import json, request
 
-	class HelloWorldTest(unittest.TestCase):
+    class HelloWorldTest(unittest.TestCase):
 
-		def assertHelloWorldRequest(self, arg, expected_result):
-			client = app.test_client()
-			request_data = json.dumps(arg)
-			response = client.post('/', data=request_data)
-			result = json.loads(response.data)
-			return result
+        def assertHelloWorldRequest(self, arg, expected_result):
+            client = app.test_client()
+            request_data = json.dumps(arg)
+            response = client.post('/', data=request_data)
+            result = json.loads(response.data)
+            return result
 
-		def test_GivenNoneOnInput_GreetingIsWordly(self):
-			self.assertHelloWorldRequest(None, 'Hello, World!')
+        def test_GivenNoneOnInput_GreetingIsWordly(self):
+            self.assertHelloWorldRequest(None, 'Hello, World!')
 
-		def test_GivenEmptyStringOnInput_GreetingIsWordly(self):
-			self.assertHelloWorldRequest('   ', 'Hello, World!')
+        def test_GivenEmptyStringOnInput_GreetingIsWordly(self):
+            self.assertHelloWorldRequest('   ', 'Hello, World!')
 
-		def test_GivenNameOnInput_GreetingIsPersonal(self):
-			self.assertHelloWorldRequest('John', 'Hello, John!')
+        def test_GivenNameOnInput_GreetingIsPersonal(self):
+            self.assertHelloWorldRequest('John', 'Hello, John!')
 
-		def test_GivenNameWithWhitespaceOnInput_NameIsTrimmed(self):
-			self.assertHelloWorldRequest('   Jacky  \t\r\n ', 'Hello, Jacky!')
+        def test_GivenNameWithWhitespaceOnInput_NameIsTrimmed(self):
+            self.assertHelloWorldRequest('   Jacky  \t\r\n ', 'Hello, Jacky!')
 
 
 Even though this is a very basic level API method (simple input, simple
@@ -122,7 +122,7 @@ Using Flask-Micron, we can greatly simplify the code from the previous section::
 What happens here, is that ``@micron.method`` wraps the hello_world function
 as a Micron method and registers it with the Flask app to be linked to the
 root url. When a client POSTs to '/', then Flask will resolve the URL and
-calls ``hello_world`` via the ``@micron.method`` wrapper.
+calls ``hello_world()`` via the ``@micron.method`` wrapper.
 
 From here on, the wrapper will take care of all interaction with Flask,
 JSON (de)serialization, security checks, data normalization etc.
@@ -140,13 +140,13 @@ actual business logic when testing (and writing) the API::
         def test_GivenNoNameOnInput_GreetingIsWordly(self):
             self.assertEqual('Hello, World!', hello_world())
 
-Much simpler to write and actual unit tests (these are tests against
-``hello_world()`` and not against ``app``) instead of integration tests.
+Much simpler to write and actual unit tests instead of integration tests:
+these are tests against ``hello_world()`` and not against ``app``.
 
 *Note: no tests were implemented for None and empty strings. The reason for this
 is that Flask-Micron normalizes input data by default: trailing and leading
 whitespace are stripped and empty strings are converted to None. When calling
 a function and the input is None, then the argument is omitted (by convention).
 For those reasons, I didn't write specific tests for None and empty strings.
-The ``@micron.method`` wrapper makes sure that those scenario's won't occur
+The @micron.method wrapper arranges that those scenario's won't occur
 in practice.*
