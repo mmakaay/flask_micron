@@ -152,35 +152,24 @@ class Micron(object):
             def hello(who="World"):
                 return "Hello, %s" % who
         """
-        def decorator(func):
+        if self.app is None:
+            raise ImplementationError(
+                'The @micron.method decorator can only be used when '
+                'the Micron class is linked to a Flask app')
+
+        def decorator(func, rule=rule):
             """Wraps a function in a MicronMethod and add it to the URL
             routing of the related Flask app.
 
             Args:
                 func: The function to wrap.
             """
-            if self.app is None:
-                raise ImplementationError(
-                    'The @micron.method decorator can only be used when '
-                    'the Micron class is linked to a Flask app')
-            micron_method = MicronMethod(self, func).configure(**configuration)
-            _add_micron_method_to_flask_app(self.app, micron_method, rule)
+            if rule is None:
+                rule = _create_url_rule(func)
+            method = MicronMethod(self, func).configure(**configuration)
+            self.app.add_url_rule(rule, view_func=method, methods=['POST'])
             return func
         return decorator
-
-
-def _add_micron_method_to_flask_app(app, micron_method, rule=None):
-    """Adds a URL rule for a Micron method to the Flask app.
-
-    Args:
-        app: The Flask app to add the URL rule to.
-        micron_method: The Micron method that implements the route.
-        rule: The URL rule to use. When no rule is provided, then a rule
-            will be automatically derived from the Micron method's name.
-    """
-    if rule is None:
-        rule = _create_url_rule(micron_method)
-    app.add_url_rule(rule, view_func=micron_method, methods=['POST'])
 
 
 def _create_url_rule(micron_method):
