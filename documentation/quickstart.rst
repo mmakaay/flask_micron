@@ -65,7 +65,7 @@ Flask has everything on board to implement this new and ground breaking API::
     from flask import Flask, json, jsonify, request
     app = Flask(__name__)
 
-    @app.route('/', methods=['POST'])
+    @app.route('/hello_world', methods=['POST'])
     def hello_world():
         name = json.loads(request.data)
         if isinstance(name, str):
@@ -86,7 +86,7 @@ And here are the accompanying unit tests::
         def assertHelloWorldRequest(self, arg, expected_result):
             client = app.test_client()
             request_data = json.dumps(arg)
-            response = client.post('/', data=request_data)
+            response = client.post('/hello_world', data=request_data)
             result = json.loads(response.data)
             return result
 
@@ -115,11 +115,11 @@ as if it were already running in a web server.
 To me, these unit tests are integration tests, since I have to work almost
 the full stack in order to test my code.
 
-Now imagine having to add extra features like CSRF protection, authentication
-and logging, you probably can foresee that things get out of hand fast. This
-is the reason that I started the Flask-Micron project, with the ultimate goal
-to bring back the implementation code for this kind of project to pure business
-logic. 
+Now imagine having to add extra features like :ref:`CSRF protection
+<csrf-protection>`, authentication and logging, you probably can foresee
+that things get out of hand fast. This is the reason that I started the
+Flask-Micron project, with the ultimate goal to bring back the
+implementation code for this kind of project to pure business logic. 
 
 .. _api-using-flask-micron:
 
@@ -133,20 +133,20 @@ Using Flask-Micron, we can greatly simplify the code from the previous section::
     app = Flask(__name__)
     micron = Micron(app)
 
-    @micron.method('/')
+    @micron.method()
     def hello_world(name='World'):
         return 'Hello, %s!' % name
 
-What happens here, is that ``@micron.method`` wraps the ``hello_world()``
-function in a Micron method and registers this Micron method with the Flask
-app to be the handler for POST requests to the root url.
+What happens here, is that ``@micron.method()`` wraps the ``hello_world()``
+function in a MicronMethod object and registers this object with the Flask
+app to be the handler for POST requests to ``/hello_world``.
 
-From here on, the Micron method will sit between Flask and the function,
-taking care of tasks like JSON-deserializing and normalizing request
+From here on, the MicronMethod will sit between Flask and the function,
+taking care of tasks like reading the JSON request, normalizing the request
 data, performing security checks, calling the wrapped function to get a result
-and JSON-serializing the result data.
+and creating the JSON response.
 
-By making the Micron method responsible for these tasks, we can now focus on
+By making the MicronMethod responsible for these tasks, we can now focus on
 actual business logic when writing and testing the API functions::
 
     import unittest
@@ -160,7 +160,7 @@ actual business logic when writing and testing the API functions::
         def test_GivenNoNameOnInput_GreetingIsWordly(self):
             self.assertEqual('Hello, World!', hello_world())
 
-These are actual unit tests instead of integration tests. The entry point for
+These are actual unit tests instead of integration tests. The entrypoint for
 the tests is ``hello_world()`` and not the Flask ``app``.
 
 .. note::
@@ -198,8 +198,8 @@ make_empty_strings_none: True (default) or False
   normalized to None.
 
 Flask-Micron provides a configuration mechanism to tweak plugin behavior at
-the level of the ``Micron`` object and/or the level of the ``@micron.method``.
-Configuration at the ``@micron.method`` level overrides configuration at the
+the level of the ``Micron`` object and/or the level of the ``@micron.method()``.
+Configuration at the ``@micron.method()`` level overrides configuration at the
 ``Micron`` level::
 
     from flask import Flask
@@ -207,29 +207,29 @@ Configuration at the ``@micron.method`` level overrides configuration at the
     app = Flask(__name__)
     micron = Micron(app, normalize=False, strip_strings=False)
 
-    @micron.method('/', normalize=True, strip_strings=True)
+    @micron.method('/', normalize=True)
     def hello_world(name='World'):
         return 'Hello, %s!' % name
 
-    @micron.method(normalize=True, make_empty_strings_none=False)
+    @micron.method()
     def good_bye_world(name='World'):
         return 'Good bye, %s!' % name
 
 Based on this configuration:
 
-- Function ``hello_world()`` will get normalizated input. Trailing and leading
-  whitespace will be stripped and empty strings will be normalized to None.
-- Function ``good_bye_world()`` will get normalized input. Trailing and leading
-  whitespace will not be stripped and empty strings are not normalized to
-  None.
+- Function ``hello_world()`` will get normalizated input. Trailing and
+  leading whitespace will not be stripped, but empty strings will be
+  normalized to None.
+- Function ``good_bye_world()`` will get no normalized input at all, since
+  it inherits the disabled normalization from the ``Micron`` object.
 
 For information on the possible configuration options, take a look at the
 documentation for the plugins that you use.
 
-.. _csrf::
+.. _csrf-protection:
 
-Cross-Site Request Forgery protectection
-----------------------------------------
+Cross-Site Request Forgery (CSRF) protectection
+-----------------------------------------------
 
 Cross-Site Request Forgery (CSRF) is a type of attack where a user is
 logged into site A, then visits site B which tells the browser
@@ -239,14 +239,76 @@ performs the "bad thing".
 For more in depth info on CSRF, take a look at:
 https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 
-Because it is very, very important to protect your API's against this kind
+Because it is *very, very important* to protect your API's against this kind
 of attack, Flask-Micron comes bundled with a CSRF protection plugin. This
 plugin is enabled by default. This is something to beware of when trying to
 talk to the web service from a client. You will have to play by the rules:
 
-  1. Each response generated by Flask-Micron includes a CSRF token in the
-     HTTP header ``X-Micron-CSRF-Token``.
+  1. All responses (also error responses) generated by Flask-Micron include
+     a CSRF token in the HTTP header ``X-Micron-CSRF-Token``.
 
-  2. TODO
+  2. Clients must take this token from the response header and include it
+     in the HTTP header ``X-Micron-CSRF-Token`` on their next request.
+     When no token is sent to Flask-Micron or an invalid token is sent,
+     the request will be denied with an error.
 
+I can hear you think: "But how do I get a token for my first request then?"
+For that purpose, Flask-Micron automatically sets up a ``/ping`` method,
+which does not check for a valid CSRF token. So the simple handshake from
+above can be bootstrapped by issuing a ``/ping`` request from the client,
+to get hold of a first token.
 
+If you want to implement your own bootstrapping function, or if you want to
+disable the CSRF protection module (which I advise strongly against), you
+can make use of the ``csrf`` plugin configuration option::
+
+    app = Flask(__name__)
+    micron = Micron(app, csrf=False)
+
+    @micron.method()
+    def hello_world():
+        return 'Hello, World!'
+
+In this example, the ``hello_world()`` function is not CSRF-protected, because
+the CSRF protection module has been fully disabled in the ``Micron``
+constructor. Other functions in this API will also be unprotected. 
+
+To disable CSRF protection for a single function, you can make use of the
+``@micron.method()`` decorator configuration::
+
+    app = Flask(__name__)
+    micron = Micron(app)
+
+    @micron.method(csrf=False)
+    def give_me_a_token():
+        return 'You will find your token in the headers'
+
+    @micron.method()
+    def hello_world():
+        return 'Hello, World!'
+
+In this example, the API provides the function ``give_me_a_token()``,
+that could be used (just like ``/ping``) for bootstrapping the CSRF
+handshake cycle.
+
+Below, a small client example that shows how one could obtain and use a
+CSRF token using the http://python-requests.org Python library::
+
+    import requests
+
+    # Start a Session, to make the Flask session cookie work.
+    s = requests.Session()
+
+    # POST to /ping and fetch a fresh CSRF token from the headers.
+    r = s.post('http://localhost:5000/ping')
+    csrf_token = r.headers['X-Micron-CSRF-Token']
+
+    # POST to /hello_world, including the CSRF token in the request headers.
+    headers = {'X-Micron-CSRF-Token': csrf_token}
+    r = s.post('http://localhost:5000/hello_world', headers=headers)
+
+    print(r.text)
+
+The output of this script is::
+
+    "Hello, World!"
