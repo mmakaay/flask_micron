@@ -1,5 +1,6 @@
 import unittest
 from flask import Flask
+from flask import json
 from flask_micron import Micron
 from flask_micron.errors import ImplementationError
 from flask_micron.plugins import csrf
@@ -22,25 +23,44 @@ class Tests(unittest.TestCase):
                 pass
 
     def test_SettingsArePassedToDecoratedMethods(self):
-        micron = Micron(Flask('TestApp'))
-        micron.configure(csrf='x', option1='y', option2='z')
+        app = Flask('TestApp')
+        app.secret_key = "Let's see this config trick"
+        micron = Micron(app, csrf=False, option1='y', option2='z')
+        micron.plugin(ConfigSpy())
 
         @micron.method()
         def f():
             pass
 
-        self.assertEqual('x', f.config.csrf)
-        self.assertEqual('y', f.config.option1)
-        self.assertEqual('z', f.config.option2)
+        response = micron.app.test_client().post('/f')
+        config = json.loads(response.data)
+
+        self.assertEqual({
+            'csrf': False,
+            'option1': 'y',
+            'option2': 'z'
+        }, config)
 
     def test_SettingsCanBeOverriddenInDecorator(self):
-        micron = Micron(Flask('TestApp'))
-        micron.configure(csrf='x', option1='y', option2='z')
+        app = Flask('TestApp')
+        app.secret_key = "Let's see this config trick"
+        micron = Micron(app, csrf=False, option1='y', option2='z')
+        micron.plugin(ConfigSpy())
 
-        @micron.method(csrf='a', option1='b', option2='c')
+        @micron.method(option1='b', option2=None)
         def f():
             pass
 
-        self.assertEqual('a', f.config.csrf)
-        self.assertEqual('b', f.config.option1)
-        self.assertEqual('c', f.config.option2)
+        response = micron.app.test_client().post('/f')
+        config = json.loads(response.data)
+
+        self.assertEqual({
+            'csrf': False,
+            'option1': 'b',
+            'option2': None 
+        }, config)
+
+
+class ConfigSpy(object):
+    def process_output(self, ctx):
+        ctx.output = ctx.config
