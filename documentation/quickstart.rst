@@ -287,9 +287,9 @@ To disable CSRF protection for a single function, you can make use of the
     def hello_world():
         return 'Hello, World!'
 
-In this example, the API provides the function ``give_me_a_token()``,
-that could be used (just like ``/ping``) for bootstrapping the CSRF
-handshake cycle.
+In this example, the API provides the unprotected function
+``give_me_a_token()``, that could be used (just like ``/ping``) for
+bootstrapping the CSRF handshake cycle.
 
 Below, a small client example that shows how one could obtain and use a
 CSRF token using the http://python-requests.org Python library::
