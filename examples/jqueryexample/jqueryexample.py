@@ -4,13 +4,14 @@
     ~~~~~~~~~~~~~~
 
     A simple application that shows how Flask-Micron and jQuery get along.
-    This example is a reimplementation of the Flask example with the same name.
+    This example is adapted from the Flask example with the same name.
 
     :copyright: (c) 2016 by Stichting Fiber Overal
     :license: BSD, see LICENSE for more details.
 """
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, render_template
 from flask_micron import Micron
+
 app = Flask(__name__)
 app.secret_key = 'SimpleKeySinceThisIsJustADemo'
 micron = Micron(app)

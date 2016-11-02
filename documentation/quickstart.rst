@@ -228,8 +228,8 @@ documentation for the plugins that you use.
 
 .. _csrf-protection:
 
-Cross-Site Request Forgery (CSRF) protectection
------------------------------------------------
+Cross-Site Request Forgery (CSRF) protection
+--------------------------------------------
 
 Cross-Site Request Forgery (CSRF) is a type of attack where a user is
 logged into site A, then visits site B which tells the browser

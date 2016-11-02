@@ -22,30 +22,36 @@ What can I say? Flask rules big times!
 Micron extends flask, making all Flask features readily available for Micron
 as well. Note that it is possible to mix standard Flask code with Micron
 code because of this. This means that the jQuery example from the Flask
-package could be rewritten as:
+package could be rewritten to something like this::
 
-  from flask import Flask, render_template
-  from flask_micron import Micron
-  app = Flask(__name__)
-  micron = Micron(app, csrf=False)
+    from flask import Flask, render_template
+    from flask_micron import Micron
+    app = Flask(__name__)
+    micron = Micron(app, csrf=False)
+  
+  
+    @micron.method('/_add_numbers')
+    def add_numbers(numbers):
+        """Sum a list of numbers server side, ridiculous but well..."""
+        total = 0
+        for number in numbers:
+            try:
+                total = total + number
+            except TypeError:
+                pass
+        return total
+  
+  
+    @app.route('/')
+    def index():
+        return render_template('index.html')
 
+Note that I slightly changed the ``add_numbers()`` function implementation.
+This implementation takes a list of numbers and returns the sum of those
+numbers. Like the Flask example, values of an invalid type (non-numeric)
+in the list are ignored.
 
-  @micron.method('/_add_numbers')
-  def add_numbers(args):
-      """Add two numbers server side, ridiculous but well..."""
-      a = args.get('a', 0)
-      if !isinstance(a, int):
-          a = 0
-      b = args.get('b', 0)
-      if !isinstance(b, int):
-          b = 0
-      return a + b
-
-
-  @app.route('/')
-  def index():
-      return render_template('index.html')
-
+TODO client side change doc
 
 Method-oriented (SOAP-y), not Resource-oriented (REST, CRUD)
 ------------------------------------------------------------

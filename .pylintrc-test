@@ -1,0 +1,83 @@
+[MASTER]
+
+persistent=no
+jobs=1
+
+[MESSAGES CONTROL]
+
+# no-self-use:
+# too-few-public-method:
+#   In the tests, there are many small classes, e.g. for creating a
+#   simple test plugin. For these it is actually good when they are
+#   degenerate.
+# missing-docstring:
+#   In the tests, we'll not be documenting every element in the code.
+# invalid-name:
+#   The most important documentation would be about what is tested by a
+#   test function, but documenting that has been taken care of in the
+#   actual test function names. I do use a format that looks like
+#   this example: "test_InvalidIdentifier_RaisesException". This does not
+#   follow the standard naming for Python, but I do find this very
+#   practical naming.
+# too-many-public-methods:
+#   Test cases can have a lot of test methods, which is not a problem.
+# expression-not-assigned:
+#   Sometimes, properties are accessed without using their value. This is
+#   for example done to check if in certain cases an exception is raised
+#   from an accessor function.
+# ununsed-variable:
+#   Disabled, because @micron.method() decorators used on a function makes
+#   the function an unused variable, when we're not actively using the
+#   function afterwards. We do use the function, but we do so by calling
+#   it via a test request.
+# locally-disabled:
+#   Some minor issues are suppressed at the file level using pylint hints
+#   in the file header. I am not interested in warnings about this.
+disable=no-self-use,missing-docstring,too-few-public-methods,invalid-name,too-many-public-methods,expression-not-assigned,unused-variable,locally-disabled
+
+[REPORTS]
+
+output-format=text
+files-output=no
+reports=no
+
+[VARIABLES]
+
+init-import=no
+
+[MISCELLANEOUS]
+
+notes=TODO
+
+[BASIC]
+
+include-naming-hint=yes
+
+[ELIF]
+
+max-nested-blocks=2
+
+[FORMAT]
+
+max-line-length=80
+max-module-lines=1000
+indent-string='    '
+indent-after-paren=4
+expected-line-ending-format=LF
+
+[CLASSES]
+
+exclude-protected=_plugins,_serializer_hook,_normalize
+
+[DESIGN]
+
+max-args=5
+max-locals=8
+max-returns=3
+max-branches=5
+max-statements=30
+max-parents=6
+max-attributes=10
+min-public-methods=2
+max-public-methods=10
+max-bool-expr=3
