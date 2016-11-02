@@ -22,7 +22,7 @@ class Plugin(MicronPlugin):
     def read_input(self, ctx):
         """Reads the input data and stores it in the MicronPluginContext."""
         ctx.input = None
-        post_body = request.data
+        post_body = request.get_data()
 
         if post_body is None:
             return
