@@ -171,20 +171,96 @@ the tests is ``hello_world()`` and not the Flask ``app``.
   omitted (by convention). Therefore, I omitted some tests, since the tested
   scenarios do not exist in practice.
 
+.. _accessing_request_data:
+
+Accessing request data
+----------------------
+
+Flask-Micron takes a very straight forward approach to handling request
+data:
+
+  - The function that provides the business logic can take a single argument
+    or none at all. The argument can have a default value assigned to it.
+  - Flask-Micron will pass the full deserialized and normalized JSON request
+    data to the function, unless no data is provided.
+
+These are the possible function patterns::
+
+    @micron.method()
+    def no_argument():
+        return 'Hello, World!'
+
+    @micron.method()
+    def one_argument(who):
+        return 'Hello, %s' % who
+
+    @micron.method()
+    def one_argument_with_default(who='World'):
+        return 'Hello, %s!' % who
+
+An exception is raised when:
+
+  - ``no_argument()`` is called with request data.
+  - ``one_argument()`` is called without request data.
+  - a function would be defined with more than one argument.
+
+What counts as 'without request data':
+
+  - No payload at all in the request (an empty HTTP request body).
+  - Just a JSON ``null`` value in the request (translates to ``None`` in Python).
+  - Just an empty JSON string in the request (normalized to ``None``).
+  - Just a JSON whitespace string in the request (normalized to ``None``).
+
+When using any of the above when calling the example function
+``one_argument_with_default()``, then Flask-Micron will call it without
+any argument. As a result, the return value would be ``"Hello, World!"``.
+
+.. _error_handling:
+
+Error handling
+--------------
+
+blah
+
+.. _possible_responses:
+
+Possible responses
+------------------
+
+blah
+
 .. _configuring-flask-micron-behavior
 
 Configuring Flask-Micron behavior
 ---------------------------------
 
-As explained in the previous section, Flask-Micron automatically performs
-normalization on strings in the input data. This is a sane default. It can 
-for example prevent needless authentication failures when a user accidentally
-types a trailing space after the username or password.
+As explained earlier, Flask-Micron automatically performs normalization on
+string values in the input data. It can for example prevent needless
+authentication failures when a user accidentally types a trailing space after
+the username or password::
 
-Even though a sane default is used, sometimes you might require different
-behavior. No worries! All processing features in Flask-Micron are written as
-plugins and these plugins can be written in a configurable manner.
-The normalization plugin supports the following configuration options:
+    {
+        "credentials": {
+            "username": "   johndoe   ",
+            "password": "Udon'tKn0wm3! "
+        },
+        "token": "     "
+    }
+
+is normalized to::
+
+    {
+        "credentials": {
+            "username": "johndoe",
+            "password": "Udon'tKn0wm3!"
+        },
+        "token": None
+    }
+
+Sometimes you might require different behavior. No worries! All processing
+features in Flask-Micron are written as plugins and these plugins can be
+written in a configurable manner. The normalization plugin provides the
+following configuration options:
 
 normalize: True (default) or False
   Whether or not to apply normalization at all.
@@ -217,7 +293,7 @@ Configuration at the ``@micron.method()`` level overrides configuration at the
 
 Based on this configuration:
 
-- Function ``hello_world()`` will get normalizated input. Trailing and
+- Function ``hello_world()`` will get normalized input. Trailing and
   leading whitespace will not be stripped, but empty strings will be
   normalized to None.
 - Function ``good_bye_world()`` will get no normalized input at all, since
@@ -271,7 +347,8 @@ can make use of the ``csrf`` plugin configuration option::
 
 In this example, the ``hello_world()`` function is not CSRF-protected, because
 the CSRF protection module has been fully disabled in the ``Micron``
-constructor. Other functions in this API will also be unprotected. 
+constructor. Be careful when using this method. Other functions in this API
+will also be unprotected!
 
 To disable CSRF protection for a single function, you can make use of the
 ``@micron.method()`` decorator configuration::
@@ -292,7 +369,7 @@ In this example, the API provides the unprotected function
 bootstrapping the CSRF handshake cycle.
 
 Below, a small client example that shows how one could obtain and use a
-CSRF token using the http://python-requests.org Python library::
+CSRF token using the `Requests`_ Python library::
 
     import requests
 

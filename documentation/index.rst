@@ -23,6 +23,7 @@ Users Guide
 .. toctree::
    :maxdepth: 2
 
+   installation
    quickstart
 
 API Reference

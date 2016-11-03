@@ -29,29 +29,30 @@ package could be rewritten to something like this::
     app = Flask(__name__)
     micron = Micron(app, csrf=False)
   
-  
-    @micron.method('/_add_numbers')
+
+    @micron.method('/_add_numbers', csrf=False)
     def add_numbers(numbers):
         """Sum a list of numbers server side, ridiculous but well..."""
         total = 0
         for number in numbers:
             try:
-                total = total + number
+                total = total + float(number)
+            except ValueError:
+                pass
             except TypeError:
                 pass
         return total
-  
+
   
     @app.route('/')
     def index():
         return render_template('index.html')
 
-Note that I slightly changed the ``add_numbers()`` function implementation.
+Note that I slightly changed the ``add_numbers()`` functionality.
 This implementation takes a list of numbers and returns the sum of those
-numbers. Like the Flask example, values of an invalid type (non-numeric)
+numbers. Like in the Flask example, values of an invalid type (non-numeric)
 in the list are ignored.
 
-TODO client side change doc
 
 Method-oriented (SOAP-y), not Resource-oriented (REST, CRUD)
 ------------------------------------------------------------
