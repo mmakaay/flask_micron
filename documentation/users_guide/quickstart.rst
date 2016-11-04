@@ -7,7 +7,7 @@ In this chapter, I will explain how to get your first Flask-Micron app
 running. If you already familiar with writing JSON API's using Flask,
 then you might want to jump directly to :ref:`api-using-flask-micron`.
 
-.. _minimal-flask-app
+.. _minimal-flask-app:
 
 A minimal Flask application
 ---------------------------
@@ -22,9 +22,9 @@ application from the `Flask Documentation`_::
     def hello_world():
         return 'Hello, World!'
 
-For a full description of this code, check out Flask's documentation, it is
-excellent. In short, this code links the root URL ('/') to the hello_world()
-function. This application can be started using Flask::
+For a full description of this code, check out the `Flask Quickstart
+Documentation`_.  In short, this code links the root URL ('/') to the
+hello_world() function. The application can be started using Flask::
 
     $ export FLASK_APP=hello.py
     $ python -m flask run
@@ -215,21 +215,103 @@ When using any of the above when calling the example function
 ``one_argument_with_default()``, then Flask-Micron will call it without
 any argument. As a result, the return value would be ``"Hello, World!"``.
 
-.. _error_handling:
+.. _communicating_errors:
 
-Error handling
---------------
+Communicating errors to API clients
+-----------------------------------
 
-blah
+Micron does not use a wide range of HTTP status codes to communicate
+a response status to its clients. It only uses "200 OK" for successful
+requests and "500 SERVER ERROR" for failed requests.
 
-.. _possible_responses:
+*Wow, that takes away a lot of expressiveness!!*
 
-Possible responses
-------------------
+Not really... When a function raises an exception, Micron catches it and turns
+turns the ugly beast into a frienly response message, containing information
+about the exception that occurred. This way, a client that runs into an error
+can get hold of a lot more information than what can normally be communicated
+through an HTTP status code alone. If you have any experience with SOAP web
+services, then you might understand what inspired me.
 
-blah
+When you want to communicate an error, then the recommended way is to derive a
+specific exception class from either ``MicronClientError`` or
+``MicronServerError``. Provide at least a docstring that describes the error.
+Simply raise your exception and Flask-Micron will take care of the rest for
+you::
 
-.. _configuring-flask-micron-behavior
+  class FlaskIsHalfEmpty(MicronClientError):
+      """Permission denied to pessimists, please consider the
+      Flask half full before continuing.
+      """
+
+  @micron.method():
+  def get_flask():
+      if g.user.is_pessimistic:
+          raise FlaskIsHalfEmpty()
+      return 'Here's your half full flask, sir!'
+
+But what if you feel the need to provide more information about the error that
+occurred? We can do that! Simply pass these details to the raised exception.
+You can use any data structure that can be serialized into JSON here. The
+information will be included in the response::
+
+    raise FlaskIsHalfEmpty({
+        "reason": "user is a pessimist",
+        "source": "the mother told us"
+    })
+
+When the flask application has debugging enabled, then the response message
+will also contain a backtrace of the error that occurred::
+
+    app = Flask(__name__)
+    app.debug = True
+
+Here's an example response message that you would see with debugging enabled::
+
+    {
+      "caused_by": "client",
+      "code": "FlaskIsHalfEmpty",
+      "description": "Permission denied to pessimists, please consider " + \
+                     "the Flask half full before continuing.",
+      "details": {
+        "reason": "user is a pessimist",
+        "source": "the mother told us"
+      },
+      "trace": [
+        "File \"...\", line ..., in ...",
+        "File \"...\", line ..., in ...",
+        "File \"...\", line ..., in ...",
+        ...
+      ]
+    }
+
+As you can see, ``caused_by``, ``code`` and ``description`` are directly
+derived from the exception class that was used.
+
+*"Okay, I agree, this is kinda useful. But what about standard exceptions?"*
+
+Those are handled too! When you raise a non-MicronError exception or when you
+don't catch an exception that is raised from a client library, then
+Flask-Micron will catch it and turn it into an error response. The error code
+``UnhandledException`` will be used::
+
+    raise ValueError("I don't like it")
+
+will result in::
+
+    {
+      "caused_by": "server",
+      "code": "UnhandledException",
+      "description": "During execution of a Micron method, an exception was
+                      raised that was not handled by the service.",
+      "details": {
+        "error_message": "I don't like it",
+        "error_type": "ValueError"
+      },
+      "trace": []
+    }
+
+.. _configuring-flask-micron-behavior:
 
 Configuring Flask-Micron behavior
 ---------------------------------

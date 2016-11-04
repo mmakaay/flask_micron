@@ -23,8 +23,16 @@ Users Guide
 .. toctree::
    :maxdepth: 2
 
-   installation
-   quickstart
+   users_guide/installation
+   users_guide/quickstart
+
+Developers Guide
+----------------
+
+.. toctree::
+   :maxdepth: 2
+
+   developers_guide/setup
 
 API Reference
 -------------
@@ -38,7 +46,7 @@ Additional Notes
 .. toctree::
    :maxdepth: 2
 
-   license
-   dependencies
-   history
-   why_that_name
+   additional/license
+   additional/dependencies
+   additional/history
+   additional/why_that_name

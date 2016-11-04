@@ -16,11 +16,11 @@ The full license text can be found below (:ref:`flask-micron-license`).
 Authors
 -------
 
-.. include:: ../AUTHORS
+.. include:: ../../AUTHORS
 
 .. _flask-micron-license:
 
 Flask-Micron License
 --------------------
 
-.. include:: ../LICENSE
+.. include:: ../../LICENSE
