@@ -25,9 +25,9 @@ I make use of Python virtualenv for setting up my Python environment. This is
 in line with the recommended way for working with Flask.  See the `Flask
 Installation Documentation`_.
 
-Some advantages are that the dependencies are not added to the system-wide
-Python installation (keeping that environment clean) and that it is possible to
-switch between different versions of Python.
+Some advantages are that the dependencies and utilities are not added to the
+system-wide Python installation (keeping that environment clean) and that it
+is possible to switch between different versions of Python.
 
 For getting things up-and-running, I first install some tools in my global
 Python installation::
@@ -41,21 +41,19 @@ Python 2::
 
     $ virtualenv -p python venv2
     $ . venv3/bin/activate
-    $ pip install Flask nose pylint sphinx
+    $ pip install Flask pylint sphinx
     $ deactivate
 
 Python 3::
 
     $ virtualenv -p python3 venv3
     $ . venv2/bin/activate
-    $ pip install Flask nose pylint sphinx
+    $ pip install Flask pylint sphinx
     $ deactivate
 
 The packages that I install in my Python virtual environment are:
 
   - `Flask`_: Flask-Micron is built on top of the Flask package.
-  - `Nose`_: "Nicer testing for Python", although no longer under maintenance,
-    I still use the ``nose`` tool to run my unit tests.
   - `Pylint`_: Strict checking of coding standards and possible errors in
     the code. Just like jsline, Pylint will hurt your feelings, but all
     for the greater good.
@@ -65,5 +63,35 @@ The packages that I install in my Python virtual environment are:
 
 Testing
 -------
+
+Like every developer, I make loads of mistakes! Luckily, there's the
+practice of Test Driven Development (TDD) to keep me on track and to
+give me the courage to do drastic things to my code.
+
+https://en.wikipedia.org/wiki/Test-driven_development
+
+For writing my unit tests, I make use of the built-in Python unittest
+framework. It follows the patterns that most testing frameworks follow
+nowadays. I felt right at home when I started to use it, being familiar
+with frameworks like JUnit (for Java), NUnit (for .NET) and PHPUnit
+(for .. yeah, you guessed that one, right?)
+
+https://docs.python.org/2/library/unittest.html
+
+To run all unit tests, you can use one of the following commands::
+
+    $ python setup.py test
+HIER HIER HIER TODO
+
+The tests for Flask-Micron can be found in the tests/ directory. All
+test files follow the file naming pattern `*_tests.py`. The discovery code
+in `tests/__init__.py` will pickup the test files automatically when
+performing a test run.
+
+When writing tests, my tests directory uses the same directory structure
+as the project that I am testing.
+
+
+
 
 
