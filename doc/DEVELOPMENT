@@ -1,33 +1,6 @@
 Development environment
 =======================
 
-Setup
------
-
-For development, I make use of Python virtualenv for setting up my
-development environment. This is in line with the recommended way for
-working with Flask. Some advantages are that the dependencies are not
-added to the system-wide Python installation (keeping that environment
-clean) and that it is possible to switch between different versions
-of Python.
-
-    $ sudo apt-get install python python3 python-pip python-virtualenv
-
-Setup for Python 2:
-
-    $ virtualenv -p python venv2
-    $ . venv3/bin/activate
-    $ pip install Flask nose pylint sphinx
-    $ deactivate
-
-Setup for Python 3:
-
-    $ virtualenv -p python3 venv3
-    $ . venv2/bin/activate
-    $ pip install Flask nose pylint sphinx
-    $ deactivate
-
-
 Tests
 -----
 

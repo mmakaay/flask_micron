@@ -7,3 +7,6 @@
 .. _Werkzeug: http://werkzeug.pocoo.org/
 .. _Werkzeug Documentation: http://werkzeug.pocoo.org/docs
 .. _Requests: http://python-requests.org
+.. _Sphinx: http://www.sphinx-doc.org
+.. _Nose: http://nose.readthedocs.io/
+.. _Pylint: https://www.pylint.org/

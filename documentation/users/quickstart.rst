@@ -1,4 +1,4 @@
-.. _quickstart:
+.. _user_quickstart:
 
 QuickStart
 ==========
@@ -7,7 +7,7 @@ In this chapter, I will explain how to get your first Flask-Micron app
 running. If you already familiar with writing JSON API's using Flask,
 then you might want to jump directly to :ref:`api-using-flask-micron`.
 
-.. _minimal-flask-app:
+.. _user_minimal-flask-app:
 
 A minimal Flask application
 ---------------------------
@@ -40,7 +40,7 @@ web browser to see the function's greeting output.
   For information on deploying the app to a production environment, see
   the Flask documentation.
 
-.. _api-using-flask:
+.. _user_api-using-flask:
 
 JSON API using Flask
 --------------------
@@ -121,7 +121,7 @@ that things get out of hand fast. This is the reason that I started the
 Flask-Micron project, with the ultimate goal to bring back the
 implementation code for this kind of project to pure business logic. 
 
-.. _api-using-flask-micron:
+.. _user_api-using-flask-micron:
 
 JSON API using Flask-Micron
 ---------------------------
@@ -171,7 +171,7 @@ the tests is ``hello_world()`` and not the Flask ``app``.
   omitted (by convention). Therefore, I omitted some tests, since the tested
   scenarios do not exist in practice.
 
-.. _accessing_request_data:
+.. _user_accessing-request-data:
 
 Accessing request data
 ----------------------
@@ -215,7 +215,7 @@ When using any of the above when calling the example function
 ``one_argument_with_default()``, then Flask-Micron will call it without
 any argument. As a result, the return value would be ``"Hello, World!"``.
 
-.. _communicating_errors:
+.. _user_communicating-errors:
 
 Communicating errors to API clients
 -----------------------------------
@@ -311,7 +311,7 @@ will result in::
       "trace": []
     }
 
-.. _configuring-flask-micron-behavior:
+.. _user_configure-behavior:
 
 Configuring Flask-Micron behavior
 ---------------------------------
@@ -384,7 +384,7 @@ Based on this configuration:
 For information on the possible configuration options, take a look at the
 documentation for the plugins that you use.
 
-.. _csrf-protection:
+.. _user_csrf-protection:
 
 Cross-Site Request Forgery (CSRF) protection
 --------------------------------------------

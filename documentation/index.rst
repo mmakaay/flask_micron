@@ -23,8 +23,8 @@ Users Guide
 .. toctree::
    :maxdepth: 2
 
-   users_guide/installation
-   users_guide/quickstart
+   users/installation
+   users/quickstart
 
 Developers Guide
 ----------------
@@ -32,7 +32,7 @@ Developers Guide
 .. toctree::
    :maxdepth: 2
 
-   developers_guide/setup
+   developers/environment
 
 API Reference
 -------------

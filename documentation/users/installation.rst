@@ -1,4 +1,4 @@
-.. installation:
+.. _user_installation:
 
 Installation
 ============
