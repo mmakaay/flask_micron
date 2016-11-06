@@ -1,24 +1,6 @@
 Development environment
 =======================
 
-Tests
------
-
-The tests can be run in two ways.
-Either using setuptools:
-
-    $ python setup.py test
-
-Or using the Nose utility:
-
-    $ nosetests
-
-The Makefile provides two targets for running tests:
-
-    $ make test         to perform a single test run
-    $ make test-watch   to perform continuous test runs
-
-
 Linting
 -------
 

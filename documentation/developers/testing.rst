@@ -77,7 +77,7 @@ test run manually for every step in this cycle.
 Luckily, I work on a UNIX system, where most of the time there is a right
 tool for a right job. In this case, the right tool is called ``watch``.  This
 tool can be instructed to start a command on regular intervals and show its
-output on screen. Exacly what we need here::
+output on screen. Exactly what we need here::
 
     $ watch -n 1 "python -m unittest discover"
 
@@ -94,10 +94,41 @@ For more information on ``watch``, take a look at its manual page::
 Test directory structure
 ------------------------
 
-The tests for Flask-Micron can be found in the tests/ directory. All
-test files follow the file naming pattern ``*_tests.py``. The discovery code
-in ``tests/__init__.py`` will pickup the test files automatically when
-performing a test run.
+The tests for Flask-Micron can be found in the ``tests/`` directory. All
+test files follow the file naming pattern ``test_*.py``. By using this pattern,
+``python -m unittest discover`` is able to automatically find all unit test
+files in the project.
 
-When writing tests, my tests directory uses the same directory structure
-as the project that I am testing.
+When writing tests, my ``tests/`` directory mirrors the directory structure
+of the project that I am testing. This way, it is very easy to find the tests
+that belong to a given script file in the project.
+
+Here's a little project structure example, that shows the above in action::
+
+    file1.py
+    folder1/
+        file2.py
+        file3.py
+    tests/
+        test_file1.py
+        folder1/
+            test_file2.py
+            test_file3.py
+
+So the tests for ``folder1/file3.py`` can be found by convention in
+``tests/folder1/test_file3.py``.
+
+When you find that you are writing a lot of tests for a given script file,
+then consider splitting up the tests for that file. Let's say that
+``folder1/file2.py`` requires a lot of tests, then this is how I would split
+up the test code::
+
+    tests/
+        folder1/
+            file2/
+                test_feature1.py
+                test_feature2.py
+                ...
+
+In the Flask-Micron code, an example of this is are the tests for the
+CSRF protection plugin, which can be found in ``tests/plugins/csrf/*``.

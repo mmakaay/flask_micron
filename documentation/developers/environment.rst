@@ -42,6 +42,7 @@ Python 2::
     $ virtualenv -p python venv2
     $ . venv3/bin/activate
     $ pip install Flask pylint sphinx
+    $ python setup.py develop
     $ deactivate
 
 Python 3::
@@ -49,6 +50,7 @@ Python 3::
     $ virtualenv -p python3 venv3
     $ . venv2/bin/activate
     $ pip install Flask pylint sphinx
+    $ python setup.py develop
     $ deactivate
 
 The packages that I install in my Python virtual environment are:
@@ -58,3 +60,8 @@ The packages that I install in my Python virtual environment are:
     the code. Just like jsline, Pylint will hurt your feelings, but all
     for the greater good.
   - `Sphinx`_: The tool that is used to produce this documentation. 
+
+The command ``python setup.py develop`` installs Flask-Micron from the project
+source directory in the virtual environment in development mode. This means
+that changes to the source code will be available immediately in the virtual
+environment.
