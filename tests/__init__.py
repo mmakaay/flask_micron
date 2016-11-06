@@ -7,7 +7,7 @@ from flask_micron.plugins import csrf
 
 def suite():
     test_loader = unittest.TestLoader()
-    return test_loader.discover('tests', pattern='*_tests.py')
+    return test_loader.discover('tests')
 
 
 class MicronTestCase(unittest.TestCase):

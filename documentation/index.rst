@@ -33,6 +33,7 @@ Developers Guide
    :maxdepth: 2
 
    developers/environment
+   developers/testing
 
 API Reference
 -------------

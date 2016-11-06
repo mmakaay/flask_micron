@@ -1,5 +1,5 @@
 .*.sw*
 *.pyc
 *.egg-info
-*.egg
+*.eggs
 __pycache__

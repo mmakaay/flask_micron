@@ -5,7 +5,7 @@ QuickStart
 
 In this chapter, I will explain how to get your first Flask-Micron app 
 running. If you already familiar with writing JSON API's using Flask,
-then you might want to jump directly to :ref:`api-using-flask-micron`.
+then you might want to jump directly to :ref:`user_api-using-flask-micron`.
 
 .. _user_minimal-flask-app:
 
@@ -116,7 +116,7 @@ To me, these unit tests are integration tests, since I have to work almost
 the full stack in order to test my code.
 
 Now imagine having to add extra features like :ref:`CSRF protection
-<csrf-protection>`, authentication and logging, you probably can foresee
+<user_csrf-protection>`, authentication and logging, you probably can foresee
 that things get out of hand fast. This is the reason that I started the
 Flask-Micron project, with the ultimate goal to bring back the
 implementation code for this kind of project to pure business logic. 

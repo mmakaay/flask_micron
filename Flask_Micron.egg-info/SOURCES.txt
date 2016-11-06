@@ -22,3 +22,8 @@ flask_micron/plugins/csrf.py
 flask_micron/plugins/json_input.py
 flask_micron/plugins/json_output.py
 flask_micron/plugins/normalize_input.py
+tests/plugins/__init__.py
+tests/plugins/test_call_function.py
+tests/plugins/test_json_input.py
+tests/plugins/test_json_output.py
+tests/plugins/test_normalize_input.py
