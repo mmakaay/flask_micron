@@ -132,3 +132,12 @@ up the test code::
 
 In the Flask-Micron code, an example of this is are the tests for the
 CSRF protection plugin, which can be found in ``tests/plugins/csrf/*``.
+
+PyLint
+------
+
+I do check all my code using PyLint, a tool that checks for coding standard
+issues and code that could lead to bugs. 
+
+TODO
+
