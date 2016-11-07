@@ -35,37 +35,42 @@ Python installation::
 
     $ sudo apt-get install python python3 python-pip python-virtualenv
 
-After this, I setup two virtual environments, one for Python 2 and one
-for Python 3.
+After this, I setup two Python virtual environments, one for Python 2 and one
+for Python 3. Although it is possible to create virtual environments directly
+in the project source folder, I always create them in another folder.
 
 Python 2::
 
+    $ cd /where/you/want/to/create/the/virtualenv
     $ virtualenv -p python venv2
-    $ . venv3/bin/activate
-    $ pip install Flask pylint sphinx
-    $ python setup.py develop
-    $ deactivate
+    $ . venv2/bin/activate
+    (venv2) $ pip install Flask pylint sphinx
+    (venv2) $ cd /the/flask_micron/sources
+    (venv2) $ python setup.py develop
+    (venv2) $ deactivate
 
 Python 3::
 
+    $ cd /where/you/want/to/create/the/virtualenv
     $ virtualenv -p python3 venv3
-    $ . venv2/bin/activate
-    $ pip install Flask pylint sphinx
-    $ python setup.py develop
-    $ deactivate
+    $ . venv3/bin/activate
+    (venv3) $ pip install Flask pylint sphinx
+    (venv3) $ cd /the/flask_micron/sources
+    (venv3) $ python setup.py develop
+    (venv3) $ deactivate
 
 The packages that I install in my Python virtual environment are:
 
   - `Flask`_: Flask-Micron is built on top of the Flask package.
   - `Pylint`_: Strict checking of coding standards and possible errors in
-    the code. Just like jsline, Pylint will hurt your feelings, but all
+    the code. Just like jslint, Pylint will hurt your feelings, but all
     for the greater good.
   - `Sphinx`_: The tool that is used to produce this documentation. 
 
 The command ``python setup.py develop`` installs Flask-Micron from the project
 source directory into the virtual environment in development mode. This means
 that the source code is not copied to, but linked from the virtual environment.
-Therefore, changes to the source code are available immediately in the virtual
+As a result, changes to the source code are available immediately in the virtual
 environment.
 
 .. _dev_shell:
@@ -74,10 +79,13 @@ Shell
 -----
 
 My shell of choice is Bash. There are many good things to say about bash,
-but I will leave that up to the many fan sites. The feature that I want to
-focus on here, is the ``alias`` command (supported by other shells as well),
-which can be used to define new commands. Below are a few useful ones that
-I use. 
+but I will leave that up to the many fan sites.
+
+http://www.gnu.org/software/bash/
+
+The feature that I want to focus on here, is the ``alias`` command (supported
+by other shells as well), which can be used to define new commands. Below are a
+few useful ones that I use. 
 
 ``alias ls='ls --hide=*.pyc --hide=*.egg-info --hide=*.eggs --hide=__pycache__'``
 
