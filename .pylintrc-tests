@@ -8,17 +8,14 @@ jobs=1
 # no-self-use:
 # too-few-public-method:
 #   In the tests, there are many small classes, e.g. for creating a
-#   simple test plugin. For these it is actually good when they are
-#   degenerate.
+#   simple test plugin or an actual unittest TestCase that only has a
+#   few tests in it.
 # missing-docstring:
 #   In the tests, we'll not be documenting every element in the code.
 # invalid-name:
-#   The most important documentation would be about what is tested by a
-#   test function, but documenting that has been taken care of in the
-#   actual test function names. I do use a format that looks like
-#   this example: "test_InvalidIdentifier_RaisesException". This does not
-#   follow the standard naming for Python, but I do find this very
-#   practical naming.
+#   I do use a format that looks like this example:
+#   "test_InvalidIdentifier_RaisesException". This does not follow the standard
+#   naming for Python, but I do find this very practical naming for testing.
 # too-many-public-methods:
 #   Test cases can have a lot of test methods, which is not a problem.
 # expression-not-assigned:

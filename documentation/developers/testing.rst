@@ -136,8 +136,17 @@ CSRF protection plugin, which can be found in ``tests/plugins/csrf/*``.
 PyLint
 ------
 
-I do check all my code using PyLint. This is a tool that checks for coding
-standard issues and code that could potentially lead to bugs. 
+I let PyLint check all my code. PyLint is a tool that checks for code that
+does not follow the Python coding standards and for common code smells that
+could indicate bugs.
 
-TODO
+The tests and the flask_micron package have their own PyLint configuration
+file (``.pylinerc-tests`` and ``.pylintrc-flask_micron`` respectively).
+I do not use a single file for both, because I use slightly different
+rules for package code and testing code.
 
+To let PyLint check the package and the tests, run the following commands
+from the Flask-Micron source code directory::
+
+    $ pylint --rcfile=.pylintrc-flask_micron flask_micron
+    $ pylint --rcfile=.pylintrc-tests tests

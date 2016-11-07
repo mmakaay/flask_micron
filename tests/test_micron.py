@@ -57,7 +57,7 @@ class Tests(unittest.TestCase):
         self.assertEqual({
             'csrf': False,
             'option1': 'b',
-            'option2': None 
+            'option2': None
         }, config)
 
 

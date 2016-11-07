@@ -108,6 +108,22 @@ In general, any time when you find yourself getting bored of typing some
 long command line over and over again, consider if you can create an alias
 for it.
 
+.. _dev_cvs:
+
+Version control
+---------------
+
+For version control, I use Git. I have used some other solutions as well
+in the past (e.g. RCS, CVS, Subversion, Mercurial and Bazaar), but Git is
+the definite winner.
+
+https://git-scm.com/
+
+To have some direct feedback within my shell about the status of my
+repository, I make use of ``bash-git-prompt``:
+
+https://github.com/magicmonty/bash-git-prompt
+
 .. _dev_editor:
 
 Editor
