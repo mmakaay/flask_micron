@@ -12,14 +12,15 @@ The motivation for writing this section, is to *improve the future*, by:
   - preventing you from yelling "Why did nobybody tell me this years earlier?!"
   - giving me a good laugh, looking back at my old-school development environment.
 
+.. note:
+  For development, I work on an Ubuntu Linux machine. Therefore, commands
+  that I talk about from here on, might require Ubuntu or another Debian-ish
+  distribution.
+
 .. _dev_python:
 
 Python setup
 ------------
-
-For development, I work on an Ubuntu Linux machine. Therefore, commands
-that I talk about from here on, might require Ubuntu or another Debian-ish
-distribution.
 
 I make use of Python virtualenv for setting up my Python environment. This is
 in line with the recommended way for working with Flask.  See the `Flask
@@ -62,6 +63,91 @@ The packages that I install in my Python virtual environment are:
   - `Sphinx`_: The tool that is used to produce this documentation. 
 
 The command ``python setup.py develop`` installs Flask-Micron from the project
-source directory in the virtual environment in development mode. This means
-that changes to the source code will be available immediately in the virtual
+source directory into the virtual environment in development mode. This means
+that the source code is not copied to, but linked from the virtual environment.
+Therefore, changes to the source code are available immediately in the virtual
 environment.
+
+.. _dev_shell:
+
+Shell
+-----
+
+My shell of choice is Bash. There are many good things to say about bash,
+but I will leave that up to the many fan sites. The feature that I want to
+focus on here, is the ``alias`` command (supported by other shells as well),
+which can be used to define new commands. Below are a few useful ones that
+I use. 
+
+``alias ls='ls --hide=*.pyc --hide=*.egg-info --hide=*.eggs --hide=__pycache__'``
+
+This redefines the ``ls`` command ('list files in directory') to not show
+the files and directories that Python might create and that are not part
+of the source code. Those would normally clobber your output.
+
+``alias pytest='python -m unittest'``
+
+This alias brings down the number of keystrokes that I need to perform
+to fire up my tests. See the :ref:`testing documentation
+<dev_testing_running>` for info on this command. For example, the alias allows
+me to start all unit tests in a directory by typing ``pytest discover``.
+
+In general, any time when you find yourself getting bored of typing some
+long command line over and over again, consider if you can create an alias
+for it.
+
+.. _dev_editor:
+
+Editor
+------
+
+For editing my code, I mostly use Vim.
+
+http://www.vim.org
+
+I use at least the following in my vim configuration ``~/.vimrc``::
+
+    set ts=4
+    set sw=4
+    set expandtab
+    set ai
+
+This way indentation is automatic, using four spaces (not tabs).
+
+For navigating a project, I make use of a few Vim plugins.
+NERDTree can be used to browse a directory tree within Vim.
+
+https://github.com/scrooloose/nerdtree
+
+CtrlP provides a fuzzy search interface, which helps me find files very
+quickly. For example the source for this documentation file
+(``documentation/developers/environment.rst``) can be reached from anywhere in
+the project, by hitting CTRL+P and typing ``env``.  That is already unique
+enough for CtrlP to identify this file. I could also have typed ``docdevenv``.
+
+http://ctrlpvim.github.io/ctrlp.vim
+
+.. _dev_terminal:
+
+Terminal
+--------
+
+I am a big fan of ``tmux``, a terminal multiplexer like Gnu Screen, only
+sooooo much better. I am a heavy user of tmux' panels (split screen).
+I mostly have an editor running in one panel, while running a
+:ref:`countinuous testing loop <dev_testing_continuous>` in another panel.
+That allows me to quickly move forward using Test Driven Development (TDD,
+highly recommended).
+
+https://tmux.github.io/
+
+Searching
+---------
+
+For searching through my source code, I don't use ``grep``. Instead I use
+``ack-grep``. One of its biggest features for me, is that it knows about
+version control systems (VCS) and automatically skips VCS meta data files
+and directories when traversing the source tree. This makes searching a lot
+faster and the output will only contain matches from the actual source code.
+
+http://beyondgrep.com/
