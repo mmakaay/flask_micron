@@ -98,7 +98,11 @@ of the source code. Those would normally clobber your output.
 This alias brings down the number of keystrokes that I need to perform
 to fire up my tests. See the :ref:`testing documentation
 <dev_testing_running>` for info on this command. For example, the alias allows
-me to start all unit tests in a directory by typing ``pytest discover``.
+me to start all unit tests in a directory by simply typing ``pytest``.
+I also have an alias ``pywatch`` that I use for starting a continuous test
+run in the working directory:
+
+``alias pywatch='watch -n 1 "python -m unittest"'``
 
 In general, any time when you find yourself getting bored of typing some
 long command line over and over again, consider if you can create an alias
@@ -113,7 +117,7 @@ For editing my code, I mostly use Vim.
 
 http://www.vim.org
 
-I use at least the following in my vim configuration ``~/.vimrc``::
+I use at least the following settings in my vim configuration ``~/.vimrc``::
 
     set ts=4
     set sw=4

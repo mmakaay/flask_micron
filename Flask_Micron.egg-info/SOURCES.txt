@@ -7,7 +7,6 @@ Flask_Micron.egg-info/requires.txt
 Flask_Micron.egg-info/top_level.txt
 flask_micron/__init__.py
 flask_micron/auth_session.py
-flask_micron/config.py
 flask_micron/errors.py
 flask_micron/micron.py
 flask_micron/micron_method.py

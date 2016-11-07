@@ -10,7 +10,6 @@
 """
 
 import flask
-from flask_micron import config
 from flask_micron.micron import Micron
 from flask_micron.errors import MicronClientError
 from flask_micron.errors import MicronServerError

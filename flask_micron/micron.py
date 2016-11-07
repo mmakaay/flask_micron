@@ -1,5 +1,6 @@
 """This module provides the Micron class."""
-# TODO deal correctly with unicode in all places, Werkzeug should be using unicode, not bytes as it is now in the Response.data.
+# TODO deal correctly with unicode in all places, Werkzeug should be
+# using unicode, not bytes as it is now in the Response.data.
 
 from flask_micron.errors import ImplementationError
 from flask_micron.micron_method import MicronMethod
@@ -78,12 +79,12 @@ class Micron(object):
             micron.init_app(app)
         """
         self.app = app
-        self._add_ping_method(app)
+        self._add_ping_method()
 
-    def _add_ping_method(self, app):
+    def _add_ping_method(self):
         """Add /ping as a Micron method to the app."""
-        @self.method(csrf=False)
-        def ping():
+        @self.method('/ping', csrf=False)
+        def _ping():
             return 'pong'
 
     def plugin(self, plugin):

@@ -32,7 +32,7 @@ jobs=1
 #   it via a test request.
 # locally-disabled:
 #   Some minor issues are suppressed at the file level using pylint hints
-#   in the file header. I am not interested in warnings about this.
+#   in the file header. I am not interested in warnings about these.
 disable=no-self-use,missing-docstring,too-few-public-methods,invalid-name,too-many-public-methods,expression-not-assigned,unused-variable,locally-disabled
 
 [REPORTS]

@@ -119,5 +119,5 @@ def _get_trace(error):
         return None
     tb_list = traceback.extract_tb(error.__traceback__)
     formatted = traceback.format_list(tb_list)
-    stripped = [ line.strip() for line in formatted ]
+    stripped = [line.strip() for line in formatted]
     return stripped

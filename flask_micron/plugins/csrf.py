@@ -203,7 +203,7 @@ class Plugin(MicronPlugin):
             provided_token = _extract_token_from_headers(headers)
             if provided_token is None:
                 raise CsrfTokenRequired()
-            if provided_token not in _get_tokens(session):
+            if provided_token not in _get_tokens():
                 raise CsrfTokenInvalid()
 
     def process_response(self, ctx):
@@ -212,7 +212,7 @@ class Plugin(MicronPlugin):
         header in the response.
         """
         new_token = _generate_token()
-        _store_token(new_token, session)
+        _store_token(new_token)
         ctx.response.headers[CSRF_TOKEN_HEADER] = new_token
 
 
@@ -237,7 +237,7 @@ def _generate_token():
     return str(uuid.uuid4())
 
 
-def _store_token(token, session):
+def _store_token(token):
     """Stores a CSRF token in the session data.
 
     We keep a few CSRF tokens around, which will handle cases where
@@ -245,7 +245,7 @@ def _store_token(token, session):
     causing use of an already used CSRF token or out-of-order use
     of generated CSRF tokens.
     """
-    tokens = _get_tokens(session)
+    tokens = _get_tokens()
     tokens.append(token)
     while len(tokens) > MAX_NUMBER_OF_CSRF_TOKENS_TO_STORE:
         tokens.pop(0)
@@ -253,5 +253,5 @@ def _store_token(token, session):
     session[SESSION_KEY] = tokens
 
 
-def _get_tokens(session):
+def _get_tokens():
     return session.get(SESSION_KEY, [])

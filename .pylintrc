@@ -16,11 +16,10 @@ jobs=1
 #   also clearly communicated by "python setup.py test".
 # too-few-public-methods:
 #   I do use classes as pure data containers, without public methods.
-# eval-used
-#   I agree, eval is evil, but in this package, I use it for generating
-#   and compiling dynamic code for performance. I promise I'll be 
-#   really careful.
-disable=broad-except,deprecated-method,too-few-public-methods,eval-used
+# locally-disabled:
+#   Some minor issues are suppressed at the file level using pylint hints
+#   in the file header. I am not interested in warnings about these.
+disable=broad-except,deprecated-method,too-few-public-methods,locally-disabled
 
 [REPORTS]
 

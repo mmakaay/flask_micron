@@ -1,3 +1,5 @@
+# pylint: disable=too-many-branches
+
 """This module implements an input normalization plugin for Flask-Micron."""
 from flask_micron.micron_plugin import MicronPlugin
 
@@ -44,28 +46,32 @@ class Plugin(MicronPlugin):
         if ctx.config.get('normalize', True):
             strip_strings = ctx.config.get('strip_strings', True)
             make_empty_none = ctx.config.get('make_empty_strings_none', True)
-            if strip_strings or make_empty_none:
-                ctx.input = _normalize(ctx.input, strip_strings, make_empty_none)
+            ctx.input = _normalize(ctx.input, strip_strings, make_empty_none)
 
 
 def _normalize(data, strip_strings, make_empty_none):
-    if data is not None:
-        if isinstance(data, str):
-            if strip_strings:
-                data = data.strip()
-            if make_empty_none:
-                data = None if data == "" else data
+    if not strip_strings and not make_empty_none:
+        return data
 
-        elif isinstance(data, dict):
-            data = dict([
-                (k, _normalize(data[k], strip_strings, make_empty_none))
-                for k in data.keys()
-            ])
+    if data is None:
+        return data
 
-        elif isinstance(data, list):
-            data = [
-                _normalize(v, strip_strings, make_empty_none)
-                for v in data
-            ]
+    if isinstance(data, str):
+        if strip_strings:
+            data = data.strip()
+        if make_empty_none:
+            data = None if data == "" else data
+
+    elif isinstance(data, dict):
+        data = dict([
+            (k, _normalize(data[k], strip_strings, make_empty_none))
+            for k in data.keys()
+        ])
+
+    elif isinstance(data, list):
+        data = [
+            _normalize(v, strip_strings, make_empty_none)
+            for v in data
+        ]
 
     return data
