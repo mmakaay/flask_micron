@@ -148,12 +148,20 @@ NERDTree can be used to browse a directory tree within Vim.
 https://github.com/scrooloose/nerdtree
 
 CtrlP provides a fuzzy search interface, which helps me find files very
-quickly. For example the source for this documentation file
+quickly from within Vim. For example the source for this documentation file
 (``documentation/developers/environment.rst``) can be reached from anywhere in
 the project, by hitting CTRL+P and typing ``env``.  That is already unique
 enough for CtrlP to identify this file. I could also have typed ``docdevenv``.
 
 http://ctrlpvim.github.io/ctrlp.vim
+
+When you have ``ag`` installed (see :ref:`searching <dev_searching>`), then
+I recommend adding the following to your ``~/.vimrc`` to let CtrlP
+automatically ignore files from e.g. the ``.gitignore`` file::
+
+    if executable('ag')
+      let g:ctrlp_user_command = 'ag %s -g -l --nocolor ""'
+    endif
 
 .. _dev_terminal:
 
@@ -169,13 +177,23 @@ highly recommended).
 
 https://tmux.github.io/
 
+.. _dev_searching:
+
 Searching
 ---------
 
 For searching through my source code, I don't use ``grep``. Instead I use
-``ack-grep``. One of its biggest features for me, is that it knows about
+``ack``. One of its biggest features for me, is that it knows about
 version control systems (VCS) and automatically skips VCS meta data files
 and directories when traversing the source tree. This makes searching a lot
 faster and the output will only contain matches from the actual source code.
 
 http://beyondgrep.com/
+
+Another search tool with similar grep-trumping features, but a lot faster
+than ``ack`` is ``ag``. When starting with a grep replacement, then for now
+I would recommend using ``ag`` instead of ``ack`` (if only for the very good
+sales pitch of the ``ag`` author: "The command name is 33% shorter than ack,
+and all keys are on the home row!")
+
+https://github.com/ggreer/the_silver_searcher
