@@ -27,14 +27,14 @@ root directory of the Flask-Micron project::
 
     $ python setup.py test
 
-    $ python -m unittest
+    $ python -m unittest discover
 
 The first command is very verbose. It lists the results for every single
 test that is executed. Although its output can be trimmed down quite a bit
 by adding the ``-q`` option, I normally use the second command. That one
 displays a clean and brief result::
 
-    $ python -m unittest
+    $ python -m unittest discover
     ......................................................................
     ................................
     ----------------------------------------------------------------------
@@ -42,12 +42,16 @@ displays a clean and brief result::
     
     OK
 
+.. note::
+    When working with Python 3, 'discover' can be omitted from the command
+    line: ``python -m unittest``
+
 To run all tests contained by a testing subdirectory, the second command
 from above is very useful as well. For example, to run all tests for the
 CSRF protection plugin, you can do::
 
     $ cd tests/plugins/csrf
-    $ python -m unittest
+    $ python -m unittest discover
     .....................
     ----------------------------------------------------------------------
     Ran 21 tests in 0.321s
@@ -79,7 +83,7 @@ tool for a right job. In this case, the right tool is called ``watch``.  This
 tool can be instructed to start a command on regular intervals and show its
 output on screen. Exactly what we need here::
 
-    $ watch -n 1 "python -m unittest"
+    $ watch -n 1 "python -m unittest discover"
 
 By editing my code in one terminal, while having this command running in
 another, I can keep an eye on the results of my unittest while writing my
@@ -96,8 +100,8 @@ Test directory structure
 
 The tests for Flask-Micron can be found in the ``tests/`` directory. All
 test files follow the file naming pattern ``test_*.py``. By using this pattern,
-``python -m unittest`` is able to automatically find all unit test files in
-the project.
+``python -m unittest discover`` is able to automatically find all unit test
+files in the project.
 
 When writing tests, my ``tests/`` directory mirrors the directory structure
 of the project that I am testing. This way, it is very easy to find the tests
