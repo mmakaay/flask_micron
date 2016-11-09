@@ -17,37 +17,30 @@ class Micron(object):
     """The Micron class is used to decorate regular functions, to become
     all singing and all dancing MicronMethods, which are plugged into
     the routing of a Flask application.
-
-    Example:
-
-        from flask import Flask
-        from flask_micron import Micron
-
-        app = Flask(__name__)
-        micron = Micron(app, csrf=True)
-
-        @micron.method()
-        def hello():
-                return "Hello, world!"
     """
     def __init__(self, app=None, **configuration):
-        """Creates a new Micron object.
-
+        """
         Args:
             app: The Flask app (or Blueprint) to wrap.
-            **configuration: Configuration options that define in what way
+
+        Kwargs:
+            configuration: Configuration options that define in what way
                 Micron methods that are created using this Micron instance
                 must behave. These configuration options can be overridden
                 by method-specific configuration options, defined in the
                 @micron.method(...) decorator.
 
-        Example:
+        Example::
 
             from flask import Flask
             from flask_micron import Micron
 
             app = Flask(__name__)
             micron = Micron(app, csrf=True)
+
+            @micron.method()
+            def hello():
+                return "Hello, world!"
         """
         self.config = MicronMethodConfig(**configuration)
 
@@ -69,7 +62,7 @@ class Micron(object):
         Args:
             app: The Flask app to initialize Micron for.
 
-        Example:
+        Example::
 
             from flask import Flask
             from flask_micron import Micron
@@ -82,21 +75,31 @@ class Micron(object):
         self._add_ping_method()
 
     def _add_ping_method(self):
-        """Add /ping as a Micron method to the app."""
         @self.method('/ping', csrf=False)
         def _ping():
             return 'pong'
 
     def plugin(self, plugin):
         """Adds a MicronPlugin to this Micron object.
-        See the documentation for MicronPlugin for more information on
-        writing plugins.
+        See the documentation for :class:`MicronPlugin` for more
+        information on writing plugins.
 
         Args:
             plugin: The plugin to add to this Micron object.
 
         Returns:
             This Micron instance, useful for fluent syntax.
+
+        Example::
+
+            from flask import Flask
+            from flask_micron import Micron
+
+            app = Flask(__name__)
+            micron = Micron(app)
+            
+            my_plugin = my.Plugin()
+            micron.plugin(my_plugin)
         """
         self.plugins.add(plugin)
         return self
@@ -104,8 +107,8 @@ class Micron(object):
     def configure(self, **configuration):
         """Updates the configuration for this Micron instance.
 
-        Args:
-            **configuration: Configuration options that define in what way
+        Kwargs:
+            configuration: Configuration options that define in what way
                 Micron methods that are created using this Micron instance
                 must behave. These configuration options can be overridden
                 by method-specific configuration options, defined in the
@@ -114,13 +117,17 @@ class Micron(object):
         Returns:
             This Micron instance, useful for fluent syntax.
 
-        Example:
+        Example::
 
             from flask import Flask
             from flask_micron import Micron
 
             app = Flask(__name__)
             micron = Micron(app).configure(csrf=False)
+
+        Note: the last line is equivalent to::
+
+            micron = Micron(app, csrf=False)
         """
         self.config.configure(**configuration)
         return self
@@ -131,7 +138,9 @@ class Micron(object):
         Args:
             rule: The URL rule to use for this method.
                 Default: /<name of decorated function>
-            **configuration: Configuration options that define in what way
+
+        Kwargs:
+            configuration: Configuration options that define in what way
                 the Micron method must behave. These configuration options
                 can be used to override the default configuration as set
                 for the Micron object.
@@ -141,7 +150,7 @@ class Micron(object):
             in the Flask application and hooking it up with the Micron
             request handling.
 
-        Example:
+        Example::
 
             from flask import Flask
             from flask_micron import Micron
@@ -158,19 +167,13 @@ class Micron(object):
                 'The @micron.method decorator can only be used when '
                 'the Micron class is linked to a Flask app')
 
-        def decorator(func, rule=rule):
-            """Wraps a function in a MicronMethod and add it to the URL
-            routing of the related Flask app.
-
-            Args:
-                func: The function to wrap.
-            """
+        def _decorator(func, rule=rule):
             if rule is None:
                 rule = _create_url_rule(func)
             method = MicronMethod(self, func).configure(**configuration)
             self.app.add_url_rule(rule, view_func=method, methods=['POST'])
             return func
-        return decorator
+        return _decorator
 
 
 def _create_url_rule(micron_method):

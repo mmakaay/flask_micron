@@ -142,8 +142,11 @@ I use at least the following settings in my vim configuration ``~/.vimrc``::
 
 This way indentation is automatic, using four spaces (not tabs).
 
-For navigating a project, I make use of a few Vim plugins.
-NERDTree can be used to browse a directory tree within Vim.
+For managing Vim plugins, I make use of Vundle:
+
+https://github.com/VundleVim/Vundle.vim
+
+The NRDTree plugin can be used to browse a directory tree within Vim.
 
 https://github.com/scrooloose/nerdtree
 

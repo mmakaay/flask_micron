@@ -9,7 +9,8 @@
     :copyright: (c) 2016 by Stichting Fiber Overal
     :license: BSD, see LICENSE for more details.
 """
-from flask import Flask, render_template
+from flask import Flask
+from flask import render_template
 from flask_micron import Micron
 
 app = Flask(__name__)

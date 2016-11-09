@@ -88,14 +88,13 @@ class MicronMethod(object):
             self.plugins.call_one('call_function', ctx)
             self.plugins.call_all('process_output', ctx)
             self.plugins.call_one('create_response', ctx)
+            self.plugins.call_all('process_response', ctx)
         except MicronError:
             (errcls, error, traceback_) = sys.exc_info()
             self._handle_error(ctx, error, traceback_)
         except Exception:
             (errcls, error, traceback_) = sys.exc_info()
             self._handle_error(ctx, UnhandledException(error), traceback_)
-        finally:
-            self.plugins.call_all('process_response', ctx)
 
         return ctx.response
 
@@ -110,6 +109,7 @@ class MicronMethod(object):
         }
         self.plugins.call_one('create_response', ctx)
         self.plugins.call_all('process_error', ctx)
+        self.plugins.call_all('process_response', ctx)
 
 
 def _create_trace(traceback_):

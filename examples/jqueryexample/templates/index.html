@@ -6,9 +6,9 @@
       $.post(
           $SCRIPT_ROOT + '/_add_numbers',
           JSON.stringify([
-            $('input[name="a"]').val(),
-            $('input[name="b"]').val(),
-            $('input[name="c"]').val()
+              $('input[name="a"]').val(),
+              $('input[name="b"]').val(),
+              $('input[name="c"]').val()
           ])
       ).done(function(result) {
           $('#result').text(result);

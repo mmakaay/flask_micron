@@ -41,12 +41,15 @@ API Reference
 .. toctree::
    :maxdepth: 2
 
+   developers/api
+
 Additional Notes
 ----------------
 
 .. toctree::
    :maxdepth: 2
 
+   additional/stack
    additional/design
    additional/license
    additional/dependencies
