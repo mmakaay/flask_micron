@@ -14,9 +14,10 @@ from flask_micron.plugins import json_output
 
 
 class Micron(object):
-    """The Micron class is used to decorate regular functions, to become
-    all singing and all dancing MicronMethods, which are plugged into
-    the routing of a Flask application.
+    """The Micron class is used to decorate regular functions, to become all
+    singing and all dancing :class:`Micron methods
+    <flask_micron.micron_method.MicronMethod>`, which are plugged into the
+    routing of a Flask application.
     """
     def __init__(self, app=None, **configuration):
         """
@@ -28,7 +29,7 @@ class Micron(object):
                 Micron methods that are created using this Micron instance
                 must behave. These configuration options can be overridden
                 by method-specific configuration options, defined in the
-                @micron.method(...) decorator.
+                ``@micron.method()`` decorator.
 
         Example::
 
@@ -80,8 +81,8 @@ class Micron(object):
             return 'pong'
 
     def plugin(self, plugin):
-        """Adds a MicronPlugin to this Micron object.
-        See the documentation for :class:`MicronPlugin` for more
+        """Adds a :class:`MicronPlugin <flask_micron.MicronPlugin>` to this
+        Micron object. See the documentation for MicronPlugin for more
         information on writing plugins.
 
         Args:
@@ -94,11 +95,12 @@ class Micron(object):
 
             from flask import Flask
             from flask_micron import Micron
+            import my_stuff
 
             app = Flask(__name__)
             micron = Micron(app)
             
-            my_plugin = my.Plugin()
+            my_plugin = my_stuff.Plugin()
             micron.plugin(my_plugin)
         """
         self.plugins.add(plugin)

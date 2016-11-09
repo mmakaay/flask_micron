@@ -2,66 +2,63 @@
 
 
 class MicronPlugin(object):
-    """The MicronPlugin provides an interface that can be implemented
+    """The MicronPlugin defines the interface that can be implemented
     to create a Micron plugin.
 
-    The MicronPlugin base class contains methods with can be overridden in
-    order to hook into specific phases of the request handling. This plugin
-    mechanism could for example be used for implementing authentication,
-    authorization, ACL checking and mangling of input and output data,
-    but anything is possible.
+    Derived classes can override methods to hook into specific phases of
+    the request handling. This plugin mechanism could for example be used
+    for implementing authentication, authorization, ACL checking and
+    mangling of input and output data, but anything is possible.
 
+    **Duck Typing**
 
-    Duck Typing
-    -----------
+    It is not strictly required to derive from MicronPlugin in order to create
+    a plugin. In the tradition of Python, Duck Typing is allowed, meaning that
+    you can register any object as a plugin, as long as it provides the
+    expected plugin hook functions.
 
-    It is not strictly required to derive from MicronPlugin in order
-    to create a plugin. In the tradition of Python, Duck Typing is
-    allowed, meaning that you can register any object as a plugin,
-    as long as it provides plugin hook functions.
+    In fact, Flask-Micron goes even a step further by accepting
+    non-MicronPlugin objects that implement only a subset of the plugin hook
+    functions ("Crippled Duck Typing"?).
 
-    In fact, Micron goes even a step further by accepting
-    non-MicronPlugin objects that implement only a subset of the
-    plugin hook functions ("Crippled Duck Typing"?).
+    **Available hook functions**
 
-
-    Available hooks
-    ---------------
-
-    These are the available hook functions, in the order in which
-    they are called by Micron during request processing:
+    These are the available hook functions, in the order in which they are
+    called from a :class:`MicronMethod
+    <flask_micron.micron_method.MicronMethod>` object during request
+    processing:
 
         - start_request(self, ctx)
         - check_access(self, ctx)
         - after_check_access(self, ctx)
-        - read_input(self, ctx) *
+        - **read_input(self, ctx)**
         - process_input(self, ctx)
-        - call_function(self, ctx) *
+        - **call_function(self, ctx)**
         - process_output(self, ctx)
-        - create_response(self, ctx) *
+        - **create_response(self, ctx)**
         - process_error(self, ctx)
         - process_response(self, ctx)
 
-        *) A special type of hook, for which only the last registered
-           plugin that implements the hook is called.
+    The **bold** hook functions are special. For these, only the very last
+    registered plugin that implements the hook is called. So when you
+    implement one of those hooks in your plugin, beware that registering
+    the Plugin will replace the original behavior completely.
 
-    MicronPluginContext
-    -------------------
+    **MicronPluginContext**
 
-    To keep things straight forward, every hook function receives the
-    same input object: a MicronPluginContext. This object contains
-    data that is used by plugins during request processing.
+    Every hook function in a plugin receives the same input object: a
+    :class:`MicronPluginContext
+    <flask_micron.micron_plugin_context.MicronPluginContext>`. This object
+    contains data that is used by plugins during request processing.
 
     At the start of the request, the context object is empty, but during
-    request handling, the data is enriched with new data, as soon as it
+    request handling, the object is enriched with new data, as soon as it
     comes available.
 
-    For more information on the available data in the context,
-    see the documentation for each of the hook functions.
+    For information on what data is available, see the documentation for
+    each individual hook function.
 
-
-    Plugin behavior configuration
-    -----------------------------
+    **Plugin behavior configuration**
 
     In case your plugin can display different kinds of behavior, and
     you need to be able to differentiate the behavior per Micron method,
@@ -74,7 +71,7 @@ class MicronPlugin(object):
     The Micron object configuration is used for all functions that are
     decorated using that object. The decorator configuration can be
     used to override the configuration per decorated function.
-    Here's an example:
+    Here's an example::
 
         app = Flask(__name__)
         micron = Micron(app, configA='plug', configB='in')
@@ -90,7 +87,7 @@ class MicronPlugin(object):
     When Micron processes a request, it will aggregate the configuration
     options for the called Micron method into a single dict and pass
     it to plugin hook functions via the MicronPluginContext. For the above
-    example, you would see the following configuration data in a plugin:
+    example, you would see the following configuration data in a plugin::
 
         hello()  ctx.config = {
                      "configA": "drive",
@@ -105,7 +102,7 @@ class MicronPlugin(object):
 
     Here's an example of how you could access these configuration options
     from within a hook function, and fall back to a default value when
-    a configuration option is not defined in Micron and the Micron method:
+    a configuration option is not defined in Micron and the Micron method::
 
         def process_input(self, ctx):
             ctx.input.things = [
@@ -116,7 +113,7 @@ class MicronPlugin(object):
 
     Another way to work with default values, could be to resolve the default
     values in the start_request hook function, so other hook functions can
-    be assured that a configuration value is set:
+    be assured that a configuration value is set::
 
         def start_request(self, ctx):
             ctx.config.setdefault('configA', 'defaultA')
@@ -135,11 +132,10 @@ class MicronPlugin(object):
     plugins.
 
 
-    Example
-    -------
+    **Example**
 
     Here an example of a (rather useless) MicronPlugin, used for guarding
-    access to Micron methods:
+    access to Micron methods::
 
         from flask_micron import MicronPlugin
         from flask_micron.errors import AccessDenied
@@ -150,7 +146,7 @@ class MicronPlugin(object):
                 if ctx.config.get(guard, True):
                     raise AccessDenied("Access denied by StupidGuard")
 
-    And to use the plugin in the service code:
+    And to use the plugin in the service code::
 
         from flask import Flask
         from flask_micron import Micron

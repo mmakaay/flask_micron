@@ -15,7 +15,7 @@ Micron
 MicronPlugin
 ------------
 
-.. module:: flask_micron.micron_plugin
+.. module:: flask_micron
 .. autoclass:: MicronPlugin
     :members:
 
