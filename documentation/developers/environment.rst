@@ -160,7 +160,7 @@ I recommend adding the following to your ``~/.vimrc`` to let CtrlP
 automatically ignore files from e.g. the ``.gitignore`` file::
 
     if executable('ag')
-      let g:ctrlp_user_command = 'ag %s -g -l --nocolor ""'
+      let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
     endif
 
 .. _dev_terminal:

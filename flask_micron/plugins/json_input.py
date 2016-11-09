@@ -5,6 +5,7 @@ from flask import json
 from flask import request
 from flask_micron.errors import MicronClientError
 from flask_micron.micron_plugin import MicronPlugin
+from flask_micron.compat import is_string
 
 
 class NonJsonInput(MicronClientError):
@@ -32,7 +33,7 @@ class Plugin(MicronPlugin):
         if isinstance(post_body, bytes):
             post_body = post_body.decode('utf-8')
 
-        if isinstance(post_body, str) and post_body.strip() == "":
+        if is_string(post_body) and post_body.strip() == "":
             return
 
         try:

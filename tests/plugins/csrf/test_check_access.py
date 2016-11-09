@@ -6,7 +6,7 @@ from tests import MicronTestCase
 class Tests(MicronTestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Tests, self).setUp()
 
         @self.micron.method(csrf=True)
         def with_check():

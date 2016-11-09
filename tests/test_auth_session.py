@@ -7,7 +7,7 @@ from tests import MicronTestCase
 class Tests(MicronTestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Tests, self).setUp()
         auth_session.TTL = 1800
 
     def test_GivenNoStartedAuthSesssion_NoAuthSessionDataAvailable(self):

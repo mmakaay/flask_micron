@@ -4,7 +4,7 @@ from tests import MicronTestCase
 class Tests(MicronTestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Tests, self).setUp()
         @self.micron.method(csrf=False, normalize=False)
         def echo(arg=None):
             return arg

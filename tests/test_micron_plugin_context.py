@@ -5,7 +5,7 @@ from tests import MicronTestCase
 class Tests(MicronTestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Tests, self).setUp()
         self.ctx = MicronPluginContext()
 
     def test_NewContextHasNoInput(self):

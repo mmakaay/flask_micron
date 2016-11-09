@@ -2,6 +2,7 @@
 
 """This module implements an input normalization plugin for Flask-Micron."""
 from flask_micron.micron_plugin import MicronPlugin
+from flask_micron.compat import is_string
 
 
 class Plugin(MicronPlugin):
@@ -56,7 +57,7 @@ def _normalize(data, strip_strings, make_empty_none):
     if data is None:
         return data
 
-    if isinstance(data, str):
+    if is_string(data):
         if strip_strings:
             data = data.strip()
         if make_empty_none:

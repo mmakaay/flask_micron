@@ -1,5 +1,6 @@
 """This module provides the MicronMethod class."""
 
+import sys
 import traceback
 from functools import update_wrapper
 import flask
@@ -87,37 +88,36 @@ class MicronMethod(object):
             self.plugins.call_one('call_function', ctx)
             self.plugins.call_all('process_output', ctx)
             self.plugins.call_one('create_response', ctx)
-        except MicronError as error:
-            self._handle_error(ctx, error)
-        except Exception as error:
-            self._handle_error(ctx, UnhandledException(error))
+        except MicronError:
+            (errcls, error, traceback_) = sys.exc_info()
+            self._handle_error(ctx, error, traceback_)
+        except Exception:
+            (errcls, error, traceback_) = sys.exc_info()
+            self._handle_error(ctx, UnhandledException(error), traceback_)
         finally:
             self.plugins.call_all('process_response', ctx)
 
         return ctx.response
 
-    def _handle_error(self, ctx, error):
+    def _handle_error(self, ctx, error, traceback_):
         ctx.error = error
-        output = {}
-        output['code'] = type(error).__name__
-        output['caused_by'] = error.caused_by
-        output['description'] = str(error)
-        output['details'] = error.details
-        output['trace'] = _get_trace(error)
-        ctx.output = output
+        ctx.output = {
+            'code': type(error).__name__,
+            'caused_by': error.caused_by,
+            'description': str(error),
+            'details': error.details,
+            'trace': _create_trace(traceback_)
+        }
         self.plugins.call_one('create_response', ctx)
         self.plugins.call_all('process_error', ctx)
 
 
-def _get_trace(error):
-    """Returns a trace for the provided exception, in case the current
-    app is running in debug mode.
-    """
+def _create_trace(traceback_):
     ctx = flask._app_ctx_stack.top
     debug = ctx.app.debug if ctx else False
     if not debug:
         return None
-    tb_list = traceback.extract_tb(error.__traceback__)
+    tb_list = traceback.extract_tb(traceback_)
     formatted = traceback.format_list(tb_list)
     stripped = [line.strip() for line in formatted]
     return stripped

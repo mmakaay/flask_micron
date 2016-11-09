@@ -7,7 +7,7 @@ import json
 class Tests(MicronTestCase):
 
     def setUp(self):
-        super().setUp()
+        super(Tests, self).setUp()
 
         @self.micron.method(csrf=False)
         def dummy():
