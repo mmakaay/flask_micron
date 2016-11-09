@@ -1,20 +1,3 @@
-Micron Protocol
-===============
-
-In this document, the Micron request handling protocol is described.
-These are the topics that are discussed:
-
-    - A new CSRF token is generated and sent along in the response
-    - Micron sends the output JSON-serialized to the client
-    - The function performs its magic
-    - The function that is wrapped as a Micron method is called
-    - Clients must provide method input as a JSON-serialized post body
-    - The function that is wrapped as a Micron method takes either one argument
-      or no arguments as input
-    - Clients must provide a valid CSRF token for CSRF-protected methods
-    - Every request must use the HTTP POST method
-
-
 Every request must use the HTTP POST method
 -------------------------------------------
 

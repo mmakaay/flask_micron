@@ -47,6 +47,7 @@ Additional Notes
 .. toctree::
    :maxdepth: 2
 
+   additional/design
    additional/license
    additional/dependencies
    additional/history
