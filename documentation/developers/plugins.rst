@@ -158,47 +158,58 @@ Every hook function in a plugin receives the same input: a
 holds the data that is required by plugins for request handling.
 
 At the start of a request, a context object is created by :class:`MicronMethod
-<flask_micron.micron_method.MicronMethod>`. The context object properties
-``function`` and ``config`` are set. Then, all plugin hook functions
+<flask_micron.micron_method.MicronMethod>`. Then, all plugin hook functions
 are called with this context object as their input. The hook functions are
 responsible for enriching the context data.
 
 When writing a plugin, then keep in mind that the hooks represent a logical
 request handling flow. Consequently, for each hook there is a specific    
 way in which the context data should be used. In the table below, you can
-find the rules for this:                                          
+find the data access rules for all context properties.
 
-+------------------------+-----------+----------+----------+----------+   
-| Hook name              | input     | output   | response | error    |   
-+========================+===========+==========+==========+==========+   
-| **start_request**      |           |          |          |          |   
-+------------------------+-----------+----------+----------+----------+   
-| **check_access**       |           |          |          |          |   
-+------------------------+-----------+----------+----------+----------+   
-| **after_check_access** |           |          |          |          |   
-+------------------------+-----------+----------+----------+----------+   
-| **read_input**         | WRITE     |          |          |          |   
-+------------------------+-----------+----------+----------+----------+   
-| **process_input**      | MODIFY    |          |          |          |   
-+------------------------+-----------+----------+----------+----------+   
-| **call_function**      | READ      | WRITE    |          |          |   
-+------------------------+-----------+----------+----------+----------+   
-| **process_output**     | READ      | MODIFY   |          |          |   
-+------------------------+-----------+----------+----------+----------+   
-| **create_response**    | READ      | READ     | WRITE    |          |   
-+------------------------+-----------+----------+----------+----------+   
-| **process_error**      | READ      | READ     | MODIFY   | READ     |   
-+------------------------+-----------+----------+----------+----------+   
-| **process_response**   | READ      | READ     | MODIFY   | READ     |   
-+------------------------+-----------+----------+----------+----------+   
-| **end_request**        | READ      | READ     | READ     | READ     |   
-+------------------------+-----------+----------+----------+----------+   
-                                                                          
-You might have noticed that the ``error`` property is only marked as READ.
-The reason for this, is that the Flask-Micron code takes care of setting
-that property when an unhandled exception pops up.
+* WRITE: The hook must only store data
+* MODIFY: The hook can read the data and is allowed to modify / replace it
+* READ: The hook must only read the data
 
-                                                            
++--------------------+----------+--------+--------+--------+----------+-------+
+| Hook name          | function | config | input  | output | response | error |
++====================+==========+========+========+========+==========+=======+
+| start_request      | READ     | MODIFY |        |        |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| check_access       | READ     | READ   |        |        |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| after_check_access | READ     | READ   |        |        |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| read_input         | READ     | READ   | WRITE  |        |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| process_input      | READ     | READ   | MODIFY |        |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| call_function      | READ     | READ   | READ   | WRITE  |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| process_output     | READ     | READ   | READ   | MODIFY |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| create_response    | READ     | READ   | READ   | READ   | WRITE    |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| process_error      | READ     | READ   | READ   | READ   | MODIFY   | READ  |
++--------------------+----------+--------+--------+--------+----------+-------+
+| process_response   | READ     | READ   | READ   | READ   | MODIFY   | READ  |
++--------------------+----------+--------+--------+--------+----------+-------+
+| end_request        | READ     | READ   | READ   | READ   | READ     | READ  |
++--------------------+----------+--------+--------+--------+----------+-------+
+ 
+You might have noticed that no WRITE option is defined for the properties
+``function``, ``config`` and ``error``. The reason for this, is that the 
+Flask-Micron core code is responsible for setting these.
+
+Another thing you might have noticed, is that all hooks that have the WRITE
+option correspond to the hooks that were annotated with *[Single]* in the
+:ref:`dev_plugin_hooks` section. This is no coincidence, since these hooks
+are responsible for setting the initial value of the related properties.
+
+When you play by above rules, you are being a good citizen (kudos for that)
+and you can rest assured that your plugin won't run into conflicts with
+other plugins.
+
 .. _dev_plugins_usingplugin:
 
 Using your plugin
