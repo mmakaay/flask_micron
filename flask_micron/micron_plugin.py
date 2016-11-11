@@ -3,60 +3,8 @@
 
 class MicronPlugin(object):
     """The MicronPlugin defines the interface that can be implemented
-    to create a Micron plugin.
-
-    Derived classes can override methods to hook into specific phases of
-    the request handling. This plugin mechanism could for example be used
-    for implementing authentication, authorization, ACL checking and
-    mangling of input and output data, but anything is possible.
-
-    **Duck Typing**
-
-    It is not strictly required to derive from MicronPlugin in order to create
-    a plugin. In the tradition of Python, Duck Typing is allowed, meaning that
-    you can register any object as a plugin, as long as it provides the
-    expected plugin hook functions.
-
-    In fact, Flask-Micron goes even a step further by accepting
-    non-MicronPlugin objects that implement only a subset of the plugin hook
-    functions ("Crippled Duck Typing"?).
-
-    **Available hook functions**
-
-    These are the available hook functions, in the order in which they are
-    called from a :class:`MicronMethod
-    <flask_micron.micron_method.MicronMethod>` object during request
-    processing:
-
-        - start_request(self, ctx)
-        - check_access(self, ctx)
-        - after_check_access(self, ctx)
-        - **read_input(self, ctx)**
-        - process_input(self, ctx)
-        - **call_function(self, ctx)**
-        - process_output(self, ctx)
-        - **create_response(self, ctx)**
-        - process_error(self, ctx)
-        - process_response(self, ctx)
-
-    The **bold** hook functions are special. For these, only the very last
-    registered plugin that implements the hook is called. So when you
-    implement one of those hooks in your plugin, beware that registering
-    the Plugin will replace the original behavior completely.
-
-    **MicronPluginContext**
-
-    Every hook function in a plugin receives the same input object: a
-    :class:`MicronPluginContext
-    <flask_micron.micron_plugin_context.MicronPluginContext>`. This object
-    contains data that is used by plugins during request processing.
-
-    At the start of the request, the context object is empty, but during
-    request handling, the object is enriched with new data, as soon as it
-    comes available.
-
-    For information on what data is available, see the documentation for
-    each individual hook function.
+    to create a Micron plugin. Derived classes can override methods
+    to hook into specific phases of the request handling.
 
     **Plugin behavior configuration**
 

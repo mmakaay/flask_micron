@@ -25,7 +25,8 @@ class Tests(unittest.TestCase):
             'process_output': d['process_output'],
             'create_response': d['create_response'],
             'process_error': d['process_error'],
-            'process_response': d['process_response']
+            'process_response': d['process_response'],
+            'end_request': d['end_request']
         }, PLUGIN_METHODS)
 
     def test_CompileEmptyPlugin(self):

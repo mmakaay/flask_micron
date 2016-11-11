@@ -61,7 +61,7 @@ class Tests(unittest.TestCase):
         config = MicronMethodConfig(dommy='yo')
         ctx = MicronPluginContext()
         ctx.config = config
-        container.call_all('process_output', ctx)
+        container.call_all(ctx, 'process_output')
         self.assertEqual('I made it, yo', ctx.output)
 
     def test_PluginsCanBeDuckTyped(self):
@@ -70,6 +70,6 @@ class Tests(unittest.TestCase):
         config = MicronMethodConfig()
         ctx = MicronPluginContext()
         ctx.config = config
-        container.call_all('process_output', ctx)
-        container.call_all('process_input', ctx)
+        container.call_all(ctx, 'process_output')
+        container.call_all(ctx, 'process_input')
         self.assertEqual('Quack!', ctx.output)

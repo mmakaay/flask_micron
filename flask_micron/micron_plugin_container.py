@@ -35,24 +35,24 @@ class MicronPluginContainer(object):
         for hook, hook_function in hooks.items():
             self._hook_functions.setdefault(hook, []).append(hook_function)
 
-    def call_all(self, hook, context):
+    def call_all(self, context, hook):
         """Call the hook function in all registered plugins.
 
         Args:
-            hook: The name of the hook function to call.
             context: The MicronPluginContext to pass to the plugins.
+            hook: The name of the hook function to call.
         """
         if hook in self._hook_functions:
             for hook_function in self._hook_functions[hook]:
                 hook_function(context)
 
-    def call_one(self, hook, context):
+    def call_one(self, context, hook):
         """Call the hook function in the latest registered plugin
-        that provides the hook function.
+        that implements the hook function.
 
         Args:
-            hook: The name of the hook function to call.
             context: The MicronPluginContext to pass to the plugins.
+            hook: The name of the hook function to call.
         """
         try:
             hook_function = self._hook_functions[hook][-1]

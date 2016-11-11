@@ -34,6 +34,7 @@ Developers Guide
 
    developers/environment
    developers/testing
+   developers/plugins
 
 API Reference
 -------------

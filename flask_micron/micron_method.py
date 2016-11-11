@@ -80,15 +80,16 @@ class MicronMethod(object):
         ctx.config = self.config.flattened
         ctx.function = self.function
         try:
-            self.plugins.call_all('start_request', ctx)
-            self.plugins.call_all('check_access', ctx)
-            self.plugins.call_all('after_check_access', ctx)
-            self.plugins.call_one('read_input', ctx)
-            self.plugins.call_all('process_input', ctx)
-            self.plugins.call_one('call_function', ctx)
-            self.plugins.call_all('process_output', ctx)
-            self.plugins.call_one('create_response', ctx)
-            self.plugins.call_all('process_response', ctx)
+            self.plugins.call_all(ctx, 'start_request')
+            self.plugins.call_all(ctx, 'check_access')
+            self.plugins.call_all(ctx, 'after_check_access')
+            self.plugins.call_one(ctx, 'read_input')
+            self.plugins.call_all(ctx, 'process_input')
+            self.plugins.call_one(ctx, 'call_function')
+            self.plugins.call_all(ctx, 'process_output')
+            self.plugins.call_one(ctx, 'create_response')
+            self.plugins.call_all(ctx, 'process_response')
+            self.plugins.call_all(ctx, 'end_request')
         except MicronError:
             (errcls, error, traceback_) = sys.exc_info()
             self._handle_error(ctx, error, traceback_)
@@ -107,9 +108,10 @@ class MicronMethod(object):
             'details': error.details,
             'trace': _create_trace(traceback_)
         }
-        self.plugins.call_one('create_response', ctx)
-        self.plugins.call_all('process_error', ctx)
-        self.plugins.call_all('process_response', ctx)
+        self.plugins.call_one(ctx, 'create_response')
+        self.plugins.call_all(ctx, 'process_error')
+        self.plugins.call_all(ctx, 'process_response')
+        self.plugins.call_all(ctx, 'end_request')
 
 
 def _create_trace(traceback_):
