@@ -152,24 +152,30 @@ Example: plugin as a module::
 Plugin Context
 --------------
 
-Every hook function in a plugin receives the same input: a
+Every hook function in a plugin is called with the same argument: a
 :class:`MicronPluginContext
-<flask_micron.micron_plugin_context.MicronPluginContext>`. This object
-holds the data that is required by plugins for request handling.
+<flask_micron.micron_plugin_context.MicronPluginContext>` object. This object
+holds the data that are required by plugins for request handling. The following
+properties are availble in the context:
 
-At the start of a request, a context object is created by :class:`MicronMethod
-<flask_micron.micron_method.MicronMethod>`. Then, all plugin hook functions
-are called with this context object as their input. The hook functions are
-responsible for enriching the context data.
+* **function**: The function that is wrapped by the MicronMethod.
+* **config**: The configuration for the MicronMethod, flattened as a dict 
+  (see :ref:`dev_plugins_configurable`)
+* **input**: The input data for the function (the Flask ``request`` translated
+  into a Python data structure).
+* **output**: The return value of the function.
+* **response**: The Flask Response object to return to the caller.
+* **error**: The exception object, in case an unhandled exception is raised
+  from a plugin.
 
-When writing a plugin, then keep in mind that the hooks represent a logical
-request handling flow. Consequently, for each hook there is a specific    
-way in which the context data should be used. In the table below, you can
-find the data access rules for all context properties.
+At the start of a request, a context object is created by the
+:class:`MicronMethod <flask_micron.micron_method.MicronMethod>`. Then, all
+plugin hook functions are called with this context object as their input. The
+hook functions are responsible for enriching the context data.
 
-* WRITE: The hook must only store data
-* MODIFY: The hook can read the data and is allowed to modify / replace it
-* READ: The hook must only read the data
+The hooks represent a logical request handling flow. Consequently, for each
+hook there is a specific way in which the context data should be used. In the
+table below, you can find the data access rules for all context properties.
 
 +--------------------+----------+--------+--------+--------+----------+-------+
 | Hook name          | function | config | input  | output | response | error |
@@ -197,6 +203,10 @@ find the data access rules for all context properties.
 | end_request        | READ     | READ   | READ   | READ   | READ     | READ  |
 +--------------------+----------+--------+--------+--------+----------+-------+
  
+* **WRITE**: The hook must store new data
+* **MODIFY**: The hook can read the data and can modify or replace it
+* **READ**: The hook can read the data
+
 You might have noticed that no WRITE option is defined for the properties
 ``function``, ``config`` and ``error``. The reason for this, is that the 
 Flask-Micron core code is responsible for setting these.
@@ -215,7 +225,7 @@ other plugins.
 Using your plugin
 -----------------
 
-Once you have created a plugin class, you can use it to your Flask-Micron
+Once you have created a plugin class, you can use it with your Flask-Micron
 application by adding it to the :class:`Micron <flask_micron.Micron>` object::
 
     from flask_micron import Micron
@@ -235,3 +245,115 @@ Flask-Micron like this::
 
     micron = Micron(Flask(__name__)
     micron.plugin(plugin_module)
+
+.. _dev_plugins_configurable:
+
+Making your plugin configurable
+-------------------------------
+
+When your plugin can display different kinds of behavior, and you need
+to be able to differentiate this behavior per Micron method, then you can
+make use of the Micron configuration handling.
+
+Configuration can be done at two levels:
+
+1. The Micron object
+2. The @micron.method() decorator
+
+Configuration at the level of the Micron object is used for all functions that
+are decorated using that object. The decorator configuration can be used to
+override the configuration per decorated function. Here's an example::
+
+    app = Flask(__name__)
+    micron = Micron(app, configA='plug', configB='in')
+
+    @micron.method(configA='drive')
+    def hello():
+        return "Hello, world!"
+
+    @micron.method(configC='peep')
+    def bye():
+        return "Bye, world!"
+
+When Micron processes a request, it will flatten the configuration options
+from Micron and the @micron.method decorator into a single dict and pass it to
+plugin hook functions via the context object. For the above example, you would
+see the following configuration data in the plugin context::
+
+    hello()     ctx.config = {
+                    "configA": "drive",
+                    "configB": "in"
+                }
+
+    bye()       ctx.config = {
+                    "configA": "plug",
+                    "configB": "in",
+                    "configC": "peep"
+                }
+
+Here's an example of how you could access these configuration options from
+within a hook function, and fall back to a default value when a configuration
+option is not defined in either Micron or the @micron.method decorator::
+
+	def process_input(self, ctx):
+		ctx.input.things = [
+			ctx.config.get('configA', 'defaultA'),
+			ctx.config.get('configB', 'defaultB'),
+			ctx.config.get('configC', 'defaultC')
+		]
+
+Another way to work with default values, could be to resolve the default
+values in the ``start_request`` hook function, so other hook functions can
+be assured that all configuration values are set::
+
+	def start_request(self, ctx):
+		ctx.config.setdefault('configA', 'defaultA')
+		ctx.config.setdefault('configB', 'defaultB')
+		ctx.config.setdefault('configC', 'defaultC')
+
+	def process_input(self, ctx):
+		ctx.input.things = [
+			ctx.config['configA'],
+			ctx.config['configB'],
+			ctx.config['configC']
+		]
+
+Beware that the configuration space is shared by all plugins. Therefore
+use configuration names that are not likely to collide with other plugins.
+
+**Full example**
+
+Here an example of a (rather useless) MicronPlugin, used for guarding
+access to Micron methods::
+
+	from flask_micron import MicronPlugin
+	from flask_micron.errors import AccessDenied
+
+	class StupidGuard(MicronPlugin):
+
+		def check_access(self, ctx):
+			if ctx.config.get(guard, True):
+				raise AccessDenied("StupidGuard says no")
+
+And to use the plugin in the service code::
+
+	from flask import Flask
+	from flask_micron import Micron
+	from your.package import StupidGuard
+
+	app = Flask(__name__)
+	micron = Micron(app).plugin(StupidGuard())
+
+	@micron.method(guard=True)
+	def guarded():
+		return "I am guarded"
+
+	@micron.method()
+	def guarded_by_default():
+		return "I am guarded by default"
+
+	@micron.method(guard=False)
+	def not_guarded():
+		return "I am not guarded"
+
+
