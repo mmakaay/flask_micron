@@ -1,0 +1,35 @@
+**Full example**
+
+Here an example of a (rather useless) MicronPlugin, used for guarding
+access to Micron methods::
+
+	from flask_micron import MicronPlugin
+	from flask_micron.errors import AccessDenied
+
+	class StupidGuard(MicronPlugin):
+
+		def check_access(self, ctx):
+			if ctx.config.get(guard, True):
+				raise AccessDenied("StupidGuard says no")
+
+And to use the plugin in the service code::
+
+	from flask import Flask
+	from flask_micron import Micron
+	from your.package import StupidGuard
+
+	app = Flask(__name__)
+	micron = Micron(app).plugin(StupidGuard())
+
+	@micron.method(guard=True)
+	def guarded():
+		return "I am guarded"
+
+	@micron.method()
+	def guarded_by_default():
+		return "I am guarded by default"
+
+	@micron.method(guard=False)
+	def not_guarded():
+		return "I am not guarded"
+

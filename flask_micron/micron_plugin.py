@@ -9,47 +9,19 @@ class MicronPlugin(object):
 
     def start_request(self, ctx):
         """A hook, called right at the start of the Micron request processing.
+        This hook can be used to handle plugin initialization, e.g. applying
+        default configuration options.
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : <NOT AVAILABLE>
             ctx.output   : <NOT AVAILABLE>
             ctx.error    : <NOT AVAILABLE>
             ctx.response : <NOT AVAILABLE>
-
-        Example (Crippled Duck Typing style):
-
-            class ClosedDownForMaintenance(MicronServerError):
-                "The service is shut down completely, for maintenance purposes."
-
-            class MaintenanceMode:
-                def start_request(self, ctx):
-                    if (ctx.config.get("maintenance", False))
-                        raise ClosedDownForMaintenance()
-
-            --------
-
-            from flask import Flask
-            from flask_micron import Micron
-            from your.package import ClosedDownForMaintenance
-
-            app = Flask(__name__)
-            micron = Micron(app).plugin(ClosedDownForMaintenance())
-            micron.configure(maintenance=True)
-
-            @micron.method()
-            def in_maintenance_by_default():
-                return "Hello, me!"
-
-            @micron.method(maintenance=True)
-            def explicitly_in_maintenance():
-                return "Hello, you!"
-
-            @micron.method(maintenance=False)
-            def not_in_maintenance():
-                return "Hello, people!"
         """
 
     def check_access(self, ctx):
@@ -64,6 +36,8 @@ class MicronPlugin(object):
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : <NOT AVAILABLE>
@@ -116,6 +90,8 @@ class MicronPlugin(object):
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : <NOT AVAILABLE>
@@ -156,6 +132,8 @@ class MicronPlugin(object):
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : The function input data <- new for this hook
@@ -177,6 +155,8 @@ class MicronPlugin(object):
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : The function input data
@@ -197,6 +177,8 @@ class MicronPlugin(object):
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : The function input data
@@ -219,6 +201,8 @@ class MicronPlugin(object):
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : The function input data
@@ -239,6 +223,8 @@ class MicronPlugin(object):
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : The function input data (possibly empty)
@@ -275,11 +261,13 @@ class MicronPlugin(object):
 
         Args:
             ctx: The MicronPluginContext, describing the current request.
+
+        Context:
             ctx.function : The function that is wrapped as Micron method
             ctx.config   : The MicronMethodConfig, flattened as a dict
             ctx.input    : The function input data
             ctx.output   : The function output data
-            ctx.error    : <NOT AVAILABLE>
+            ctx.error    : The exception that was raised if any, otherwise None
             ctx.response : The Flask response object <- new for this hook
 
         Example:
@@ -290,4 +278,20 @@ class MicronPlugin(object):
 
                 def process_response(self, ctx):
                     ctx.response.content_type = 'text/html'
+        """
+
+    def end_request(self, ctx):
+        """A hook, called at the very end of the Micron request processing.
+        This hook can be used to handle plugin teardown.
+
+        Args:
+            ctx: The MicronPluginContext, describing the current request.
+
+        Context:
+            ctx.function : The function that is wrapped as Micron method
+            ctx.config   : The MicronMethodConfig, flattened as a dict
+            ctx.input    : The function input data
+            ctx.output   : The function output data
+            ctx.error    : The exception that was raised if any, otherwise None
+            ctx.response : The Flask response object
         """

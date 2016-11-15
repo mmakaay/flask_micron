@@ -69,40 +69,6 @@ class MicronMethodConfig(object):
             self.set(name, value)
         return self
 
-    @property
-    def csrf(self):
-        """Whether or not to execute the CSRF token check (i.e. a check
-        to see if a valid CSRF token is provided by the caller).
-        """
-        return self.get('csrf')
-
-    @csrf.setter
-    def csrf(self, value):
-        self.set('csrf', value)
-
-    @property
-    def auth(self):
-        """Whether or not an active authentication session is required
-        for accessing the method. When role is used, then auth is implied
-        to be True.
-        """
-        return self.get('auth')
-
-    @auth.setter
-    def auth(self, value):
-        self.set('auth', value)
-
-    @property
-    def role(self):
-        """Either None or the name of the authentication role that is required
-        for accessing the method.
-        """
-        return self.get('role')
-
-    @role.setter
-    def role(self, value):
-        self.set('role', value)
-
     def __getattr__(self, name):
         """For making config options available as instance attributes
         of the config object.

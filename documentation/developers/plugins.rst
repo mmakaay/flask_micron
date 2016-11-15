@@ -7,12 +7,7 @@ Flask-Micron is in its core a plugin system. Plugins can be used
 to add extra features to the request handling. The built-in request
 handling is fully implemented using plugins as well.
 
-This section explains the plugin system. We will start by explaining
-the :ref:`hooks <dev_plugins_hooks>` (extension points) that are available
-in Flask-Micron, followed by information about writing actual
-:ref:`plugins <dev_plugins_plugin>` and the use of the
-:ref:`plugin context <dev_plugins_context>` for passing
-data between Flask-Micron and its plugins.
+This section explains the plugin system.
 
 .. _dev_plugins_hooks:
 
@@ -131,7 +126,7 @@ implement only a subset of the plugin hook functions ("Crippled Duck Typing"?)
 
 Example: plugin as a basic object::
 
-    from flask_micron import AccessDenied
+    from flask_micron.errors import AccessDenied
 
     class MyFirstPlugin(object):
     
@@ -141,7 +136,7 @@ Example: plugin as a basic object::
 
 Example: plugin as a module::
 
-    from flask_micron import AccessDenied
+    from flask_micron.errors import AccessDenied
 
     def check_access(self, ctx):
         if request.remote_addr != '127.0.0.1':
@@ -164,7 +159,7 @@ properties are availble in the context:
 * **input**: The input data for the function (the Flask ``request`` translated
   into a Python data structure).
 * **output**: The return value of the function.
-* **response**: The Flask Response object to return to the caller.
+* **response**: The Flask ``Response`` object to return to the caller.
 * **error**: The exception object, in case an unhandled exception is raised
   from a plugin.
 
@@ -228,8 +223,8 @@ Using your plugin
 Once you have created a plugin class, you can use it with your Flask-Micron
 application by adding it to the :class:`Micron <flask_micron.Micron>` object::
 
-    from flask_micron import Micron
     from flask import Flask
+    from flask_micron import Micron
     from your_plugin_module import MyFirstPlugin
 
     micron = Micron(Flask(__name__)
@@ -239,8 +234,8 @@ In you you created a module-based plugin (let's say in the file
 ``your_package/plugin_module.py``, you would register it with
 Flask-Micron like this::
 
-    from flask_micron import Micron
     from flask import Flask
+    from flask_micron import Micron
     from your_package import plugin_module
 
     micron = Micron(Flask(__name__)
@@ -248,8 +243,8 @@ Flask-Micron like this::
 
 .. _dev_plugins_configurable:
 
-Making your plugin configurable
--------------------------------
+Making plugin behavior configurable
+-----------------------------------
 
 When your plugin can display different kinds of behavior, and you need
 to be able to differentiate this behavior per Micron method, then you can
@@ -260,9 +255,10 @@ Configuration can be done at two levels:
 1. The Micron object
 2. The @micron.method() decorator
 
-Configuration at the level of the Micron object is used for all functions that
-are decorated using that object. The decorator configuration can be used to
-override the configuration per decorated function. Here's an example::
+Configuration at the level of the Micron object is used for all functions
+that are decorated using that object. The ``@micron.method()`` decorator
+configuration can be used to override the configuration per decorated
+function. Here's an example::
 
     app = Flask(__name__)
     micron = Micron(app, configA='plug', configB='in')
@@ -321,39 +317,45 @@ be assured that all configuration values are set::
 Beware that the configuration space is shared by all plugins. Therefore
 use configuration names that are not likely to collide with other plugins.
 
-**Full example**
+.. _dev_plugins_globalconfiguration:
 
-Here an example of a (rather useless) MicronPlugin, used for guarding
-access to Micron methods::
+Global plugin configuration
+---------------------------
 
-	from flask_micron import MicronPlugin
-	from flask_micron.errors import AccessDenied
+When your plugin requires some global configuration, for example the
+connection details for a database connection, then don't implement this
+using the configuration system as described above. This system is primarily
+designed for configuration options that might differ per method.
 
-	class StupidGuard(MicronPlugin):
+Example of a clean implementation::
 
-		def check_access(self, ctx):
-			if ctx.config.get(guard, True):
-				raise AccessDenied("StupidGuard says no")
+    flask = new Flask(__name__)
+    micron = Micron(flask)
+    my_plugin = MyPlugin("my_plugin.conf")
+    micron.plugin(plugin)
 
-And to use the plugin in the service code::
+    @micron.method(my_option=42)
+    def give_me_one():
+        return 1
 
-	from flask import Flask
-	from flask_micron import Micron
-	from your.package import StupidGuard
+In this example, the fictional MyPlugin loads its global configuration from
+the file ``my_plugin.conf``, while the ``my_option`` parameter is used for
+tweaking the plugin behavior at the Micron method level.
 
-	app = Flask(__name__)
-	micron = Micron(app).plugin(StupidGuard())
+This style is highly preferred above a style where global configuration data
+is put in the Micron method configuration::
 
-	@micron.method(guard=True)
-	def guarded():
-		return "I am guarded"
+    flask = new Flask(__name__)
+    micron = Micron(flask,
+        my_plugin_dbhost="127.0.0.1",
+        my_plugin_dbuser="myuser",
+        my_plugin_dbpass="mypass")
+    my_plugin = MyPlugin()
+    micron.plugin(my_plugin)
 
-	@micron.method()
-	def guarded_by_default():
-		return "I am guarded by default"
+    @micron.method(my_option=42)
+    def give_me_one():
+        return 1
 
-	@micron.method(guard=False)
-	def not_guarded():
-		return "I am not guarded"
-
-
+This style of coding would technically work, but it mixes global
+configuration with Micron method configuration.
