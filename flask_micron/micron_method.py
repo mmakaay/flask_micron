@@ -76,6 +76,7 @@ class MicronMethod(object):
         Returns:
             The Flask Response object to return to the client.
         """
+        _enable_cookies_for_js_clients()
         ctx = MicronPluginContext()
         ctx.config = self.config.flattened
         ctx.function = self.function
@@ -91,10 +92,10 @@ class MicronMethod(object):
             self.plugins.call_all(ctx, 'process_response')
             self.plugins.call_all(ctx, 'end_request')
         except MicronError:
-            (errcls, error, traceback_) = sys.exc_info()
+            (_, error, traceback_) = sys.exc_info()
             self._handle_error(ctx, error, traceback_)
         except Exception:
-            (errcls, error, traceback_) = sys.exc_info()
+            (_, error, traceback_) = sys.exc_info()
             self._handle_error(ctx, UnhandledException(error), traceback_)
 
         return ctx.response
@@ -112,6 +113,10 @@ class MicronMethod(object):
         self.plugins.call_all(ctx, 'process_error')
         self.plugins.call_all(ctx, 'process_response')
         self.plugins.call_all(ctx, 'end_request')
+
+
+def _enable_cookies_for_js_clients():
+    flask.current_app.config['SESSION_COOKIE_HTTPONLY'] = False
 
 
 def _create_trace(traceback_):

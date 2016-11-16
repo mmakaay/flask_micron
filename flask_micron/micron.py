@@ -5,6 +5,7 @@
 from flask_micron.errors import ImplementationError
 from flask_micron.micron_method import MicronMethod
 from flask_micron.micron_plugin_container import MicronPluginContainer
+from flask_micron.micron_plugin_context import MicronPluginContext
 from flask_micron.micron_method_config import MicronMethodConfig
 from flask_micron.plugins import csrf
 from flask_micron.plugins import json_input
@@ -76,9 +77,18 @@ class Micron(object):
         self._add_ping_method()
 
     def _add_ping_method(self):
-        @self.method('/ping', csrf=False)
+        """The ping method is provided as a standard means for clients to
+        bootstrap the CSRF protection schema. In this implementation, as
+        little as possible is done to provide the client with a fresh
+        CSRF token when POSTing to /ping.
+        """
+        @self.app.route('/ping', methods=['POST'])
         def _ping():
-            return 'pong'
+            ctx = MicronPluginContext()
+            ctx.output = 'pong'
+            self.plugins.call_one(ctx, 'create_response')
+            csrf.Plugin().process_response(ctx)
+            return ctx.response
 
     def plugin(self, plugin):
         """Adds a :class:`MicronPlugin <flask_micron.MicronPlugin>` to this
@@ -99,7 +109,7 @@ class Micron(object):
 
             app = Flask(__name__)
             micron = Micron(app)
-            
+
             my_plugin = my_stuff.Plugin()
             micron.plugin(my_plugin)
         """

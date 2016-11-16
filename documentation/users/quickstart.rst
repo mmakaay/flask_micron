@@ -302,8 +302,8 @@ will result in::
     {
       "caused_by": "server",
       "code": "UnhandledException",
-      "description": "During execution of a Micron method, an exception was
-                      raised that was not handled by the service.",
+      "description": "During execution of a Micron method, an exception " + \
+                     "was raised that was not handled by the service.",
       "details": {
         "error_message": "I don't like it",
         "error_type": "ValueError"

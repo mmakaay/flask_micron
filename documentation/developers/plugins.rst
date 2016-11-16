@@ -138,7 +138,7 @@ Example: plugin as a module::
 
     from flask_micron.errors import AccessDenied
 
-    def check_access(self, ctx):
+    def check_access(ctx):
         if request.remote_addr != '127.0.0.1':
             raise AccessDenied("Please go home and try again")
 
@@ -203,7 +203,7 @@ table below, you can find the data access rules for all context properties.
 * **READ**: The hook can read the data
 
 You might have noticed that no WRITE option is defined for the properties
-``function``, ``config`` and ``error``. The reason for this, is that the 
+**function**, **config** and **error**. The reason for this, is that the 
 Flask-Micron core code is responsible for setting these.
 
 Another thing you might have noticed, is that all hooks that have the WRITE
@@ -324,7 +324,7 @@ Global plugin configuration
 
 When your plugin requires some global configuration, for example the
 connection details for a database connection, then don't implement this
-using the configuration system as described above. This system is primarily
+using the configuration system as described above. That system is primarily
 designed for configuration options that might differ per method.
 
 Example of a clean implementation::
@@ -358,4 +358,87 @@ is put in the Micron method configuration::
         return 1
 
 This style of coding would technically work, but it mixes global
-configuration with Micron method configuration.
+configuration with Micron method configuration. One of the biggest
+problems that I see with this style, is that environment configuration
+is highly coupled with the code. Moving code between environments
+becomes hard this way.
+
+This might be a good cue for pointing you at "The 12-Factor App".
+This is a resource that should be read by *"Any developer building
+applications which run as a service."* That's you! In regards to
+this section, the section on configuration management is especially
+interesting:
+
+https://12factor.net/config
+
+Sharing data between hook functions
+-----------------------------------
+
+To share request data from one hook function to another, beware not to
+use global variables or properties on your plugin object. This would
+break in the most horrible ways in threaded environments! 
+
+Instead, you can make use of ``flask.g``, a standard Flask construct
+for storing data for a single request, fully prepared for multi-threading.
+For information on this, take a look at the Flask documentation:
+
+http://flask.pocoo.org/docs/api/#application-globals
+
+Here's an example of how you would use ``flask.g`` in your plugin::
+
+    from flask import g, request
+    from flask_micron import MicronPlugin
+    from timeit import default_timer as timer
+    
+    class RequestTimer(MicronPlugin):
+
+        def start_request(self, ctx):
+            g.start_time = timer() 
+
+        def process_response(self, ctx):
+            end_time = timer()
+            diff = round((end_time - g.start_time) * 1000, 2)
+            diff_str = "%s ms" % diff
+            ctx.response.headers['X-Micron-RequestTimer'] = diff_str
+
+This plugin records the start time for the request in ``flask.g.start_time``.
+By the time that a response has been cooked up, the plugin uses the recorded
+start time to determine how long request processing took. This time is
+then added to the response headers. Below, (part of) the response headers
+for a request that uses the above plugin:: 
+
+    HTTP/1.0 200 OK
+    Content-Type: application/json
+    X-Micron-CSRF-Token: 90dfd8d6-31e6-47f2-a153-ea68b866a6a5
+    X-Micron-RequestTimer: 1.36 ms
+    Server: Werkzeug/0.11.11 Python/3.5.2
+
+Self-Shunt: Quick 'n Dirty Pluggin'
+-----------------------------------
+
+Let's say that you are writing a simple single file web service using
+Flask-Micron and feel the need for some plugin features, without feeling
+the love for having to create a full fledged plugin. In this case, you
+might like the following pattern::
+
+    from flask import Flask
+    from flask_micron import Micron
+    from time import time
+
+    def process_response(ctx):
+       ctx.response.headers['X-Micron-I-Was'] = "here!" 
+
+    micron = Micron(Flask(__name__).plugin(globals())
+
+    @micron.method()
+    def get_epoch():
+        return round(time())
+
+Note that it is important that ``plugin(globals())`` is called *after*
+defining the required hook function(s).
+        
+.. note::
+    I call the pattern "Self-Shunt", because of its similarities with the
+    unit testing Self-Shunt pattern. In unit testing it means that you
+    write a test class, which injects itself as a dependency in the
+    tested code.

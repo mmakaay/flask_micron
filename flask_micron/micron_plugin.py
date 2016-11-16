@@ -1,3 +1,5 @@
+# pylint: disable=too-many-public-methods
+
 """This module provides the MicronPlugin class."""
 
 
