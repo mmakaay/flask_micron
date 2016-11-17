@@ -38,7 +38,7 @@ class Plugin(MicronPlugin):
             ...
             ...
     """
-    def process_input(self, ctx):
+    def normalize_input(self, ctx):
         """Normalizes input data.
 
         Args:

@@ -46,8 +46,9 @@ During the lifetime of a single request, the following hooks are triggered
 |                        | default Flask-Micron plugin deserializes    |
 | *[Single]*             | the JSON payload from a POST request.       |
 +------------------------+---------------------------------------------+
-| **process_input**      | Post-process the input data (typical use:   |
-|                        | data checking and normalization)            |
+| **normalize_input**    | Post-process the input data.                |
++------------------------+---------------------------------------------+
+| **validate_input**     | Check for valid input data.                 |
 +------------------------+---------------------------------------------+
 | **call_function**      | Call the function that is wrapped as a      |
 |                        | Micron method, feeding it the input data,   |
@@ -183,7 +184,9 @@ table below, you can find the data access rules for all context properties.
 +--------------------+----------+--------+--------+--------+----------+-------+
 | read_input         | READ     | READ   | WRITE  |        |          |       |
 +--------------------+----------+--------+--------+--------+----------+-------+
-| process_input      | READ     | READ   | MODIFY |        |          |       |
+| normalize_input    | READ     | READ   | MODIFY |        |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
+| validate_input     | READ     | READ   | READ   |        |          |       |
 +--------------------+----------+--------+--------+--------+----------+-------+
 | call_function      | READ     | READ   | READ   | WRITE  |          |       |
 +--------------------+----------+--------+--------+--------+----------+-------+
@@ -291,7 +294,7 @@ Here's an example of how you could access these configuration options from
 within a hook function, and fall back to a default value when a configuration
 option is not defined in either Micron or the @micron.method decorator::
 
-	def process_input(self, ctx):
+	def normalize_input(self, ctx):
 		ctx.input.things = [
 			ctx.config.get('configA', 'defaultA'),
 			ctx.config.get('configB', 'defaultB'),
@@ -307,7 +310,7 @@ be assured that all configuration values are set::
 		ctx.config.setdefault('configB', 'defaultB')
 		ctx.config.setdefault('configC', 'defaultC')
 
-	def process_input(self, ctx):
+	def normalize_input(self, ctx):
 		ctx.input.things = [
 			ctx.config['configA'],
 			ctx.config['configB'],

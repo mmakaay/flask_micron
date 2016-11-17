@@ -6,8 +6,8 @@ from functools import update_wrapper
 import flask
 from flask_micron.errors import MicronError
 from flask_micron.errors import UnhandledException
-from flask_micron.micron_method_config import MicronMethodConfig
 from flask_micron.micron_plugin_context import MicronPluginContext
+from flask_micron.micron_method_config import MicronMethodConfig
 
 
 class MicronMethod(object):
@@ -85,7 +85,8 @@ class MicronMethod(object):
             self.plugins.call_all(ctx, 'check_access')
             self.plugins.call_all(ctx, 'after_check_access')
             self.plugins.call_one(ctx, 'read_input')
-            self.plugins.call_all(ctx, 'process_input')
+            self.plugins.call_all(ctx, 'normalize_input')
+            self.plugins.call_all(ctx, 'validate_input')
             self.plugins.call_one(ctx, 'call_function')
             self.plugins.call_all(ctx, 'process_output')
             self.plugins.call_one(ctx, 'create_response')

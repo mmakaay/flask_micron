@@ -7,6 +7,9 @@ class MicronPlugin(object):
     """The MicronPlugin defines the interface that can be implemented
     to create a Micron plugin. Derived classes can override methods
     to hook into specific phases of the request handling.
+
+    For a detailed explanation on how to create Flask-Micron plugins,
+    take a look at the :ref:`developer plugin documentation <dev_plugins>`.
     """
 
     def start_request(self, ctx):
@@ -14,16 +17,51 @@ class MicronPlugin(object):
         This hook can be used to handle plugin initialization, e.g. applying
         default configuration options.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
 
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : <NOT AVAILABLE>
-            ctx.output   : <NOT AVAILABLE>
-            ctx.error    : <NOT AVAILABLE>
-            ctx.response : <NOT AVAILABLE>
+        Example plugin::
+
+            from datetime import datetime
+            from flask_micron import MicronPlugin
+
+            class AddLocalTimeHeader(MicronPlugin):
+
+                def start_request(self, ctx):
+                    ctx.config.setdefault('add_local_time_header', True)
+
+                def process_response(self, ctx):
+                    if ctx.config['add_local_time_header']:
+                        local_time = datetime.now().isoformat()
+                        ctx.response.headers['X-LocalTime'] = local_time
+
+        Example use::
+
+            from flask import Flask
+            from flask_micron import Micron
+            from your.package import AddLocalTimeHeader
+
+            app = Flask(__name__)
+            micron = Micron(app.plugin(AddLocalTimeHeader())
+
+            @micron.method()
+            def i_expose_local_time():
+                return "Time teller"
+
+            @micron.method(add_local_time_header = False)
+            def i_do_not_expose_local_time():
+                return "Time hider"
         """
 
     def check_access(self, ctx):
@@ -36,18 +74,21 @@ class MicronPlugin(object):
         types (e.g. AccessDenied and AuthenticationRequired), but when
         no suitable error type is available, you can create your own.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
 
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : <NOT AVAILABLE>
-            ctx.output   : <NOT AVAILABLE>
-            ctx.error    : <NOT AVAILABLE>
-            ctx.response : <NOT AVAILABLE>
-
-        Example:
+        Example plugin::
 
             from datetime import date
             from flask_micron import MicronPlugin
@@ -63,7 +104,7 @@ class MicronPlugin(object):
                     if date.weekday(date.today()) == deny_day:
                         raise NoServiceToday("Closed when day=%d" % deny_day)
 
-            --------
+        Example use::
 
             from flask import Flask
             from flask_micron import Micron
@@ -90,16 +131,19 @@ class MicronPlugin(object):
         every authenticated request (even when later on an error is
         returned).
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
-
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : <NOT AVAILABLE>
-            ctx.output   : <NOT AVAILABLE>
-            ctx.error    : <NOT AVAILABLE>
-            ctx.response : <NOT AVAILABLE>
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
         """
 
     def read_input(self, ctx):
@@ -112,18 +156,23 @@ class MicronPlugin(object):
         call this hook for the last plugin that was registered that implements
         this hook.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : <NOT AVAILABLE> <- set by this hook
-            ctx.output   : <NOT AVAILABLE>
-            ctx.error    : <NOT AVAILABLE>
-            ctx.response : <NOT AVAILABLE>
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | <MUST BE SET BY THIS HOOK>                        |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
         """
 
-    def process_input(self, ctx):
-        """A hook to modify the function input data.
+    def normalize_input(self, ctx):
+        """A hook to normalize the function input data.
 
         Called after reading the data from the request and deserializing
         it into input data for the function.
@@ -132,16 +181,43 @@ class MicronPlugin(object):
         A plugin is allowed to modify the data or store new data in the
         'ctx.input' property.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | The function input data (modifiable)              |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        """
 
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : The function input data <- new for this hook
-            ctx.output   : <NOT AVAILABLE>
-            ctx.error    : <NOT AVAILABLE>
-            ctx.response : <NOT AVAILABLE>
+    def validate_input(self, ctx):
+        """A hook to validate the function input data.
+
+        Called after the ``normalize_input`` hook, which takes care of
+        normalizing the input data that is read from a request.
+
+        The normalized input data will be available in 'ctx.input' at this
+        point. A plugin is not supposed to modify the data.
+
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | The function input data                           |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
         """
 
     def call_function(self, ctx):
@@ -155,41 +231,42 @@ class MicronPlugin(object):
         call this hook for the last plugin that was registered that implements
         this hook.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
-
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : The function input data
-            ctx.output   : <NOT AVAILABLE> <- set by this hook
-            ctx.error    : <NOT AVAILABLE>
-            ctx.response : <NOT AVAILABLE>
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | The function input data                           |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | <MUST BE SET BY THIS HOOK>                        |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
         """
 
     def process_output(self, ctx):
-        """A hook to modify the request output data.
+        """A hook to post-process the output data.
 
-        Called after executing the function that is wrapped as a Micron method
-        and serializing its output data into a JSON response.
+        Called after executing the function that is wrapped as a Micron
+        method. The return value from the function will be available in
+        'ctx.output' at this point. A plugin is allowed to modify the data
+        or store new data in the 'ctx.output' property.
 
-        The return value from the function will be available in 'ctx.output'
-        at this point. A plugin is allowed to modify the data or store new
-        data in the 'ctx.output' property.
-
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
-
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : The function input data
-            ctx.output   : The function output data <- new for this hook
-            ctx.error    : <NOT AVAILABLE>
-            ctx.response : <NOT AVAILABLE>
-
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | The function input data                           |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | The function output data (modifiable)             |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <NOT AVAILABLE>                                   |
+        +--------------+---------------------------------------------------+
         """
 
     def create_response(self, ctx):
@@ -201,16 +278,21 @@ class MicronPlugin(object):
         call this hook for the last plugin that was registered that implements
         this hook.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
-
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : The function input data
-            ctx.output   : The function output data (possibly empty)
-            ctx.error    : The exception that was raised if any, otherwise None
-            ctx.response : <NOT AVAILABLE> <- set by this hook
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | The function input data                           |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | The function output data (possibly empty in case  |
+        |              | an exception was raised during the request)       |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | The exception that was raised or None if no       |
+        |              | exception was raised during the request           |
+        +--------------+---------------------------------------------------+
+        | ctx.response | <MUST BE SET BY THIS HOOK>                        |
+        +--------------+---------------------------------------------------+
         """
 
     def process_error(self, ctx):
@@ -223,18 +305,22 @@ class MicronPlugin(object):
         at this point. A plugin is allowed to modify the response or store
         a completely new response in the 'ctx.response' property.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | The function input data                           |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | The function output data (possibly empty in case  |
+        |              | an exception was raised during the request)       |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | The exception that was raised                     |
+        +--------------+---------------------------------------------------+
+        | ctx.response | The Flask Response object                         |
+        +--------------+---------------------------------------------------+
 
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : The function input data (possibly empty)
-            ctx.output   : The function output data (possibly empty)
-            ctx.error    : The exception that was raised
-            ctx.response : The Flask response object <- new for this hook
-
-        Example:
+        Example::
 
             from flask import Response
             from flask_micron import MicronPlugin
@@ -261,39 +347,48 @@ class MicronPlugin(object):
         or store a completely new Response object in the 'ctx.response'
         property.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | The function input data                           |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | The function output data                          |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | The exception that was raised or None if no       |
+        |              | exception was raised during the request           |
+        +--------------+---------------------------------------------------+
+        | ctx.response | The Flask Response object                         |
+        +--------------+---------------------------------------------------+
 
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : The function input data
-            ctx.output   : The function output data
-            ctx.error    : The exception that was raised if any, otherwise None
-            ctx.response : The Flask response object <- new for this hook
-
-        Example:
+        Example::
 
             from flask_micron import MicronPlugin
 
             class ForceContextTypeTextPlain(MicronPlugin):
 
                 def process_response(self, ctx):
-                    ctx.response.content_type = 'text/html'
+                    ctx.response.content_type = 'text/plain'
         """
 
     def end_request(self, ctx):
         """A hook, called at the very end of the Micron request processing.
         This hook can be used to handle plugin teardown.
 
-        Args:
-            ctx: The MicronPluginContext, describing the current request.
-
-        Context:
-            ctx.function : The function that is wrapped as Micron method
-            ctx.config   : The MicronMethodConfig, flattened as a dict
-            ctx.input    : The function input data
-            ctx.output   : The function output data
-            ctx.error    : The exception that was raised if any, otherwise None
-            ctx.response : The Flask response object
+        +--------------+---------------------------------------------------+
+        | ctx.function | The function that is wrapped as Micron method     |
+        +--------------+---------------------------------------------------+
+        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        +--------------+---------------------------------------------------+
+        | ctx.input    | The function input data                           |
+        +--------------+---------------------------------------------------+
+        | ctx.output   | The function output data (possibly empty in case  |
+        |              | an exception was raised during the request)       |
+        +--------------+---------------------------------------------------+
+        | ctx.error    | The exception that was raised or None if no       |
+        |              | exception was raised during the request           |
+        +--------------+---------------------------------------------------+
+        | ctx.response | The Flask Response object                         |
+        +--------------+---------------------------------------------------+
         """

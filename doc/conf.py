@@ -354,3 +354,5 @@ texinfo_documents = [
 rst_prolog = open('global.rst.inc', 'r').read()
 
 autoclass_content = 'both'
+
+autodoc_member_order = 'bysource'

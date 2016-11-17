@@ -5,12 +5,16 @@ Public API
 
 This section contains the low-level API documentation for Flask-Micron.
 
+.. _api_micron:
+
 Micron
 ------
 
 .. module:: flask_micron
 .. autoclass:: Micron
     :members:
+
+.. _api_micronplugin:
 
 MicronPlugin
 ------------
@@ -19,12 +23,16 @@ MicronPlugin
 .. autoclass:: MicronPlugin
     :members:
 
+.. _api_micronplugincontext:
+
 MicronPluginContext
 -------------------
 
 .. module:: flask_micron.micron_plugin_context
 .. autoclass:: MicronPluginContext
     :members:
+
+.. _api_errors:
 
 Errors
 ------
@@ -35,8 +43,12 @@ Errors
 .. autoclass:: MicronClientError
     :members:
 
+.. _api_internal:
+
 Internal Components
 ===================
+
+.. _api_micronmethod:
 
 MicronMethod
 ------------
@@ -45,12 +57,16 @@ MicronMethod
 .. autoclass:: MicronMethod
     :members:
 
+.. _api_micronmethodconfig:
+
 MicronMethodConfig
 ------------------
 
 .. module:: flask_micron.micron_method_config
 .. autoclass:: MicronMethodConfig
     :members:
+
+.. _api_micronplugincontainer:
 
 MicronPluginContainer
 ---------------------
@@ -59,6 +75,8 @@ MicronPluginContainer
 .. autoclass:: MicronPluginContainer
     :members:
 
+.. _api_micronplugincompiler:
+
 MicronPluginCompiler
 --------------------
 
@@ -66,12 +84,4 @@ MicronPluginCompiler
 .. autoclass:: MicronPluginCompiler
     :members:
 
-Bundled Plugins
-===============
-
-CSRF Protection Plugin
-----------------------
-
-.. module:: flask_micron.plugins.csrf
-.. autoclass:: Plugin
-    :members:
+.. _api_bundled_plugins:

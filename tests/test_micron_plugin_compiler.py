@@ -20,7 +20,8 @@ class Tests(unittest.TestCase):
             'check_access': d['check_access'],
             'after_check_access': d['after_check_access'],
             'read_input': d['read_input'],
-            'process_input': d['process_input'],
+            'normalize_input': d['normalize_input'],
+            'validate_input': d['validate_input'],
             'call_function': d['call_function'],
             'process_output': d['process_output'],
             'create_response': d['create_response'],
@@ -52,7 +53,7 @@ class Tests(unittest.TestCase):
     def test_CompileDerivedPlugin(self):
 
         class DerivedPlugin(MicronPlugin):
-            def process_input(self, ctx):
+            def normalize_input(self, ctx):
                 ctx.input = "DerivedPlugin input %s" % ctx.config.option1
             def process_output(self, ctx):
                 ctx.output = "%s %s" % (ctx.config.option1, ctx.config.option2)
@@ -61,7 +62,7 @@ class Tests(unittest.TestCase):
 
         # Check for extraction of the correct hook functions.
         self.assertEqual(
-            {'process_input', 'process_output'},
+            {'normalize_input', 'process_output'},
             set(hooks.keys()))
 
         # Check if the compiled hook functions can be called.
@@ -69,7 +70,7 @@ class Tests(unittest.TestCase):
         ctx = MicronPluginContext()
         ctx.config = config
         ctx.input = 'orig input'
-        hooks['process_input'](ctx)
+        hooks['normalize_input'](ctx)
         self.assertEqual('DerivedPlugin input value1', ctx.input)
         self.assertEqual(None, ctx.output)
         hooks['process_output'](ctx)
@@ -78,20 +79,20 @@ class Tests(unittest.TestCase):
 
     def test_CompileDuckTypedPlugin(self):
         class DuckTypedPlugin(object):
-            def process_input(self, ctx):
+            def normalize_input(self, ctx):
                 duck = ctx.config.duck
                 ctx.input = "DuckTypedPlugin input %s" % duck
 
         hooks = MicronPluginCompiler().compile(DuckTypedPlugin())
 
         # Check for extraction of the correct hook functions.
-        self.assertEqual({'process_input'}, set(hooks.keys()))
+        self.assertEqual({'normalize_input'}, set(hooks.keys()))
 
         # Check if the compiled hook functions can be called.
         config = MicronMethodConfig(duck='Dagobert')
         ctx = MicronPluginContext()
         ctx.config = config
-        hooks['process_input'](ctx)
+        hooks['normalize_input'](ctx)
         self.assertEqual('DuckTypedPlugin input Dagobert', ctx.input)
 
     def test_CompileConstructedPlugin(self):
@@ -139,12 +140,12 @@ class Tests(unittest.TestCase):
 
         # Check for extraction of the correct hook functions.
         self.assertEqual(
-            {'process_input', 'process_output'},
+            {'normalize_input', 'process_output'},
             set(hooks.keys()))
 
         # Check if the compiled hook functions can be called.
         ctx = MicronPluginContext()
-        hooks['process_input'](ctx)
+        hooks['normalize_input'](ctx)
         hooks['process_output'](ctx)
         self.assertEqual(256, ctx.output)
 
@@ -152,7 +153,7 @@ class Tests(unittest.TestCase):
 # These functions after used to make this module work as a Micron plugin.
 # The test_ModulePlugin() makes use of it.
 
-def process_input(ctx):
+def normalize_input(ctx):
     ctx.input = 16
 
 def process_output(ctx):

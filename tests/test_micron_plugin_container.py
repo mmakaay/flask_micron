@@ -70,6 +70,6 @@ class Tests(unittest.TestCase):
         config = MicronMethodConfig()
         ctx = MicronPluginContext()
         ctx.config = config
+        container.call_all(ctx, 'normalize_input')
         container.call_all(ctx, 'process_output')
-        container.call_all(ctx, 'process_input')
         self.assertEqual('Quack!', ctx.output)
