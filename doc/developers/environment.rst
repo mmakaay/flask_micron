@@ -146,7 +146,7 @@ For managing Vim plugins, I make use of Vundle:
 
 https://github.com/VundleVim/Vundle.vim
 
-The NRDTree plugin can be used to browse a directory tree within Vim.
+The NERDTree plugin can be used to browse a directory tree within Vim.
 
 https://github.com/scrooloose/nerdtree
 

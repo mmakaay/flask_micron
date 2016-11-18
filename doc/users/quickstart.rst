@@ -308,7 +308,7 @@ will result in::
         "error_message": "I don't like it",
         "error_type": "ValueError"
       },
-      "trace": []
+      "trace": [...]
     }
 
 .. _user_configure-behavior:
@@ -339,19 +339,20 @@ is normalized to::
         "token": None
     }
 
-Sometimes you might require different behavior. No worries! All processing
-features in Flask-Micron are written as plugins and these plugins can be
-written in a configurable manner. The normalization plugin provides the
-following configuration options:
+Sometimes you might require different behavior. No worries! All request
+processing features in Flask-Micron are written as plugins and these
+support :ref:`configuration <dev_plugins_configurable>`. The plugin
+that takes care of normalization provides the following configuration
+options:
 
-normalize: True (default) or False
+normalize = True (default) or False
   Whether or not to apply normalization at all.
 
-strip_strings: True (default) or False
+strip_strings = True (default) or False
   Whether or not leading and trailing whitespace must be stripped from
   string fields in the input data.
 
-make_empty_strings_none: True (default) or False
+make_empty_strings_none = True (default) or False
   Whether or not string fields that contain an empty string must be
   normalized to None.
 
@@ -462,7 +463,7 @@ CSRF token using the `Requests`_ Python library::
     r = s.post('http://localhost:5000/ping')
     csrf_token = r.headers['X-Micron-CSRF-Token']
 
-    # POST to /hello_world, including the CSRF token in the request headers.
+    # POST to /hello_world, including the CSRF token in the headers.
     headers = {'X-Micron-CSRF-Token': csrf_token}
     r = s.post('http://localhost:5000/hello_world', headers=headers)
 
