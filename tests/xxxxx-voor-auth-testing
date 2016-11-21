@@ -17,11 +17,11 @@
         (response, data) = self._execute(call)
         print(data)
         self.assertEqual(500, response.status_code)
-        self.assertEqual('AuthorizationRequired', data['code'])
+        self.assertEqual('AuthorizationFailed', data['code'])
 from flask_micron import auth_session
 from flask_micron import config
 from flask_micron.errors import AuthenticationRequired
-from flask_micron.errors import AuthorizationRequired
+from flask_micron.errors import AuthorizationFailed
 from flask_micron.method.auth_checker import execute
 import unittest
 
@@ -47,12 +47,12 @@ class Tests(unittest.TestCase):
 
     def test_GivenActiveSessionWithoutRoles_RequireRoleCheckFails(self):
         auth_session.start()
-        with self.assertRaises(AuthorizationRequired):
+        with self.assertRaises(AuthorizationFailed):
             execute(auth=False, role='owner')
 
     def test_GivenActiveSessionWithoutReqRole_RequireRoleCheckFails(self):
         auth_session.start(roles=['loser'])
-        with self.assertRaises(AuthorizationRequired):
+        with self.assertRaises(AuthorizationFailed):
             execute(auth=False, role='owner')
 
     def test_GivenActiveSessionWithReqRole_RequireRoleCheckSucceeds(self):
@@ -70,7 +70,7 @@ authorization checks for a request.
 
 from flask_micron import auth_session
 from flask_micron.errors import AuthenticationRequired
-from flask_micron.errors import AuthorizationRequired
+from flask_micron.errors import AuthorizationFailed
 from flask_micron.errors import ImplementationError
 
 
@@ -100,7 +100,7 @@ def _check_authorization(role):
         raise ImplementationError(
             "role must be None or a role name string")
     if not auth_session.has_role(role):
-        raise AuthorizationRequired()
+        raise AuthorizationFailed()
 from flask_micron import auth_session
 from flask_micron import config
 import unittest

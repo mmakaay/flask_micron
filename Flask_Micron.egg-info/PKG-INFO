@@ -1,6 +1,6 @@
 Metadata-Version: 1.1
 Name: Flask-Micron
-Version: 0.0.1
+Version: 0.1.0
 Summary: A JSON microservices framework on top of Flask
 Home-page: http://makaay.nl/flask-micron/
 Author: Maurice Makaay

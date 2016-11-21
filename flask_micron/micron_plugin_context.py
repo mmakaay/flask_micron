@@ -7,7 +7,7 @@ class MicronPluginContext(object):
     hooks.
 
     For information on the data that are stored in this object, take
-    a look at :ref:`dev_plugins_context`.
+    a look at :ref:`user_plugins_context`.
     """
     def __init__(self):
         self.config = None

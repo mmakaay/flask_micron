@@ -1,4 +1,4 @@
-.. _dev_plugins:
+.. _user_plugins:
 
 Plugins
 =======
@@ -9,7 +9,7 @@ handling is fully implemented using plugins as well.
 
 This section explains the plugin system.
 
-.. _dev_plugins_hooks:
+.. _user_plugins_hooks:
 
 Hooks
 -----
@@ -88,7 +88,7 @@ created once.
 Put differently: when implementing a *[Single]* hook function, your plugin
 will override existing behavior. Other hook functions will extend the behavior.
 
-.. _dev_plugins_writeplugin:
+.. _user_plugins_writeplugin:
 
 How to write a plugin
 ---------------------
@@ -113,7 +113,7 @@ Example: plugin as a derived MicronPlugin class::
                 raise AccessDenied("Please go home and try again")
 
 You might be wondering: "What is that ``ctx`` argument?" This will be
-explained in :ref:`dev_plugins_context`.
+explained in :ref:`user_plugins_context`.
 
 **Duck typing**
 
@@ -143,7 +143,7 @@ Example: plugin as a module::
         if request.remote_addr != '127.0.0.1':
             raise AccessDenied("Please go home and try again")
 
-.. _dev_plugins_context:
+.. _user_plugins_context:
 
 Plugin Context
 --------------
@@ -156,7 +156,7 @@ properties are availble in the context:
 
 * **function**: The function that is wrapped by the MicronMethod.
 * **config**: The configuration for the MicronMethod, flattened as a dict 
-  (see :ref:`dev_plugins_configurable`)
+  (see :ref:`user_plugins_configurable`)
 * **input**: The input data for the function (the Flask ``request`` translated
   into a Python data structure).
 * **output**: The return value of the function.
@@ -211,14 +211,14 @@ Flask-Micron core code is responsible for setting these.
 
 Another thing you might have noticed, is that all hooks that have the WRITE
 option correspond to the hooks that were annotated with *[Single]* in the
-:ref:`dev_plugin_hooks` section. This is no coincidence, since these hooks
+:ref:`user_plugins_hooks` section. This is no coincidence, since these hooks
 are responsible for setting the initial value of the related properties.
 
 When you play by above rules, you are being a good citizen (kudos for that)
 and you can rest assured that your plugin won't run into conflicts with
 other plugins.
 
-.. _dev_plugins_usingplugin:
+.. _user_plugins_usingplugin:
 
 Using your plugin
 -----------------
@@ -244,7 +244,7 @@ Flask-Micron like this::
     micron = Micron(Flask(__name__)
     micron.plugin(plugin_module)
 
-.. _dev_plugins_configurable:
+.. _user_plugins_configurable:
 
 Making plugin behavior configurable
 -----------------------------------
@@ -320,7 +320,7 @@ be assured that all configuration values are set::
 Beware that the configuration space is shared by all plugins. Therefore
 use configuration names that are not likely to collide with other plugins.
 
-.. _dev_plugins_globalconfiguration:
+.. _user_plugins_globalconfiguration:
 
 Global plugin configuration
 ---------------------------

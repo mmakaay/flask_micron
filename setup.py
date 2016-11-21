@@ -56,7 +56,7 @@ from setuptools import setup
 
 setup(
     name='Flask-Micron',
-    version='0.0.1',
+    version='0.1.0',
     url='http://makaay.nl/flask-micron/',
     license='BSD',
     author='Maurice Makaay',

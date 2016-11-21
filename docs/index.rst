@@ -25,6 +25,7 @@ Users Guide
 
    users/installation
    users/quickstart
+   users/plugins
 
 Developers Guide
 ----------------
@@ -34,7 +35,6 @@ Developers Guide
 
    developers/environment
    developers/testing
-   developers/plugins
 
 API Reference
 -------------

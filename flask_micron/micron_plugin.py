@@ -9,7 +9,7 @@ class MicronPlugin(object):
     to hook into specific phases of the request handling.
 
     For a detailed explanation on how to create Flask-Micron plugins,
-    take a look at the :ref:`developer plugin documentation <dev_plugins>`.
+    take a look at the :ref:`developer plugin documentation <user_plugins>`.
     """
 
     def start_request(self, ctx):

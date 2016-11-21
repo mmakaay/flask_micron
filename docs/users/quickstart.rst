@@ -239,16 +239,19 @@ specific exception class from either ``MicronClientError`` or
 Simply raise your exception and Flask-Micron will take care of the rest for
 you::
 
+  from flask_micron import MicronClientError
+
+
   class FlaskIsHalfEmpty(MicronClientError):
       """Permission denied to pessimists, please consider the
       Flask half full before continuing.
       """
 
-  @micron.method():
+  @micron.method()
   def get_flask():
       if g.user.is_pessimistic:
           raise FlaskIsHalfEmpty()
-      return 'Here's your half full flask, sir!'
+      return "Here's your half full flask, sir!"
 
 But what if you feel the need to provide more information about the error that
 occurred? We can do that! Simply pass these details to the raised exception.
@@ -302,8 +305,9 @@ will result in::
     {
       "caused_by": "server",
       "code": "UnhandledException",
-      "description": "During execution of a Micron method, an exception " + \
-                     "was raised that was not handled by the service.",
+      "description": "During execution of a Micron method, an " + \
+                     "exception was raised that was not handled " + \
+                     "by the service.",
       "details": {
         "error_message": "I don't like it",
         "error_type": "ValueError"
@@ -341,7 +345,7 @@ is normalized to::
 
 Sometimes you might require different behavior. No worries! All request
 processing features in Flask-Micron are written as plugins and these
-support :ref:`configuration <dev_plugins_configurable>`. The plugin
+support :ref:`configuration <user_plugins_configurable>`. The plugin
 that takes care of normalization provides the following configuration
 options:
 

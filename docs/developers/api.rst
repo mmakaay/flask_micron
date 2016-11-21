@@ -29,11 +29,26 @@ MicronPluginContext
 Errors
 ------
 
-.. currentmodule:: flask_micron.errors
+**The base type for all Flask-Micron exceptions is MicronError.**
+
+.. currentmodule:: flask_micron
 .. autoclass:: MicronError
+
+**For creating your own exception classes, you can derive from
+MicronServerError or MicronClientError.**
+
 .. autoclass:: MicronServerError
 .. autoclass:: MicronClientError
-    :members:
+
+**Exceptions ready for use in your own (plugin) code.**
+
+.. currentmodule:: flask_micron.errors
+.. autoclass:: AccessDenied
+.. autoclass:: AuthenticationRequired
+.. autoclass:: AuthenticationFailed
+.. autoclass:: AuthorizationFailed
+.. autoclass:: ImplementationError
+.. autoclass:: UnhandledException
 
 .. _api_internal:
 

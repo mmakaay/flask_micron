@@ -9,9 +9,9 @@ class MicronError(Exception):
         """Creates a new MicronError.
 
         Args:
-            caused_by: An indication about who is to blame for the error.
+            caused_by: Who is to blame for the error.
                 The value must be either "server" or "client".
-            details: (optionals) A data structure providing details about
+            details: (optional) A data structure providing details about
                 the error. These details are all communicated to the client,
                 so be sure not to include any sensitive information.
         """
@@ -71,7 +71,7 @@ class AuthenticationFailed(MicronClientError):
     """Username or password incorrect during authentication."""
 
 
-class AuthorizationRequired(MicronClientError):
+class AuthorizationFailed(MicronClientError):
     """A method was called for which authorization is required, but
     the client does not meet the authorization criteria."""
 

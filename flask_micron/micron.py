@@ -92,7 +92,7 @@ class Micron(object):
 
     def plugin(self, plugin):
         """Adds a :class:`MicronPlugin <flask_micron.MicronPlugin>` to this
-        Micron object. See :ref:`dev_plugins` for information on writing
+        Micron object. See :ref:`user_plugins` for information on writing
         and using plugins.
 
         Args:
