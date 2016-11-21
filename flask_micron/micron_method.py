@@ -31,7 +31,7 @@ class MicronMethod(object):
     def configure(self, **configuration):
         """Updates the configuration for this MicronMethod instance.
 
-        :param **configuration:
+        :param \**configuration:
             Configuration options that define in what way the Micron method
             must behave. These configuration options can be used to override
             the default configuration as set for the Micron object that was

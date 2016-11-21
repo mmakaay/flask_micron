@@ -21,18 +21,18 @@ class MicronMethodConfig(object):
 
     Example:
 
-        >>> level1 = MicronMethodConfig(csrf=False, some_option=True)
-        >>> level2 = MicronMethodConfig(level2, csrf=True, some_option=True)
-        >>> level3 = MicronMethodConfig(level3, some_option=None)
-        >>> level1.csrf
+        >>> level1 = MicronMethodConfig(x=False, y=True)
+        >>> level2 = MicronMethodConfig(level2, x=True, y=True)
+        >>> level3 = MicronMethodConfig(level3, y=None)
+        >>> level1.x
         False
-        >>> level2.csrf
+        >>> level2.x
         True
-        >>> level3.csrf
+        >>> level3.x
         True
-        >>> level2.some_option
+        >>> level2.y
         True
-        >>> level3.some_option
+        >>> level3.y
         None
     """
 
@@ -43,7 +43,7 @@ class MicronMethodConfig(object):
 
         :param MicronMethodConfig parent:
             The parent of this MicronMethodConfig object.
-        :param **configuration:
+        :param \**configuration:
             Values to instantiate this config object with.
         """
         # Using the super __setattr__ is required to prevent endless loops,
@@ -60,7 +60,7 @@ class MicronMethodConfig(object):
     def configure(self, **configuration):
         """Set configuration values for this config object.
 
-        :param **configuration:
+        :param \**configuration:
             Values to update this config object with.
 
         :returns:

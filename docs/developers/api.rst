@@ -29,18 +29,20 @@ MicronPluginContext
 Errors
 ------
 
-**The base type for all Flask-Micron exceptions is MicronError.**
+Base type for all Flask-Micron exceptions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. currentmodule:: flask_micron
 .. autoclass:: MicronError
 
-**For creating your own exception classes, you can derive from
-MicronServerError or MicronClientError.**
+Derive from these to create your own exceptions
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. autoclass:: MicronServerError
 .. autoclass:: MicronClientError
 
-**Exceptions ready for use in your own (plugin) code.**
+Exceptions ready for use in your own code
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. currentmodule:: flask_micron.errors
 .. autoclass:: AccessDenied

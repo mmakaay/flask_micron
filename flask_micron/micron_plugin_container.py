@@ -11,9 +11,9 @@ class MicronPluginContainer(object):
     def __init__(self, *plugins):
         """Creates a new MicronPluginContainer object.
 
-        :param *plugins:
+        :param \*plugins:
             Plugins to add to the container directly. Additional plugins can
-            be added after construction using the method add(*plugin)".
+            be added after construction using the method add(\*plugin)".
         """
         self._plugins = []
         self._hook_functions = {}
@@ -22,7 +22,7 @@ class MicronPluginContainer(object):
     def add(self, *plugins):
         """Add MicronPlugins to this MicronPluginContainer.
 
-        :param *plugins:
+        :param \*plugins:
             The plugin(s) to add.
         """
         for plugin in plugins:

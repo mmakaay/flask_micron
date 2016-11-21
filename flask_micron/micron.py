@@ -24,7 +24,7 @@ class Micron(object):
         """
         :param Flask app:
             The Flask app (or Blueprint) to wrap.
-        :param **configuration:
+        :param \**configuration:
             Configuration options that define in what way Micron methods that
             are created using this Micron instance must behave.  These
             configuration options can be overridden by method-specific
@@ -118,7 +118,7 @@ class Micron(object):
     def configure(self, **configuration):
         """Updates the configuration for this Micron instance.
 
-        :param **configuration:
+        :param \**configuration:
             Configuration options that define in what way Micron methods that
             are created using this Micron instance must behave. These
             configuration options can be overridden by method-specific
@@ -149,7 +149,7 @@ class Micron(object):
         :param string rule:
             The URL rule to use for this method. Default value:
             "/<name of decorated function>"
-        :param **configuration:
+        :param \**configuration:
             Configuration options that define in what way the Micron method
             must behave. These configuration options can be used to override
             the default configuration as set for the Micron object.
