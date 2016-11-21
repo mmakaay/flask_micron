@@ -41,8 +41,8 @@ class Plugin(MicronPlugin):
     def normalize_input(self, ctx):
         """Normalizes input data.
 
-        Args:
-            data: The data to normalize.
+        :param data:
+            The data to normalize.
         """
         if ctx.config.get('normalize', True):
             strip_strings = ctx.config.get('strip_strings', True)

@@ -6,10 +6,9 @@ both Python v2 and Python v3."""
 def is_string(value):
     """Check if a value is a string.
 
-    Args:
-        value: The value to check.
+    :param value: The value to check.
 
-    Returns:
+    :returns:
         True in case the provided value is a string, False otherwise.
     """
     try:

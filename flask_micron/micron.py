@@ -22,15 +22,14 @@ class Micron(object):
     """
     def __init__(self, app=None, **configuration):
         """
-        Args:
-            app: The Flask app (or Blueprint) to wrap.
-
-        Kwargs:
-            configuration: Configuration options that define in what way
-                Micron methods that are created using this Micron instance
-                must behave. These configuration options can be overridden
-                by method-specific configuration options, defined in the
-                ``@micron.method()`` decorator.
+        :param Flask app:
+            The Flask app (or Blueprint) to wrap.
+        :param **configuration:
+            Configuration options that define in what way Micron methods that
+            are created using this Micron instance must behave.  These
+            configuration options can be overridden by method-specific
+            configuration options, defined in the ``@micron.method()``
+            decorator.
 
         Example::
 
@@ -61,8 +60,8 @@ class Micron(object):
     def init_app(self, app):
         """Initializes a Flask app as a Micron app.
 
-        Args:
-            app: The Flask app to initialize Micron for.
+        :param Flask app:
+            The Flask app to initialize Micron for.
 
         Example::
 
@@ -95,10 +94,10 @@ class Micron(object):
         Micron object. See :ref:`user_plugins` for information on writing
         and using plugins.
 
-        Args:
-            plugin: The plugin to add to this Micron object.
+        :param MicronPlugin plugin:
+            The plugin to add to this Micron object.
 
-        Returns:
+        :returns:
             This Micron instance, useful for fluent syntax.
 
         Example::
@@ -119,14 +118,14 @@ class Micron(object):
     def configure(self, **configuration):
         """Updates the configuration for this Micron instance.
 
-        Kwargs:
-            configuration: Configuration options that define in what way
-                Micron methods that are created using this Micron instance
-                must behave. These configuration options can be overridden
-                by method-specific configuration options, defined in the
-                @micron.method(...) decorator.
+        :param **configuration:
+            Configuration options that define in what way Micron methods that
+            are created using this Micron instance must behave. These
+            configuration options can be overridden by method-specific
+            configuration options, defined in the @micron.method(...)
+            decorator.
 
-        Returns:
+        :returns:
             This Micron instance, useful for fluent syntax.
 
         Example::
@@ -147,17 +146,15 @@ class Micron(object):
     def method(self, rule=None, **configuration):
         """Decorates a function to make it work as a Micron method.
 
-        Args:
-            rule: The URL rule to use for this method.
-                Default: /<name of decorated function>
+        :param string rule:
+            The URL rule to use for this method. Default value:
+            "/<name of decorated function>"
+        :param **configuration:
+            Configuration options that define in what way the Micron method
+            must behave. These configuration options can be used to override
+            the default configuration as set for the Micron object.
 
-        Kwargs:
-            configuration: Configuration options that define in what way
-                the Micron method must behave. These configuration options
-                can be used to override the default configuration as set
-                for the Micron object.
-
-        Returns:
+        :returns:
             A decorator that will take care of embedding the Micron method
             in the Flask application and hooking it up with the Micron
             request handling.
@@ -191,10 +188,10 @@ class Micron(object):
 def _create_url_rule(micron_method):
     """Creates the URL rule for a Micron method.
 
-    Args:
-        micron_method: The MicronMethod to create the route for.
+    :param MicronMethod micron_method:
+        The MicronMethod to create the route for.
 
-    Returns:
+    :returns:
         The URL rule: "/<function name>"
     """
     name = micron_method.__name__.split('.')[-1]

@@ -12,7 +12,7 @@ class MicronPluginCompiler(object):
     def compile(self, plugin):
         """Compiles the provided plugin.
 
-        Returns:
+        :returns:
            A dict of hooks that are implemented by the plugin.
            The keys are the hook names, the values are functions that
            can be run using a MicronPluginContext as input and which

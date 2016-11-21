@@ -231,7 +231,7 @@ def _extract_token_from_headers(headers):
 def _generate_token():
     """Generates a new random CSRF token.
 
-    Returns:
+    :returns:
         A random CSRF token.
     """
     return str(uuid.uuid4())

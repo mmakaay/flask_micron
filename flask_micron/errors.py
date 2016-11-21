@@ -8,12 +8,13 @@ class MicronError(Exception):
     def __init__(self, caused_by, details=None):
         """Creates a new MicronError.
 
-        Args:
-            caused_by: Who is to blame for the error.
-                The value must be either "server" or "client".
-            details: (optional) A data structure providing details about
-                the error. These details are all communicated to the client,
-                so be sure not to include any sensitive information.
+        :param string caused_by:
+            Who is to blame for the error. The value must be either "server"
+            or "client".
+        :param details:
+            (optional) A data structure providing details about the error.
+            These details are all communicated to the client, so be sure not to
+            include any sensitive information.
         """
         super(MicronError, self).__init__(self.description)
         self._details = details

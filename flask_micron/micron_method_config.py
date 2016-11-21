@@ -41,9 +41,10 @@ class MicronMethodConfig(object):
     def __init__(self, parent=None, **configuration):
         """Creates a new MicronMethodConfig.
 
-        Args:
-            parent: The parent of this MicronMethodConfig object.
-            **configuration: Values to instantiate this config object with.
+        :param MicronMethodConfig parent:
+            The parent of this MicronMethodConfig object.
+        :param **configuration:
+            Values to instantiate this config object with.
         """
         # Using the super __setattr__ is required to prevent endless loops,
         # since we implemented __setattr__/__getattr__ for this class.
@@ -59,10 +60,10 @@ class MicronMethodConfig(object):
     def configure(self, **configuration):
         """Set configuration values for this config object.
 
-        Args:
-            **configuration: Values to update this config object with.
+        :param **configuration:
+            Values to update this config object with.
 
-        Returns:
+        :returns:
             The MicronMethodConfig itself, useful for fluent syntax.
         """
         for name, value in configuration.items():
@@ -84,9 +85,10 @@ class MicronMethodConfig(object):
     def set(self, name, value):
         """Set a configuration option by name.
 
-        Args:
-           name: The name of the configuration option
-           value: The value to set it to
+        :param string name:
+            The name of the configuration option.
+        :param value:
+            The value to set it to.
         """
         self._check_option_name(name)
         self._data[name] = value
@@ -115,7 +117,7 @@ class MicronMethodConfig(object):
         """Returns a dict of all configuration options that are currently
         in use in the MicronMethodConfig hierarchy.
 
-        Returns:
+        :returns:
             A dict, containing all configuration options.
         """
         flattened = dict(self._data)
@@ -134,11 +136,11 @@ class MicronMethodConfig(object):
         requested configuration option, then the parent config will be
         consulted. When no parent config exists, a KeyError is raised.
 
-        Args:
-            name: The name of the configuration value to retrieve.
+        :param string name:
+            The name of the configuration value to retrieve.
 
-        Returns:
-            The configuration value
+        :returns:
+            The configuration value.
         """
         if name in self._data:
             return self._data[name]

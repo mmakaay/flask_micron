@@ -61,10 +61,10 @@ def _check_function_signature(function):
     take no or exactly one argument, possibly defined with a default
     value for it.
 
-    Args:
-        function: the function for which to check the signature
+    :param function function:
+        the function for which to check the signature
 
-    Returns:
+    :returns:
         A tuple containing two elements:
         1. bool: Whether or not the function expects input
         2. bool: Whether or not a default value is defined
@@ -93,10 +93,10 @@ def _inspect_signature(function):
     This function fixes a compatibility issue with Python 3.6+, for which
     inspect.getargspec no longer exists.
 
-    Args:
-        function: The function for which to inspect the signature.
+    :param function function:
+        The function for which to inspect the signature.
 
-    Returns:
+    :returns:
         A function signature as returned by inspect.getargspec()
     """
     if hasattr(inspect, 'signature'):

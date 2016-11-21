@@ -18,25 +18,10 @@ class MicronMethod(object):
     def __init__(self, micron, function):
         """Creates a new Flask MicronMethod object.
 
-        Args:
-            micron: The Micron instance that creates this MicronMethod.
-            function: The function to wrap this MicronMethod around.
-
-        Example:
-
-            from flask import Flask
-            from flask_micron import Micron
-
-            app = Flask(__name__)
-            micron = Micron(app)
-
-            # Using the API directly.
-            method = MicronMethod(micron, lambda: 'Hello, world!')
-
-            # Or (recommended) using the Micron method decorator.
-            @micron.method()
-            def hello():
-                return 'Hello, world!'
+        :param Micron micron:
+            The Micron instance that creates this MicronMethod.
+        :param function function:
+            The function to wrap this MicronMethod around.
         """
         update_wrapper(self, function)
         self.function = function
@@ -46,20 +31,14 @@ class MicronMethod(object):
     def configure(self, **configuration):
         """Updates the configuration for this MicronMethod instance.
 
-        Args:
-            **configuration: Configuration options that define in what way
-                the Micron method must behave. These configuration options
-                can be used to override the default configuration as set
-                for the Micron object that was used to create this
-                MicronMethod.
+        :param **configuration:
+            Configuration options that define in what way the Micron method
+            must behave. These configuration options can be used to override
+            the default configuration as set for the Micron object that was
+            used to create this MicronMethod.
 
-        Returns:
+        :returns:
             The MicronMethod itself, useful for fluent syntax.
-
-        Example:
-
-            hello = lambda: 'Hello, world!'
-            method = MicronMethod(micron, hello).configure(csrf=True)
         """
         self.config.configure(**configuration)
         return self
@@ -73,7 +52,7 @@ class MicronMethod(object):
         render the route. That is when the Micron-specific request
         handling kicks in.
 
-        Returns:
+        :returns:
             The Flask Response object to return to the client.
         """
         _enable_cookies_for_js_clients()
