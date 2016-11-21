@@ -68,6 +68,38 @@ want to run the tests from ``tests/test_micron.py``, then you can do::
     
     OK
 
+.. _dev_testing_tox:
+
+Testing against multiple environments
+-------------------------------------
+
+`Tox <https://tox.readthedocs.io/>`_ is a virtualenv-based test tool,
+which I use to check if Flask-Micron installs and runs correctly with
+multiple versions of Python. The following commands are used to setup
+the requirements for running Tox on my development machine::
+
+    $ sudo apt-get install \
+        python \
+        python3 \
+        pypy \
+        python-pip \
+        python-virtualenv
+    $ pip install tox
+
+This sets up three different versions of Python and Tox.  After doing this,
+the ``tox`` command can be run to perform tests against the installed
+environments (as defined in ``tox.ini``). When all goes well, it will look
+somewhat likt this::
+
+    $ tox
+    ...
+    (test output)
+    ...
+    py2: commands succeeded
+    py3: commands succeeded
+    pypy: commands succeeded
+    congratulations :)
+
 .. _dev_testing_continuous:
 
 Continuous testing
