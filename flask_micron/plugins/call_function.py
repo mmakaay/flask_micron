@@ -18,34 +18,37 @@ class UnexpectedInput(MicronClientError):
 
 
 class Plugin(MicronPlugin):
-    """This plugin calls the function that is wrapped by a Micron Method,
+    """This plugin calls the function that is wrapped as a Micron method,
     using the input data as prepared in the context. A very simple
-    convention is followed for the call:
+    convention is followed for the call.
 
-    - The function can take no arguments at all.
-      The context input must be None in this case.
-      The function is called without arguments.
+    **The function can take no arguments at all**
 
-      @micron.method()
-      def the_function():
-          ...
+    The context input must be None in this case.
+    The function is called without arguments::
 
-    - The function can take a single argument without a default value.
-      The context input must contain a value that is not None.
-      The function is called with the input data as the argument.
+        @micron.method()
+        def the_function():
+              ...
 
-      @micron.method()
-      def the_function(arg):
-          ...
+    **The function can take a single argument without a default value**
 
-    - The function can take a single argument with a default value.
-      The context input can contain either a value or None.
-      The function is called without argument when the input is None,
-      The function is called with the input otherwise.
+    The context input must contain a value that is not None.
+    The function is called with the input data as the argument::
 
-      @micron.method()
-      def the_function(arg=defaultvalue):
-          ...
+        @micron.method()
+        def the_function(arg):
+            ...
+
+    **The function can take a single argument with a default value**
+
+    The context input can contain either a value or None.
+    The function is called without argument when the input is None,
+    The function is called with the input otherwise::
+
+        @micron.method()
+        def the_function(arg=defaultvalue):
+            ...
 
     For other scenarios, appropriate exceptions will be raised.
     """

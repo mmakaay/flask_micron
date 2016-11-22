@@ -9,23 +9,23 @@ class Plugin(MicronPlugin):
     """An input normalization plugin for Micron.
 
     Normalizes the request data by:
-      - stripping whitespace from the string values;
-      - making empty strings None.
+    * stripping whitespace from the string values;
+    * making empty strings None.
 
     Normalization is applied to:
-      - strings
-      - dicts (recursively)
-      - lists (recursively)
+    * strings
+    * dicts (recursively)
+    * lists (recursively)
 
     Configuration options:
 
-      - normalize: True/False (default = True)
+    normalize: True/False (default = True)
         Whether or not to apply normalization to the request.
 
-      - strip_strings: True/False (default = True)
+    strip_strings: True/False (default = True)
         Whether or not to strip leading and trailing whitespace from strings.
 
-      - make_empty_strings_none: True/False (default = True)
+    make_empty_strings_none: True/False (default = True)
         Whether or not empty strings must be normalized to None.
 
     Example:

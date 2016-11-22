@@ -1,4 +1,4 @@
-"""This module implements an plugin for Flask-Micron to use JSON data as
+"""This module implements a plugin for Flask-Micron to use JSON data as
 input for Micron methods."""
 
 from flask import json
@@ -28,8 +28,6 @@ class Plugin(MicronPlugin):
         if post_body is None:
             return
 
-        # Added to make the flask app.test_client() work with Micron.
-        # When using the test client, the post body contains a bytes object.
         if isinstance(post_body, bytes):
             post_body = post_body.decode('utf-8')
 
