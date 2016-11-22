@@ -1,26 +1,24 @@
-"""This module provides the MicronPluginCompiler class."""
+"""This module provides tooling for compiling Flask-Micron plugins.
+It is used to inspect Micron plugins and provide optimized code for
+calling the hook functions that are implemented by those plugins.
+"""
 
 import inspect
 from flask_micron.micron_plugin import MicronPlugin
 
 
-class MicronPluginCompiler(object):
-    """The MicronPluginCompiler class is used to inspect Micron plugins
-    and provide optimized code for calling the hook functions that
-    are implemented by those plugins.
+def compile(plugin):
+    """Compiles the provided plugin.
+
+    :param MicronPlugin plugin:
+        The plugin to compile.
+
+    :returns:
+        A dict of hooks that are implemented by the plugin.
+        The keys are the hook names, the values are functions that
+        can be called using a MicronPluginContext as argument.
     """
-    def compile(self, plugin):
-        """Compiles the provided plugin.
-
-        :returns:
-           A dict of hooks that are implemented by the plugin.
-           The keys are the hook names, the values are functions that
-           can be run using a MicronPluginContext as input and which
-           will automatically call the hook function from the plugin.
-        """
-        hooks = _compile_hooks(plugin)
-        return hooks
-
+    return _compile_hooks(plugin)
 
 def _compile_hooks(plugin):
     functions = _extract_functions(plugin)

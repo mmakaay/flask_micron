@@ -1,6 +1,6 @@
 """This module provides the MicronPluginContainer class."""
 
-from flask_micron.micron_plugin_compiler import MicronPluginCompiler
+from flask_micron import micron_plugin_compiler
 
 
 class MicronPluginContainer(object):
@@ -9,7 +9,7 @@ class MicronPluginContainer(object):
     functions from those plugins.
     """
     def __init__(self, *plugins):
-        """Creates a new MicronPluginContainer object.
+        r"""Creates a new MicronPluginContainer object.
 
         :param \*plugins:
             Plugins to add to the container directly. Additional plugins can
@@ -20,7 +20,7 @@ class MicronPluginContainer(object):
         self.add(*plugins)
 
     def add(self, *plugins):
-        """Add MicronPlugins to this MicronPluginContainer.
+        r"""Add MicronPlugins to this MicronPluginContainer.
 
         :param \*plugins:
             The plugin(s) to add.
@@ -30,7 +30,7 @@ class MicronPluginContainer(object):
             self._plugins.append(plugin)
 
     def _compile_plugin(self, plugin):
-        hooks = MicronPluginCompiler().compile(plugin)
+        hooks = micron_plugin_compiler.compile(plugin)
         for hook, hook_function in hooks.items():
             self._hook_functions.setdefault(hook, []).append(hook_function)
 

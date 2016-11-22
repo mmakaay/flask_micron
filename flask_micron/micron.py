@@ -21,7 +21,7 @@ class Micron(object):
     routing of a Flask application.
     """
     def __init__(self, app=None, **configuration):
-        """
+        r"""
         :param Flask app:
             The Flask app (or Blueprint) to wrap.
         :param \**configuration:
@@ -116,7 +116,7 @@ class Micron(object):
         return self
 
     def configure(self, **configuration):
-        """Updates the configuration for this Micron instance.
+        r"""Updates the configuration for this Micron instance.
 
         :param \**configuration:
             Configuration options that define in what way Micron methods that
@@ -144,7 +144,7 @@ class Micron(object):
         return self
 
     def method(self, rule=None, **configuration):
-        """Decorates a function to make it work as a Micron method.
+        r"""Decorates a function to make it work as a Micron method.
 
         :param string rule:
             The URL rule to use for this method. Default value:

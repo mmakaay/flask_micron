@@ -39,7 +39,7 @@ class MicronMethodConfig(object):
     IDENTIFIER_FORMAT = re.compile('^[a-zA-Z_][a-zA-Z0-9_]*$')
 
     def __init__(self, parent=None, **configuration):
-        """Creates a new MicronMethodConfig.
+        r"""Creates a new MicronMethodConfig.
 
         :param MicronMethodConfig parent:
             The parent of this MicronMethodConfig object.
@@ -58,7 +58,7 @@ class MicronMethodConfig(object):
         return self.configure(**configuration)
 
     def configure(self, **configuration):
-        """Set configuration values for this config object.
+        r"""Set configuration values for this config object.
 
         :param \**configuration:
             Values to update this config object with.

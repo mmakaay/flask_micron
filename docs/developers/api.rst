@@ -77,10 +77,3 @@ MicronPluginContainer
 .. currentmodule:: flask_micron.micron_plugin_container
 .. autoclass:: MicronPluginContainer
     :members:
-
-MicronPluginCompiler
---------------------
-
-.. currentmodule:: flask_micron.micron_plugin_compiler
-.. autoclass:: MicronPluginCompiler
-    :members:

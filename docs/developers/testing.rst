@@ -68,6 +68,31 @@ want to run the tests from ``tests/test_micron.py``, then you can do::
     
     OK
 
+.. _dev_testing_continuous:
+
+Continuous testing
+------------------
+
+When performing TDD-style development, one has to run unit tests very often,
+since it is an active part of the development cycle "red, green, refactor".
+One issue I have with this: I grow tired quickly when having to start a
+test run manually for every step in this cycle.
+
+Luckily, I work on a UNIX system, where most of the time there is a right
+tool for a right job. In this case, the right tool is called ``watch``.  This
+tool can be instructed to start a command on regular intervals and show its
+output on screen. Exactly what we need here::
+
+    $ watch -n 1 "python -m unittest discover"
+
+By editing my code in one terminal, while having this command running in
+another, I can keep an eye on the results of my unittest while writing my
+code. 
+
+For more information on ``watch``, take a look at its manual page::
+
+    $ man watch
+
 .. _dev_testing_tox:
 
 Testing against multiple environments
@@ -99,31 +124,6 @@ somewhat likt this::
     py3: commands succeeded
     pypy: commands succeeded
     congratulations :)
-
-.. _dev_testing_continuous:
-
-Continuous testing
-------------------
-
-When performing TDD-style development, one has to run unit tests very often,
-since it is an active part of the development cycle "red, green, refactor".
-One issue I have with this: I grow tired quickly when having to start a
-test run manually for every step in this cycle.
-
-Luckily, I work on a UNIX system, where most of the time there is a right
-tool for a right job. In this case, the right tool is called ``watch``.  This
-tool can be instructed to start a command on regular intervals and show its
-output on screen. Exactly what we need here::
-
-    $ watch -n 1 "python -m unittest discover"
-
-By editing my code in one terminal, while having this command running in
-another, I can keep an eye on the results of my unittest while writing my
-code. 
-
-For more information on ``watch``, take a look at its manual page::
-
-    $ man watch
 
 .. _dev_testing_dirstructure:
 

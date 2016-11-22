@@ -45,6 +45,11 @@ class SerializerHookTests(unittest.TestCase):
             'this is it',
             json_output._serializer_hook('this is it'))
 
+    def test_bytes(self):
+        self.assertEqual(
+            'this is it',
+            json_output._serializer_hook(b'this is it'))
+
     def test_datetime(self):
         d = datetime(2000, 1, 2, 10, 11, 12)
         self.assertEqual(

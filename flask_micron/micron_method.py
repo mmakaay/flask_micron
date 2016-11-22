@@ -29,7 +29,7 @@ class MicronMethod(object):
         self.config = MicronMethodConfig(micron.config)
 
     def configure(self, **configuration):
-        """Updates the configuration for this MicronMethod instance.
+        r"""Updates the configuration for this MicronMethod instance.
 
         :param \**configuration:
             Configuration options that define in what way the Micron method

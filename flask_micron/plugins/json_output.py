@@ -1,3 +1,5 @@
+#pylint: disable=too-many-return-statements
+
 """This module implements a plugin for Flask-Micron, to use JSON data
 as the output for Micron methods."""
 
@@ -29,6 +31,8 @@ def _serializer_hook(value):
         return value.isoformat()
     if isinstance(value, timedelta):
         return str(value)
+    if isinstance(value, bytes):
+        return value.decode('utf-8')
     if isinstance(value, str):
         return value
     raise ImplementationError(
