@@ -1,3 +1,5 @@
+.PHONY: docs
+
 all: build_package
 
 build_package: test, lint
@@ -19,9 +21,14 @@ develop:
 install:
 	python setup.py install
 
+docs:
+	cd docs && make clean
+	cd docs && make html
+
 clean:
 	find . -depth -type d -name __pycache__ -exec /bin/rm -fR {} \;
 	find . -type f -name '*.pyc' -exec /bin/rm {} \;
 	find . -type d -name '*.egg-info' -exec /bin/rm -fR {} \;
 	find . -type d -name '*.egg' -exec /bin/rm -fR {} \;
 	/bin/rm -fR build .eggs
+	cd docs && make clean

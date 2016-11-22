@@ -50,13 +50,24 @@ And run it:
  `Read this first <http://flask.pocoo.org/docs/deploying/>`.
 """
 
+import os
+import re
 from setuptools import find_packages
 from setuptools import setup
 
+def _get_version():
+    path = os.path.abspath('.')
+    pkginit = os.path.join(path, "flask_micron", "__init__.py")
+    with open(pkginit, "r") as fh:
+        for line in fh.readlines():
+            m = re.match(r"^__version__\s*=\s*\"(.*)\"", line)  
+            if (m is not None):
+                return m.groups()[0]
+    raise Exception("Unable to read version from %s" % pkginit)
 
 setup(
     name='Flask-Micron',
-    version='0.1.0',
+    version=_get_version(),
     url='http://makaay.nl/flask-micron/',
     license='BSD',
     author='Maurice Makaay',
