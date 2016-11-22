@@ -1,13 +1,14 @@
 .. _user_plugins:
 
-Plugins
-=======
+Creating plugins
+================
 
 Flask-Micron is in its core a plugin system. Plugins can be used
 to add extra features to the request handling. The built-in request
 handling is fully implemented using plugins as well.
 
-This section explains the plugin system.
+This section explains how to make use of the plugin system to
+extend the Flask-Micron functionality.
 
 .. _user_plugins_hooks:
 

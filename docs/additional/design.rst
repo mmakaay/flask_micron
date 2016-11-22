@@ -82,8 +82,7 @@ POST-only
 
 Flask-Micron only accepts POST requests for various reasons.
 
-* POST requests are slightly more secure than GET requests, in particular
-  when the requests are using HTTP and not HTTPS.
+* POST requests are slightly more secure than GET requests:
 
   * With GET requests, one might leak important data via the URL. Yes, the
     same data would be exposed via the POST body, but that data wouln't
@@ -104,25 +103,6 @@ Flask-Micron only accepts POST requests for various reasons.
   it greatly simplifies the way in which a client can talk to the API
   service. The focus is on "what method is being called" and not "what
   HTTP method fits the operation best".
-
-**POST is not equal to security**
-
-Contrary to popular belief, using JSON/POST instead of GET is not a good way
-to for example prevent CSRF (Cross Site Request Forgery) attacks. Although
-it is harder than forging GET requests, it is trivial to forge requests for
-JSON/POST. To protect against this type of attack, see
-:ref:`user_csrf-protection`.
-
-Of course, when security is a concern (is it ever not?), some of the best
-security measures that you can take, are:
-
-* to stay up-to-date with `OWASP <https://www.owasp.org>`_ and ensure
-  that your application code is secure;
-
-* to use `HTTPS <https://en.wikipedia.org/wiki/HTTPS>`_ for exposing
-  your website / API;
-
-* to have your domain signed using `DNSsec <https://en.wikipedia.org/wiki/Domain_Name_System_Security_Extensions>`_.
 
 .. _design_pluginarchitecture:
 

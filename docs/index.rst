@@ -26,6 +26,7 @@ Users Guide
    users/installation
    users/quickstart
    users/plugins
+   users/bundledplugins
 
 Developers Guide
 ----------------
@@ -52,6 +53,7 @@ Additional Notes
 
    additional/stack
    additional/design
+   additional/security
    additional/license
    additional/dependencies
    additional/history
