@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This module provides the MicronPluginContainer class."""
 
 from flask_micron import micron_plugin_compiler
@@ -30,7 +31,7 @@ class MicronPluginContainer(object):
             self._plugins.append(plugin)
 
     def _compile_plugin(self, plugin):
-        hooks = micron_plugin_compiler.compile(plugin)
+        hooks = micron_plugin_compiler.compile_plugin(plugin)
         for hook, hook_function in hooks.items():
             self._hook_functions.setdefault(hook, []).append(hook_function)
 

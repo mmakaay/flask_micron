@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from time import time
 from flask import session
 from flask_micron import auth_session

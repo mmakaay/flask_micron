@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """The tests in this module are used to make sure that Micron integrates
 correctly with the Flask environment and its testing features.
 

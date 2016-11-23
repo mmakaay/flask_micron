@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This module implements a plugin for Flask-Micron to call the function
 that is wrapped as a Micron method using the input of a request."""
 

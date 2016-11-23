@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import unittest
 from flask_micron.micron_method_config import MicronMethodConfig
 from flask_micron.errors import ImplementationError

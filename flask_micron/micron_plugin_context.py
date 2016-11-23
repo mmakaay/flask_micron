@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This module provides the MicronPluginContext class."""
 
 class MicronPluginContext(object):

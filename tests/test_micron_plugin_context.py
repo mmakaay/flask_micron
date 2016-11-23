@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask_micron.micron_plugin_context import MicronPluginContext
 from tests import MicronTestCase
 

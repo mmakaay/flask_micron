@@ -6,7 +6,7 @@
     A simple application that shows how Flask-Micron and jQuery get along.
     This example is adapted from the Flask example with the same name.
 
-    :copyright: (c) 2016 by Stichting Fiber Overal
+    :copyright: (c) 2016 by Maurice Makaay 
     :license: BSD, see LICENSE for more details.
 """
 from flask import Flask

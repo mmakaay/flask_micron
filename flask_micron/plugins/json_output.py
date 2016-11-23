@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 #pylint: disable=too-many-return-statements
 
 """This module implements a plugin for Flask-Micron, to use JSON data

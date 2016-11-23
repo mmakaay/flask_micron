@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # pylint: disable=too-many-branches
 
 """This module implements an input normalization plugin for Flask-Micron."""

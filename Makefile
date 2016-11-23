@@ -1,9 +1,6 @@
-.PHONY: docs
+.PHONY: docs build
 
-all: build_package
-
-build_package: test, lint
-	python setup.py build
+all: build
 
 test:
 	python setup.py test
@@ -11,9 +8,15 @@ test:
 test-watch:
 	watch -n 1 "python -m unittest"
 
+tox:
+	tox
+
 lint:
 	pylint --rcfile=.pylintrc-flask_micron flask_micron
 	pylint --rcfile=.pylintrc-tests tests
+
+build: tox lint
+	python setup.py build
 
 develop:
 	python setup.py develop

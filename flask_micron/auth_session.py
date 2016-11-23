@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This module provides functionality for managing an auth session."""
 
 from time import time

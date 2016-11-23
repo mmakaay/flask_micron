@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # pylint: disable=no-member
 # No idea what triggers the error in _call_plugin():
 # Instance of 'str' has no 'data' member (no-member)

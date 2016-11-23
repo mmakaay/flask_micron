@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This module implements a plugin for Flask-Micron to use JSON data as
 input for Micron methods."""
 

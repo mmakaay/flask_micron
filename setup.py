@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Flask-Micron
 ------------
@@ -5,19 +6,10 @@ Flask-Micron
 A method-oriented microservice JSON framework, on top of the excellent
 Flask package, focusing on security and productivity.
 
-Basic features:
-
-- Business logic is separated from request handling.
-- Requests automatically use JSON for both input and output.
-- Built-in security features like POST-only requests, CSRF protection,
-  authentication and authorization
-
-For more extensive feature information, see doc/FEATURES. 
-
 Just like Flask, Flask-Micron is Fun
 ````````````````````````````````````
 
-Save in hello.py:
+Save in hello.py::
 
 .. code:: python
 
@@ -38,16 +30,15 @@ Save in hello.py:
 And Easy to Setup
 `````````````````
 
-And run it:
-
 .. code:: bash
 
     $ pip install Flask-Micron
     $ python hello.py 
      * Running on http://localhost:5000/
 
- Ready for production?
- `Read this first <http://flask.pocoo.org/docs/deploying/>`.
+Ready for production?
+`````````````````````
+ `Read this first <http://flask.pocoo.org/docs/deploying/>`_.
 """
 
 import os
@@ -74,7 +65,7 @@ setup(
     author_email='maurice@makaay.nl',
     description='A JSON microservices framework on top of Flask',
     long_description=__doc__,
-    packages=find_packages(exclude=('*tests', '*tests')),
+    packages=find_packages(exclude=('tests*')),
     test_suite='tests.suite',
     zip_safe=False,
     include_package_data=True,
@@ -83,11 +74,17 @@ setup(
         'Flask'
     ],
     classifiers=[
+        'Development Status :: 4 - Beta',
         'Environment :: Web Environment',
         'Intended Audience :: Developers',
         'License :: OSI Approved :: BSD License',
         'Operating System :: OS Independent',
         'Programming Language :: Python',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 2',
+        'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.5',
         'Topic :: Internet :: WWW/HTTP :: Dynamic Content',
         'Topic :: Software Development :: Libraries :: Python Modules'
     ]

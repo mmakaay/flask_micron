@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This module implements a CSRF protection plugin for Flask-Micron.
 
 What is CSRF?

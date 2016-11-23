@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask_micron.errors import ImplementationError
 from flask_micron.plugins.call_function import MissingInput
 from flask_micron.plugins.call_function import UnexpectedInput

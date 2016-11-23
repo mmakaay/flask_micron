@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from flask_micron.plugins import csrf
 import unittest
 

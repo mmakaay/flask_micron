@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # pylint: disable=redefined-outer-name
 
 import unittest
@@ -34,7 +35,7 @@ class Tests(unittest.TestCase):
         class EmptyPlugin(MicronPlugin):
             pass
 
-        hooks = micron_plugin_compiler.compile(EmptyPlugin())
+        hooks = micron_plugin_compiler.compile_plugin(EmptyPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({}, hooks)
@@ -44,7 +45,7 @@ class Tests(unittest.TestCase):
         class EmptyDuckTypedPlugin(object):
             pass
 
-        hooks = micron_plugin_compiler.compile(EmptyDuckTypedPlugin())
+        hooks = micron_plugin_compiler.compile_plugin(EmptyDuckTypedPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({}, hooks)
@@ -57,7 +58,7 @@ class Tests(unittest.TestCase):
             def process_output(self, ctx):
                 ctx.output = "%s %s" % (ctx.config.option1, ctx.config.option2)
 
-        hooks = micron_plugin_compiler.compile(DerivedPlugin())
+        hooks = micron_plugin_compiler.compile_plugin(DerivedPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual(
@@ -82,7 +83,7 @@ class Tests(unittest.TestCase):
                 duck = ctx.config.duck
                 ctx.input = "DuckTypedPlugin input %s" % duck
 
-        hooks = micron_plugin_compiler.compile(DuckTypedPlugin())
+        hooks = micron_plugin_compiler.compile_plugin(DuckTypedPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({'normalize_input'}, set(hooks.keys()))
@@ -101,7 +102,7 @@ class Tests(unittest.TestCase):
             def __init__(self):
                 self.process_output = process_output
 
-        hooks = micron_plugin_compiler.compile(ConstructedPlugin())
+        hooks = micron_plugin_compiler.compile_plugin(ConstructedPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({'process_output'}, set(hooks.keys()))
@@ -121,7 +122,7 @@ class Tests(unittest.TestCase):
             'process_output': process_output
         }
 
-        hooks = micron_plugin_compiler.compile(plugin)
+        hooks = micron_plugin_compiler.compile_plugin(plugin)
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({'process_output'}, set(hooks.keys()))
@@ -135,7 +136,7 @@ class Tests(unittest.TestCase):
 
     def test_ModulePlugin(self):
         module = globals()
-        hooks = micron_plugin_compiler.compile(module)
+        hooks = micron_plugin_compiler.compile_plugin(module)
 
         # Check for extraction of the correct hook functions.
         self.assertEqual(

@@ -1,6 +1,8 @@
+# -*- coding: utf-8 -*-
 from flask import session
 from flask_micron.plugins import csrf
 from tests import MicronTestCase
+
 
 class Tests(MicronTestCase):
 

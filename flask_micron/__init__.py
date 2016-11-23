@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
     flask_micron
     ~~~~~~~~~~~~
@@ -5,7 +6,7 @@
     A method-oriented microservice JSON framework on top of the excellent
     Flask package, focusing on security and productivity.
 
-    :copyright: (c) 2016 by Stichting FiberOveral
+    :copyright: (c) 2016 by Maurice Makaay
     :license: BSD, see LICENSE for more details.
 """
 

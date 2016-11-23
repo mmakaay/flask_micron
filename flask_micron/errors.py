@@ -1,4 +1,6 @@
+# -*- coding: utf-8 -*-
 """Provides exceptions used by Micron."""
+
 import re
 
 

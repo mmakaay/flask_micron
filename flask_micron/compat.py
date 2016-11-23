@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 # pylint: disable=redefined-outer-name, pointless-statement
 
 """This module contains code that is needed to make Flask-Micron work for

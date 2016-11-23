@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """This module provides tooling for compiling Flask-Micron plugins.
 It is used to inspect Micron plugins and provide optimized code for
 calling the hook functions that are implemented by those plugins.
@@ -7,7 +8,7 @@ import inspect
 from flask_micron.micron_plugin import MicronPlugin
 
 
-def compile(plugin):
+def compile_plugin(plugin):
     """Compiles the provided plugin.
 
     :param MicronPlugin plugin:

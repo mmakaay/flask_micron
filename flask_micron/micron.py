@@ -1,6 +1,5 @@
+# -*- coding: utf-8 -*-
 """This module provides the Micron class."""
-# TODO deal correctly with unicode in all places, Werkzeug should be
-# using unicode, not bytes as it is now in the Response.data.
 
 from flask_micron.errors import ImplementationError
 from flask_micron.micron_method import MicronMethod
