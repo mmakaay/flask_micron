@@ -76,7 +76,7 @@ class GetRequestMethodsPlugin(object):
     def __init__(self, methods):
         self.methods = methods
 
-    def get_request_methods(self, _):
+    def request_methods(self, _):
         return self.methods 
 
 

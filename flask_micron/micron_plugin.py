@@ -13,7 +13,7 @@ class MicronPlugin(object):
     take a look at the :ref:`plugin documentation <user_plugins>`.
     """
 
-    def get_request_methods(self, _):
+    def request_methods(self, _):
         """This hook is called by Flask-Micron to retrieve a list of accepted
         request methods, used for creating the `Flask`_ routing entry.
 

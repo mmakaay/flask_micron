@@ -16,7 +16,7 @@ class Tests(unittest.TestCase):
         """
         d = MicronPlugin.__dict__
         self.assertEqual({
-            'get_request_methods': d['get_request_methods'],
+            'request_methods': d['request_methods'],
             'start_request': d['start_request'],
             'check_access': d['check_access'],
             'after_check_access': d['after_check_access'],

@@ -28,7 +28,7 @@ from flask_micron.compat import is_string
 class Plugin(MicronPlugin):
     """A plugin to read the input for the Micron method from the request."""
 
-    def get_request_methods(self, _):
+    def request_methods(self, _):
         return ['POST']
 
     def read_input(self, ctx):

@@ -193,10 +193,10 @@ class Micron(object):
         :returns:
             A list of request methods.
         """
-        methods = self.plugins.call_one(None, 'get_request_methods')
+        methods = self.plugins.call_one(None, 'request_methods')
         if methods is None:
             raise ImplementationError(
-                "Hook 'get_request_methods' returned None, but a list "
+                "Hook 'request_methods' returned None, but a list "
                 "of acceptable request methods was expected.")
         return methods
 

@@ -30,6 +30,9 @@ During the lifetime of a single request, the following hooks are triggered
 +------------------------+---------------------------------------------+
 | Hook name              | Intended purpose of the hook                |
 +========================+=============================================+
+| **request_methods**    | Provide a list of request methods that are  |
+|                        | accepted for request handling.              |
++------------------------+---------------------------------------------+
 | **start_request**      | Initialize the plugin.                      |
 +------------------------+---------------------------------------------+
 | **check_access**       | Implement access control (typical use:      |
@@ -177,6 +180,8 @@ table below, you can find the data access rules for all context properties.
 +--------------------+----------+--------+--------+--------+----------+-------+
 | Hook name          | function | config | input  | output | response | error |
 +====================+==========+========+========+========+==========+=======+
+| request_methods    | READ     | MODIFY |        |        |          |       |
++--------------------+----------+--------+--------+--------+----------+-------+
 | start_request      | READ     | MODIFY |        |        |          |       |
 +--------------------+----------+--------+--------+--------+----------+-------+
 | check_access       | READ     | READ   |        |        |          |       |
