@@ -37,7 +37,7 @@ def _compile_hooks(plugin):
 
 def _create_hook_function_call(hook_function):
     def _call(context):
-        hook_function(context)
+        return hook_function(context)
     return _call
 
 

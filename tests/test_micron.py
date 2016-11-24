@@ -61,6 +61,24 @@ class Tests(unittest.TestCase):
             'option2': None
         }, config)
 
+    def test_DefaultPlugins_ReturnOnlyPostForRequestMethods(self):
+        micron = Micron(Flask('TestApp'))
+        methods = micron.get_request_methods()
+        self.assertEqual(['POST'], methods)
+
+    def test_WhenPluginReturnsNoneForRequestMethods_ExceptionIsRaised(self):
+        micron = Micron(Flask('TestApp'))
+        micron.plugin(GetRequestMethodsPlugin(None))
+        with self.assertRaises(ImplementationError):
+            micron.get_request_methods()
+
+class GetRequestMethodsPlugin(object):
+    def __init__(self, methods):
+        self.methods = methods
+
+    def get_request_methods(self, _):
+        return self.methods 
+
 
 class ConfigSpy(object):
     def process_output(self, ctx):

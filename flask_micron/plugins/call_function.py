@@ -1,6 +1,70 @@
 # -*- coding: utf-8 -*-
-"""This module implements a plugin for Flask-Micron to call the function
-that is wrapped as a Micron method using the input of a request."""
+"""This plugin calls the function that is wrapped as a Micron method,
+using ``ctx.input`` as its argument. The return value is stored in
+``ctx.output``.
+
+Mode of operation
+-----------------
+
+This plugin takes a very simple and straight-forward approach to call
+the wrapped function. The function must take either no or a single
+argument, where the single argument version can also define default value.
+Below are the possible scenarios.
+
+**The function takes no arguments**
+
+.. code:: python
+
+    @micron.method()
+    def the_function():
+          ...
+
+| The ``ctx.input`` must be ``None`` in this case.
+| The function will be called without arguments:
+
+.. code:: python
+
+     the_function()
+
+**The function takes a single argument**
+
+.. code:: python
+
+    @micron.method()
+    def the_function(arg):
+        ...
+
+| The ``ctx.input`` must contain a value that is not ``None``.
+| The function is called with ``ctx.input`` as the argument:
+
+.. code:: python
+
+     the_function(ctx.input)
+
+**The function takes a single argument, which has a default value**
+
+.. code:: python
+
+    @micron.method()
+    def the_function(arg=defaultvalue):
+        ...
+
+| The ``ctx.input`` can contain either a value or None.
+| The function is called without argument when ``ctx.input`` is ``None``,
+| The function is called with ``ctx.input`` as the argument otherwise:
+
+.. code:: python
+
+     if ctx.input is None:
+         the_function()
+     else
+         the_function(ctx.input)
+
+For other scenarios, appropriate exceptions will be raised.
+
+Members
+-------
+"""
 
 import inspect
 from flask_micron.errors import MicronClientError
@@ -8,50 +72,9 @@ from flask_micron.errors import ImplementationError
 from flask_micron.micron_plugin import MicronPlugin
 
 
-class MissingInput(MicronClientError):
-    """The requested method requires input, but no input was
-    provided by the client."""
-
-
-class UnexpectedInput(MicronClientError):
-    """The requested method does not require any input, but input
-    was provided by the client."""
-
-
 class Plugin(MicronPlugin):
     """This plugin calls the function that is wrapped as a Micron method,
-    using the input data as prepared in the context. A very simple
-    convention is followed for the call.
-
-    **The function can take no arguments at all**
-
-    The context input must be None in this case.
-    The function is called without arguments::
-
-        @micron.method()
-        def the_function():
-              ...
-
-    **The function can take a single argument without a default value**
-
-    The context input must contain a value that is not None.
-    The function is called with the input data as the argument::
-
-        @micron.method()
-        def the_function(arg):
-            ...
-
-    **The function can take a single argument with a default value**
-
-    The context input can contain either a value or None.
-    The function is called without argument when the input is None,
-    The function is called with the input otherwise::
-
-        @micron.method()
-        def the_function(arg=defaultvalue):
-            ...
-
-    For other scenarios, appropriate exceptions will be raised.
+    using the input data as prepared in the context.
     """
     def call_function(self, ctx):
         signature = _check_function_signature(ctx.function)
@@ -131,3 +154,13 @@ def _call_function(function, signature, data):
         return function()
     else:
         return function(data)
+
+
+class MissingInput(MicronClientError):
+    """The requested method requires input, but no input was
+    provided by the client."""
+
+
+class UnexpectedInput(MicronClientError):
+    """The requested method does not require any input, but input
+    was provided by the client."""

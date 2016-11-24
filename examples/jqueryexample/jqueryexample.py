@@ -25,9 +25,7 @@ def add_numbers(numbers):
     for number in numbers:
         try:
             total = total + float(number)
-        except ValueError:
-            pass
-        except TypeError:
+        except (ValueError, TypeError):
             pass
     return total
 

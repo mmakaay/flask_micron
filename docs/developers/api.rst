@@ -34,23 +34,39 @@ Base type for all Flask-Micron exceptions
 
 .. currentmodule:: flask_micron
 .. autoclass:: MicronError
+    :show-inheritance:
 
 Derive from these to create your own exceptions
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. autoclass:: MicronServerError
+    :show-inheritance:
+
 .. autoclass:: MicronClientError
+    :show-inheritance:
 
 Exceptions ready for use in your own code
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 .. currentmodule:: flask_micron.errors
+
 .. autoclass:: AccessDenied
+    :show-inheritance:
+
 .. autoclass:: AuthenticationRequired
+    :show-inheritance:
+
 .. autoclass:: AuthenticationFailed
+    :show-inheritance:
+
 .. autoclass:: AuthorizationFailed
+    :show-inheritance:
+
 .. autoclass:: ImplementationError
+    :show-inheritance:
+
 .. autoclass:: UnhandledException
+    :show-inheritance:
 
 .. _api_internal:
 

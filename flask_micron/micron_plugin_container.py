@@ -55,12 +55,15 @@ class MicronPluginContainer(object):
             The MicronPluginContext to pass to the plugins.
         :param string hook:
             The name of the hook function to call.
+        :returns:
+            The return value of the called hook function or None when
+            no plugin implements the hook function.
         """
         try:
             hook_function = self._hook_functions[hook][-1]
-            hook_function(context)
+            return hook_function(context)
         except KeyError:
-            pass
+            return None
 
     def __contains__(self, type_or_instance):
         """Checks if the plugin container contains a given plugin

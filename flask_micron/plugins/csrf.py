@@ -1,121 +1,126 @@
 # -*- coding: utf-8 -*-
-"""This module implements a CSRF protection plugin for Flask-Micron.
+"""This plugin adds CSRF protection to Flask-Micron.
 
 What is CSRF?
+-------------
 
-    CSRF = Cross-Site Request Forgery
+**CSRF** = Cross-Site Request Forgery
 
-    This is a type of attack where a user is logged into site A, then visits
-    site B which tells the browser "Do this bad thing on site A".
-    Without CSRF protection, site A actually performs the "bad thing".
+This is a type of attack where a user is logged into site A, then visits
+site B which tells the browser "Do this bad thing on site A".
+Without CSRF protection, site A actually performs the "bad thing".
 
-    For more in depth info on CSRF, take a look at:
-    https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
+For more in depth info on CSRF, take a look at:
+https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
 
 
 Mode of operation:
+------------------
 
-    On every request, this module will generate a fresh CSRF protection
-    token. This token is stored in the Flask session and it is communicated
-    to the client using an X-Micron-CSRF-Token HTTP response header.
+On every request, this module will generate a fresh CSRF protection
+token. This token is stored in the Flask session and it is communicated
+to the client using an ``X-Micron-CSRF-Token`` HTTP response header.
 
-    In the next request, the client must send this token back in an
-    X-Micron-CSRF-Token HTTP request header. When CSRF checking is enabled
-    for the requested method (which is the default) and the client does not
-    send this header or the value for the header is not a valid token (i.e.
-    it is not known in the session), the request will be rejected.
+In the next request, the client must send this token back in an
+``X-Micron-CSRF-Token`` HTTP request header. When CSRF checking is enabled
+for the requested method (which is the default) and the client does not
+send this header or the value for the header is not a valid token (i.e.
+it is not known in the session), the request will be rejected.
 
-    To bootstrap this operation, an initial call is required for which CSRF
-    checking is not enabled. For this purpose, Micron offers the method
-    'ping' by default. Of course, it is also possible to provide your own
-    unprotected method for bootstrapping. Just make sure that unprotected
-    methods perform no important operations.
+To bootstrap this operation, an initial call is required for which CSRF
+checking is not enabled. For this purpose, Micron offers the method
+'ping' by default. Of course, it is also possible to provide your own
+unprotected method for bootstrapping. Just make sure that unprotected
+methods perform no important operations.
 
+At the HTTP level
+-----------------
 
-At the HTTP level:
+Let's send a request to the "Hello, world" method that you can find
+in the example code from below::
 
-    Let's send a request to the "Hello, world" method that you can find
-    in the example code from below:
+    POST /hello HTTP/1.1
+    Host: localhost
+    Content-Length: 8
 
-        POST /hello HTTP/1.1
-        Host: localhost
-        Content-Length: 8
+    "Micron"
 
-        "Micron"
+The method is CSRF protected, however we did not provide a CSRF token.
+For that reason, the request is rejected::
 
-    The method is CSRF protected, however we did not provide a CSRF token.
-    For that reason, the request is rejected:
+    HTTP/1.0 500 SERVER ERROR
+    Content-Type: application/json
+    X-Micron-CSRF-Token: 24ce3eac-5307-4cff-bcb8-ff0d5945f685
 
-        HTTP/1.0 500 SERVER ERROR
-        Content-Type: application/json
-        X-Micron-CSRF-Token: 24ce3eac-5307-4cff-bcb8-ff0d5945f685
+    {
+      "caused_by": "client",
+      "code": "CsrfTokenRequired",
+      ...
+    }
 
-        {
-          "caused_by": "client",
-          "code": "CsrfTokenRequired",
-          ...
-        }
+In the example response from above, you can see that errors messages
+will also provide a CSRF token. A client could of course use that token
+and resubmit the request, but for bootstrapping it is cleaner to start
+out with a method like ping::
 
-    In the example response from above, you can see that errors messages
-    will also provide a CSRF token. A client could of course use that token
-    and resubmit the request, but for bootstrapping it is cleaner to start
-    out with a method like ping:
+    POST /ping HTTP/1.1
+    Host: localhost
 
-        POST /ping HTTP/1.1
-        Host: localhost
+In the server response, a token is provided::
 
-    In the server response, a token is provided:
+    HTTP/1.0 200 OK
+    X-Micron-CSRF-Token: a85892c2-ec35-42ef-9516-3b33eabe853b
 
-        HTTP/1.0 200 OK
-        X-Micron-CSRF-Token: a85892c2-ec35-42ef-9516-3b33eabe853b
+    "pong"
 
-        "pong"
+Now we can send a request to "Hello, world" using this token::
 
-    Now we can send a request to "Hello, world" using this token:
+    POST /hello HTTP/1.1
+    Host: localhost
+    Content-Length: 8
+    X-Micron-CSRF-Token: a85892c2-ec35-42ef-9516-3b33eabe853b
 
-        POST /hello HTTP/1.1
-        Host: localhost
-        Content-Length: 8
-        X-Micron-CSRF-Token: a85892c2-ec35-42ef-9516-3b33eabe853b
+    "Micron"
 
-        "Micron"
+Since a valid CSRF token is provided, the server now responds:
 
-    Since a valid CSRF token is provided, the server now responds:
+    HTTP/1.0 200 OK
+    X-Micron-CSRF-Token: 7b81b93a-e52a-4941-8cf8-d846a97d0dec
 
-        HTTP/1.0 200 OK
-        X-Micron-CSRF-Token: 7b81b93a-e52a-4941-8cf8-d846a97d0dec
+    "Hello, Micron!"
 
-        "Hello, Micron!"
+And as you can see, along with the method result, the following
+CSRF token is provided.
 
-    And as you can see, along with the method result, the following
-    CSRF token is provided.
+Usage
+-----
 
+This is a core plugin, automatically loaded by Micron.
+Therefore you can use it right away, without having to load it::
 
-Usage:
+    from flask import Flask
+    from flask_micron import Micron
 
-    This is a core plugin, automatically loaded by Micron.
-    Therefore you can use it right away, without having to load it:
+    app = Flask(__name__)
+    micron = Micron(app)
 
-        from flask import Flask
-        from flask_micron import Micron
+    @micron.method(csrf=True)
+    def hello(who="World"):
+        return 'Hello, %s!' % who
 
-        app = Flask(__name__)
-        micron = Micron(app)
+    @micron.method(csrf=False)
+    def not_protected():
+        return 'I am not CSRF protected'
 
-        @micron.method(csrf=True)
-        def hello(who="World"):
-            return 'Hello, %s!' % who
+The CSRF checking option is automatically enabled. Therefore, you could
+omit the configuration option ``csrf=True``. If you want to disable CSRF
+checking for a complete Micron instance, then you can do::
 
-        @micron.method(csrf=False)
-        def not_protected():
-            return 'I am not CSRF protected'
+    app = Flask(__name__)
+    micron = Micron(app, csrf=False)
 
-    The CSRF checking option is automatically enabled. Therefore, you could
-    omit the configuration option csrf=True. If you want to disable CSRF
-    checking for a complete Micron instance, then you can do:
-
-        app = Flask(__name__)
-        micron = Micron(app).configure(csrf=False)
+Members
+-------
 """
 
 import uuid
@@ -128,40 +133,38 @@ from flask_micron.micron_plugin import MicronPlugin
 MAX_NUMBER_OF_CSRF_TOKENS_TO_STORE = 3
 """The number of tokens to keep around in the session data.
 By remembering a few recent tokens, we prevent issues with concurrent
-calls from an asynchroneously operating UI.
+calls from an asynchroneously operating UI. Two example issue scenarios:
 
-Two example issue scenarios:
+Multiple calls using the same CSRF token:
 
-- Issue: multiple calls using the same CSRF token
+#. client sends request 0
+#. gets response 0 with new token 'A'
+#. sends request 1 with token 'A' <- using token
+#. sends request 2 with token 'A' <- reusing the same token
+#. gets response 1 with new token 'B'
+#. gets response 2 with new token 'C'
 
-  client sends request 0
-  gets response 0 with new token 'A'
-  sends request 1 with token 'A' <- using token
-  sends request 2 with token 'A' <- reusing the same token
-  gets response 1 with new token 'B'
-  gets response 2 with new token 'C'
+CSRF tokens being processed in the wrong order:
 
-- Issue: different tokens being processed in the wrong order
+#. client send request 0
+#. gets response 0 with new token 'A'
+#. sends request 1 with token 'A'
+#. sends request 2 with token 'A'
+#. gets response 1 with new token 'B'
+#. sends request 3 with token 'B'
+#. gets response 2 with new token 'C'
+#. sends request 4 with token 'C'
+#. server processes request 4 with token 'C' <- this one might be processed
+#. server processes request 3 with token 'B' <- before this one
+#. got response 4 with new token 'D'
+#. got response 3 with new token 'E'
 
-  client send request 0
-  gets response 0 with new token 'A'
-  sends request 1 with token 'A'
-  sends request 2 with token 'A'
-  gets response 1 with new token 'B'
-  sends request 3 with token 'B'
-  gets response 2 with new token 'C'
-  sends request 4 with token 'C'
-  server processes request 4 with token 'C' <- this request might be processed
-  server processes request 3 with token 'B' <- before this one
-  got response 4 with new token 'D'
-  got response 3 with new token 'E'
+Both problems are circumvented by remembering a recent set of
+CSRF tokens instead of only one.
 
-  Both problems are circumvented by remembering a recent set of
-  CSRF tokens instead of only one.
-
-  Another way of solving these issues, would be to generate a single CSRF
-  token per user session and use that one for all calls, but to me that
-  seems like an easy way out.
+Another way of solving these issues, would be to generate a single CSRF
+token per user session and use that one for all calls, but to me that
+seems like an easy way out.
 """
 
 CSRF_TOKEN_HEADER = 'X-Micron-CSRF-Token'

@@ -78,9 +78,9 @@ class Micron(object):
         """The ping method is provided as a standard means for clients to
         bootstrap the CSRF protection schema. In this implementation, as
         little as possible is done to provide the client with a fresh
-        CSRF token when POSTing to /ping.
+        CSRF token when requesting /ping.
         """
-        @self.app.route('/ping', methods=['POST'])
+        @self.app.route('/ping', methods=self.get_request_methods())
         def _ping():
             ctx = MicronPluginContext()
             ctx.output = 'pong'
@@ -178,11 +178,27 @@ class Micron(object):
         def _decorator(func, rule=rule):
             if rule is None:
                 rule = _create_url_rule(func)
-            method = MicronMethod(self, func).configure(**configuration)
-            self.app.add_url_rule(rule, view_func=method, methods=['POST'])
+            wrapped = MicronMethod(self, func).configure(**configuration)
+            self.app.add_url_rule(rule, view_func=wrapped,
+                                  methods=self.get_request_methods())
             return func
         return _decorator
 
+    def get_request_methods(self):
+        """Retrieves the request methods (POST, GET, PUT, etc.) that
+        are acceptable for incoming requests. The request methods are
+        provided by the last registered plugin that implements the
+        ``get_request_methods`` hook.
+
+        :returns:
+            A list of request methods.
+        """
+        methods = self.plugins.call_one(None, 'get_request_methods')
+        if methods is None:
+            raise ImplementationError(
+                "Hook 'get_request_methods' returned None, but a list "
+                "of acceptable request methods was expected.")
+        return methods
 
 def _create_url_rule(micron_method):
     """Creates the URL rule for a Micron method.

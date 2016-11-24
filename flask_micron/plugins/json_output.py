@@ -1,8 +1,20 @@
 # -*- coding: utf-8 -*-
 #pylint: disable=too-many-return-statements
 
-"""This module implements a plugin for Flask-Micron, to use JSON data
-as the output for Micron methods."""
+"""This plugin produces a JSON response for a request.
+
+Mode of operation
+-----------------
+
+The plugin takes the ``ctx.output`` data. This is the data that was returned
+by the wrapped function. This data is serialized into JSON.
+
+The JSON data is put in a `Flask`_ ``Response`` object, which is stored
+in ``ctx.response``.
+
+Members
+-------
+"""
 
 from datetime import datetime
 from datetime import timedelta

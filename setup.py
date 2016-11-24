@@ -53,7 +53,8 @@ def _get_version():
         for line in fh.readlines():
             m = re.match(r"^__version__\s*=\s*\"(.*)\"", line)  
             if (m is not None):
-                return m.groups()[0]
+                version = m.groups()[0]
+                return version
     raise Exception("Unable to read version from %s" % pkginit)
 
 setup(
@@ -65,7 +66,7 @@ setup(
     author_email='maurice@makaay.nl',
     description='A JSON microservices framework on top of Flask',
     long_description=__doc__,
-    packages=find_packages(exclude=('tests*')),
+    packages=find_packages(exclude=('tests*', 'tests*')),
     test_suite='tests.suite',
     zip_safe=False,
     include_package_data=True,

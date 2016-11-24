@@ -1,49 +1,60 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=too-many-branches
 
-"""This module implements an input normalization plugin for Flask-Micron."""
+"""This plugin adds input data normalization to Flask-Micron.
+
+Mode of operation
+-----------------
+
+The plugin takes the datastructure from ``ctx.input`` and normalizes it,
+according to the following rules:
+
+* Leading and trailing whitespace are stripped from string values.
+* Strings that are empty are set to ``None``.
+
+Normalization is applied to:
+
+* strings
+* dicts (recursively)
+* lists (recursively)
+
+Configuration options
+---------------------
+
+**normalize**: True/False (default = True)
+    Whether or not to apply normalization to the request.
+
+**strip_strings**: True/False (default = True)
+    Whether or not to strip leading and trailing whitespace from strings.
+
+**make_empty_strings_none**: True/False (default = True)
+    Whether or not empty strings must be normalized to None.
+
+Example::
+
+    @micron.method(
+        normalize=True,
+        strip_strings=False,
+        make_empty_strings_none=True)
+    def my_method(arg):
+        ...
+        ...
+
+Members
+-------
+"""
 from flask_micron.micron_plugin import MicronPlugin
 from flask_micron.compat import is_string
 
 
 class Plugin(MicronPlugin):
-    """An input normalization plugin for Micron.
+    """An input normalization plugin for Micron.  """
 
-    Normalizes the request data by:
-    * stripping whitespace from the string values;
-    * making empty strings None.
-
-    Normalization is applied to:
-    * strings
-    * dicts (recursively)
-    * lists (recursively)
-
-    Configuration options:
-
-    normalize: True/False (default = True)
-        Whether or not to apply normalization to the request.
-
-    strip_strings: True/False (default = True)
-        Whether or not to strip leading and trailing whitespace from strings.
-
-    make_empty_strings_none: True/False (default = True)
-        Whether or not empty strings must be normalized to None.
-
-    Example:
-
-        @micron.method(
-            normalize=True,
-            strip_strings=False,
-            make_empty_strings_none=True)
-        def my_method(arg):
-            ...
-            ...
-    """
     def normalize_input(self, ctx):
         """Normalizes input data.
 
-        :param data:
-            The data to normalize.
+        :param ctx:
+            The MicronPluginContext, containing the data to normalize.
         """
         if ctx.config.get('normalize', True):
             strip_strings = ctx.config.get('strip_strings', True)
