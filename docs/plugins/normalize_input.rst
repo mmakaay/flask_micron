@@ -1,4 +1,4 @@
-.. _plugins_csrf:
+.. _plugins_normalize_input:
 
 Normalize Input Plugin
 ======================

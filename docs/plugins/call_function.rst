@@ -1,4 +1,4 @@
-.. _plugins_csrf:
+.. _plugins_call_function:
 
 Call Function Plugin
 ====================

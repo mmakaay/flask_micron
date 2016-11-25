@@ -110,7 +110,7 @@ Plugin architecture
 -------------------
 
 When I started writing JSON webservices using `Flask`_, I quickly got bored
-of writing the same kind of :ref:`boiler plate code <user_api-using-flask>`
+of writing the same kind of :ref:`boiler plate code <user_api_using_flask>`
 for every function that I implemented. "Python decorators to the rescue!",
 I thought.
 

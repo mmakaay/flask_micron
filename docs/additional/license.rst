@@ -9,7 +9,7 @@ copyright in Flask-Micron sticks around, the conditions are not modified and
 the disclaimer is present. Furthermore you must not use the names of the
 :ref:`authors` to promote derivatives of the software without written consent.
 
-The full license text can be found below (:ref:`flask-micron-license`).
+The full license text can be found below (:ref:`flask_micron_license`).
 
 .. _authors:
 
@@ -18,7 +18,7 @@ Authors
 
 .. include:: ../../AUTHORS
 
-.. _flask-micron-license:
+.. _flask_micron_license:
 
 Flask-Micron License
 --------------------

@@ -180,7 +180,7 @@ table below, you can find the data access rules for all context properties.
 +--------------------+----------+--------+--------+--------+----------+-------+
 | Hook name          | function | config | input  | output | response | error |
 +====================+==========+========+========+========+==========+=======+
-| request_methods    | READ     | MODIFY |        |        |          |       |
+| request_methods    | *No context is provided to this hook*                  |
 +--------------------+----------+--------+--------+--------+----------+-------+
 | start_request      | READ     | MODIFY |        |        |          |       |
 +--------------------+----------+--------+--------+--------+----------+-------+

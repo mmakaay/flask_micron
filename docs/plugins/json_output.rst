@@ -1,4 +1,4 @@
-.. _plugins_csrf:
+.. _plugins_json_output:
 
 JSON Ouput Plugin
 =================

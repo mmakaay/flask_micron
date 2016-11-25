@@ -5,9 +5,9 @@ QuickStart
 
 In this chapter, I will explain how to get your first Flask-Micron app 
 running. If you already familiar with writing JSON API's using Flask,
-then you might want to jump directly to :ref:`user_api-using-flask-micron`.
+then you might want to jump directly to :ref:`user_api_using_flask_micron`.
 
-.. _user_minimal-flask-app:
+.. _user_minimal_flask_app:
 
 A minimal Flask application
 ---------------------------
@@ -40,7 +40,7 @@ web browser to see the function's greeting output.
   For information on deploying the app to a production environment, see
   the Flask documentation.
 
-.. _user_api-using-flask:
+.. _user_api_using_flask:
 
 JSON API using Flask
 --------------------
@@ -116,12 +116,12 @@ To me, these unit tests are integration tests, since I have to work almost
 the full stack in order to test my code.
 
 Now imagine having to add extra features like :ref:`CSRF protection
-<user_csrf-protection>`, authentication and logging, you probably can foresee
+<user_csrf_protection>`, authentication and logging, you probably can foresee
 that things get out of hand fast. This is the reason that I started the
 Flask-Micron project, with the ultimate goal to bring back the
 implementation code for this kind of project to pure business logic. 
 
-.. _user_api-using-flask-micron:
+.. _user_api_using_flask_micron:
 
 JSON API using Flask-Micron
 ---------------------------
@@ -171,7 +171,7 @@ the tests is ``hello_world()`` and not the Flask ``app``.
   omitted (by convention). Therefore, I omitted some tests, since the tested
   scenarios do not exist in practice.
 
-.. _user_accessing-request-data:
+.. _user_accessing_request_data:
 
 Accessing request data
 ----------------------
@@ -215,7 +215,7 @@ When using any of the above when calling the example function
 ``one_argument_with_default()``, then Flask-Micron will call it without
 any argument. As a result, the return value would be ``"Hello, World!"``.
 
-.. _user_communicating-errors:
+.. _user_communicating_errors:
 
 Communicating errors to API clients
 -----------------------------------
@@ -315,7 +315,7 @@ will result in::
       "trace": [...]
     }
 
-.. _user_configure-behavior:
+.. _user_configure_behavior:
 
 Configuring Flask-Micron behavior
 ---------------------------------
@@ -389,7 +389,7 @@ Based on this configuration:
 For information on the possible configuration options, take a look at the
 documentation for the plugins that you use.
 
-.. _user_csrf-protection:
+.. _user_csrf_protection:
 
 Cross-Site Request Forgery (CSRF) protection
 --------------------------------------------
