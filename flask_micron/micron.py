@@ -80,11 +80,11 @@ class Micron(object):
         little as possible is done to provide the client with a fresh
         CSRF token when requesting /ping.
         """
-        @self.app.route('/ping', methods=self.get_request_methods())
+        @self.app.route('/ping', methods=['POST'])
         def _ping():
             ctx = MicronPluginContext()
             ctx.output = 'pong'
-            self.plugins.call_one(ctx, 'create_response')
+            self.plugins.call_one(ctx, 'create_response', 'response')
             csrf.Plugin().process_response(ctx)
             return ctx.response
 
@@ -147,7 +147,7 @@ class Micron(object):
 
         :param string rule:
             The URL rule to use for this method. Default value:
-            "/<name of decorated function>"
+            /<name of decorated function>
         :param \**configuration:
             Configuration options that define in what way the Micron method
             must behave. These configuration options can be used to override
@@ -167,8 +167,8 @@ class Micron(object):
             micron = Micron(app, csrf=True)
 
             @micron.method(csrf=False)
-            def hello(who="World"):
-                return "Hello, %s" % who
+            def hello(who='World'):
+                return 'Hello, %s' % who
         """
         if self.app is None:
             raise ImplementationError(
@@ -179,26 +179,9 @@ class Micron(object):
             if rule is None:
                 rule = _create_url_rule(func)
             wrapped = MicronMethod(self, func).configure(**configuration)
-            self.app.add_url_rule(rule, view_func=wrapped,
-                                  methods=self.get_request_methods())
+            self.app.add_url_rule(rule, view_func=wrapped, methods=['POST'])
             return func
         return _decorator
-
-    def get_request_methods(self):
-        """Retrieves the request methods (POST, GET, PUT, etc.) that
-        are acceptable for incoming requests. The request methods are
-        provided by the last registered plugin that implements the
-        ``get_request_methods`` hook.
-
-        :returns:
-            A list of request methods.
-        """
-        methods = self.plugins.call_one(None, 'request_methods')
-        if methods is None:
-            raise ImplementationError(
-                "Hook 'request_methods' returned None, but a list "
-                "of acceptable request methods was expected.")
-        return methods
 
 def _create_url_rule(micron_method):
     """Creates the URL rule for a Micron method.

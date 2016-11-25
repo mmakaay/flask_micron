@@ -3,12 +3,12 @@
 Creating plugins
 ================
 
-Flask-Micron is in its core a plugin system. Plugins can be used
-to add extra features to the request handling. The built-in request
-handling is fully implemented using plugins as well.
+Flask-Micron is in its core a plugin system. Plugins can be used to add
+extra features to the request handling. The built-in request handling is
+fully implemented using plugins as well.
 
-This section explains how to make use of the plugin system to
-extend the Flask-Micron functionality.
+This section explains how to make use of the plugin system to extend the
+Flask-Micron functionality.
 
 .. _user_plugins_hooks:
 
@@ -30,10 +30,7 @@ During the lifetime of a single request, the following hooks are triggered
 +------------------------+---------------------------------------------+
 | Hook name              | Intended purpose of the hook                |
 +========================+=============================================+
-| **request_methods**    | Provide a list of request methods that are  |
-|                        | accepted for request handling.              |
-+------------------------+---------------------------------------------+
-| **start_request**      | Initialize the plugin.                      |
+| **start_request**      | Initialize the plugin for a request.        |
 +------------------------+---------------------------------------------+
 | **check_access**       | Implement access control (typical use:      |
 |                        | authentication, authorization,              |
@@ -81,8 +78,11 @@ During the lifetime of a single request, the following hooks are triggered
 A few hooks are annotated with *[Single]* in the table. These hooks are
 somewhat special. For most of the hooks, Flask-Micron will call the
 corresponding hook function in every registered plugin. For the *[Single]*
-hooks however, only the hook function from the plugin that was registered
-last is called. 
+hooks however, the hook functions are called in reverse order (latest
+registered plugin first), until a hook function assigns data (possibly
+None) to the relevant property in the plugin context.
+
+First come, first serve, and we only have one serving.
 
 The reason for this, is that for those steps in the request processing, it
 makes no sense to perform them multiple times. The request can only be read
@@ -90,15 +90,16 @@ once, the function must be called only once and the response can only be
 created once.
 
 Put differently: when implementing a *[Single]* hook function, your plugin
-will override existing behavior. Other hook functions will extend the behavior.
+can override existing behavior. Other hook functions will extend the behavior.
 
 .. _user_plugins_writeplugin:
 
 How to write a plugin
 ---------------------
 
-A Flask-Micron plugin is nothing more than a collection of hook functions.
-Hook functions have the same name as the hook that they must act upon.
+A Flask-Micron plugin is nothing more than a collection (e.g. object or
+module) of hook functions. Hook functions have the same name as the hook
+that they must act upon.
 
 The standard way to implement a plugin, is to derive a class from the
 :class:`MicronPlugin <flask_micron.MicronPlugin>` class. The derived plugin
@@ -180,8 +181,6 @@ table below, you can find the data access rules for all context properties.
 +--------------------+----------+--------+--------+--------+----------+-------+
 | Hook name          | function | config | input  | output | response | error |
 +====================+==========+========+========+========+==========+=======+
-| request_methods    | *No context is provided to this hook*                  |
-+--------------------+----------+--------+--------+--------+----------+-------+
 | start_request      | READ     | MODIFY |        |        |          |       |
 +--------------------+----------+--------+--------+--------+----------+-------+
 | check_access       | READ     | READ   |        |        |          |       |

@@ -13,18 +13,6 @@ class MicronPlugin(object):
     take a look at the :ref:`plugin documentation <user_plugins>`.
     """
 
-    def request_methods(self, _):
-        """This hook is called by Flask-Micron to retrieve a list of accepted
-        request methods, used for creating the `Flask`_ routing entry.
-
-        This hook does not receive a request context input parameter, because
-        it is called at app initialization time and not within request context.
-
-        :returns:
-            A list of request methods (strings). These request methods
-            must be valid input for the Flaks @app.route methods parameter.
-        """
-
     def start_request(self, ctx):
         """A hook, called right at the start of the Micron request processing.
         This hook can be used to handle plugin initialization, e.g. applying

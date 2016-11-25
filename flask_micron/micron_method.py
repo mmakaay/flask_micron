@@ -64,12 +64,12 @@ class MicronMethod(object):
             self.plugins.call_all(ctx, 'start_request')
             self.plugins.call_all(ctx, 'check_access')
             self.plugins.call_all(ctx, 'after_check_access')
-            self.plugins.call_one(ctx, 'read_input')
+            self.plugins.call_one(ctx, 'read_input', 'input')
             self.plugins.call_all(ctx, 'normalize_input')
             self.plugins.call_all(ctx, 'validate_input')
-            self.plugins.call_one(ctx, 'call_function')
+            self.plugins.call_one(ctx, 'call_function', 'output')
             self.plugins.call_all(ctx, 'process_output')
-            self.plugins.call_one(ctx, 'create_response')
+            self.plugins.call_one(ctx, 'create_response', 'response')
             self.plugins.call_all(ctx, 'process_response')
             self.plugins.call_all(ctx, 'end_request')
         except MicronError:
@@ -90,7 +90,7 @@ class MicronMethod(object):
             'details': error.details,
             'trace': _create_trace(traceback_)
         }
-        self.plugins.call_one(ctx, 'create_response')
+        self.plugins.call_one(ctx, 'create_response', 'reponse')
         self.plugins.call_all(ctx, 'process_error')
         self.plugins.call_all(ctx, 'process_response')
         self.plugins.call_all(ctx, 'end_request')

@@ -47,21 +47,25 @@ class MicronPluginContainer(object):
             for hook_function in self._hook_functions[hook]:
                 hook_function(context)
 
-    def call_one(self, context, hook):
-        """Call the hook function in the latest registered plugin
-        that implements the hook function.
+    def call_one(self, context, hook, monitor_field):
+        """Call the hook function in all of the plugins, latest registered
+        plugin first, until a plugin sets the monitor_field in the plugin
+        context (Chain of Command pattern, the first plugin that handles
+        the hook wins).
 
         :param MicronPluginContext context:
             The MicronPluginContext to pass to the plugins.
         :param string hook:
             The name of the hook function to call.
-        :returns:
-            The return value of the called hook function or None when
-            no plugin implements the hook function.
+        :param string monitor_field:
+            The name of the plugin context field to monitor. When a value
+            is assigned to that field, no more hooks functions are called.
         """
         try:
-            hook_function = self._hook_functions[hook][-1]
-            return hook_function(context)
+            for hook_function in reversed(self._hook_functions[hook]):
+                hook_function(context)
+                if (context.has(monitor_field)):
+                    return
         except KeyError:
             return None
 
