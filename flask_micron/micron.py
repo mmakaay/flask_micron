@@ -2,10 +2,9 @@
 """This module provides the Micron class."""
 
 from flask_micron.errors import ImplementationError
-from flask_micron.micron_method import MicronMethod
-from flask_micron.micron_plugin_container import MicronPluginContainer
-from flask_micron.micron_plugin_context import MicronPluginContext
-from flask_micron.micron_method_config import MicronMethodConfig
+from flask_micron.method import MicronMethod
+from flask_micron.method import MicronMethodConfig
+from flask_micron import plugin
 from flask_micron.plugins import csrf
 from flask_micron.plugins import json_input
 from flask_micron.plugins import normalize_input
@@ -16,7 +15,7 @@ from flask_micron.plugins import json_output
 class Micron(object):
     """The Micron class is used to decorate regular functions, to become all
     singing and all dancing :class:`Micron methods
-    <flask_micron.micron_method.MicronMethod>`, which are plugged into the
+    <flask_micron.method.MicronMethod>`, which are plugged into the
     routing of a Flask application.
     """
     def __init__(self, app=None, **configuration):
@@ -44,7 +43,7 @@ class Micron(object):
         """
         self.config = MicronMethodConfig(**configuration)
 
-        self.plugins = MicronPluginContainer(
+        self.plugins = plugin.Container(
             csrf.Plugin(),
             json_input.Plugin(),
             normalize_input.Plugin(),
@@ -82,18 +81,18 @@ class Micron(object):
         """
         @self.app.route('/ping', methods=['POST'])
         def _ping():
-            ctx = MicronPluginContext()
+            ctx = plugin.Context()
             ctx.output = 'pong'
             self.plugins.call_one(ctx, 'create_response', 'response')
             csrf.Plugin().process_response(ctx)
             return ctx.response
 
     def plugin(self, plugin):
-        """Adds a :class:`MicronPlugin <flask_micron.MicronPlugin>` to this
+        """Adds a :class:`Plugin <flask_micron.Plugin>` to this
         Micron object. See :ref:`user_plugins` for information on writing
         and using plugins.
 
-        :param MicronPlugin plugin:
+        :param flask_micron.Plugin plugin:
             The plugin to add to this Micron object.
 
         :returns:

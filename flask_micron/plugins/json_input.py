@@ -21,15 +21,15 @@ Members
 from flask import json
 from flask import request
 from flask_micron.errors import MicronClientError
-from flask_micron.micron_plugin import MicronPlugin
+from flask_micron import plugin
 from flask_micron.compat import is_string
 
 
-class Plugin(MicronPlugin):
+class Plugin(plugin.Plugin):
     """A plugin to read the input for the Micron method from the request."""
 
     def read_input(self, ctx):
-        """Reads the input data and stores it in the MicronPluginContext."""
+        """Reads the input data and stores it in the plugin context."""
         ctx.input = None
         post_body = request.get_data()
 

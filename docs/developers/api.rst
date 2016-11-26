@@ -12,18 +12,18 @@ Micron
 .. autoclass:: Micron
     :members:
 
-MicronPlugin
-------------
-
-.. currentmodule:: flask_micron
-.. autoclass:: MicronPlugin
-    :members:
-
-MicronPluginContext
+flask_micron.Plugin
 -------------------
 
-.. currentmodule:: flask_micron.micron_plugin_context
-.. autoclass:: MicronPluginContext
+.. currentmodule:: flask_micron
+.. autoclass:: Plugin
+    :members:
+
+flask_micron.plugin.Context
+---------------------------
+
+.. currentmodule:: flask_micron.plugin
+.. autoclass:: Context
     :members:
 
 Errors
@@ -76,20 +76,20 @@ Internal Components
 MicronMethod
 ------------
 
-.. currentmodule:: flask_micron.micron_method
+.. currentmodule:: flask_micron.method
 .. autoclass:: MicronMethod
     :members:
 
 MicronMethodConfig
 ------------------
 
-.. currentmodule:: flask_micron.micron_method_config
+.. currentmodule:: flask_micron.method
 .. autoclass:: MicronMethodConfig
     :members:
 
-MicronPluginContainer
----------------------
+flask_micron.plugin.Container
+-----------------------------
 
-.. currentmodule:: flask_micron.micron_plugin_container
-.. autoclass:: MicronPluginContainer
+.. currentmodule:: flask_micron.plugin
+.. autoclass:: Container
     :members:

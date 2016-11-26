@@ -2,19 +2,17 @@
 # pylint: disable=redefined-outer-name
 
 import unittest
-from flask_micron.micron_plugin import MicronPlugin
-from  flask_micron import micron_plugin_compiler
-from flask_micron.micron_plugin_context import MicronPluginContext
-from flask_micron.micron_method_config import MicronMethodConfig
+import flask_micron
+from flask_micron.method import MicronMethodConfig
 
 
 class Tests(unittest.TestCase):
 
     def test_PluginMethods(self):
         """Check if we only get back those methods that we consider
-        plugin hooks from the base MicronPlugin class.
+        plugin hooks from the base plugin class.
         """
-        d = MicronPlugin.__dict__
+        d = flask_micron.Plugin.__dict__
         self.assertEqual({
             'start_request': d['start_request'],
             'check_access': d['check_access'],
@@ -28,14 +26,14 @@ class Tests(unittest.TestCase):
             'process_error': d['process_error'],
             'process_response': d['process_response'],
             'end_request': d['end_request']
-        }, micron_plugin_compiler.PLUGIN_METHODS)
+        }, flask_micron.plugin.PLUGIN_METHODS)
 
     def test_CompileEmptyPlugin(self):
 
-        class EmptyPlugin(MicronPlugin):
+        class EmptyPlugin(flask_micron.Plugin):
             pass
 
-        hooks = micron_plugin_compiler.compile_plugin(EmptyPlugin())
+        hooks = flask_micron.plugin.Compiler().compile(EmptyPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({}, hooks)
@@ -45,20 +43,20 @@ class Tests(unittest.TestCase):
         class EmptyDuckTypedPlugin(object):
             pass
 
-        hooks = micron_plugin_compiler.compile_plugin(EmptyDuckTypedPlugin())
+        hooks = flask_micron.plugin.Compiler().compile(EmptyDuckTypedPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({}, hooks)
 
     def test_CompileDerivedPlugin(self):
 
-        class DerivedPlugin(MicronPlugin):
+        class DerivedPlugin(flask_micron.Plugin):
             def normalize_input(self, ctx):
                 ctx.input = "DerivedPlugin input %s" % ctx.config.option1
             def process_output(self, ctx):
                 ctx.output = "%s %s" % (ctx.config.option1, ctx.config.option2)
 
-        hooks = micron_plugin_compiler.compile_plugin(DerivedPlugin())
+        hooks = flask_micron.plugin.Compiler().compile(DerivedPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual(
@@ -67,7 +65,7 @@ class Tests(unittest.TestCase):
 
         # Check if the compiled hook functions can be called.
         config = MicronMethodConfig(option1='value1', option2='value2')
-        ctx = MicronPluginContext()
+        ctx = flask_micron.plugin.Context()
         ctx.config = config
         ctx.input = 'orig input'
         hooks['normalize_input'](ctx)
@@ -83,14 +81,14 @@ class Tests(unittest.TestCase):
                 duck = ctx.config.duck
                 ctx.input = "DuckTypedPlugin input %s" % duck
 
-        hooks = micron_plugin_compiler.compile_plugin(DuckTypedPlugin())
+        hooks = flask_micron.plugin.Compiler().compile(DuckTypedPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({'normalize_input'}, set(hooks.keys()))
 
         # Check if the compiled hook functions can be called.
         config = MicronMethodConfig(duck='Dagobert')
-        ctx = MicronPluginContext()
+        ctx = flask_micron.plugin.Context()
         ctx.config = config
         hooks['normalize_input'](ctx)
         self.assertEqual('DuckTypedPlugin input Dagobert', ctx.input)
@@ -102,14 +100,14 @@ class Tests(unittest.TestCase):
             def __init__(self):
                 self.process_output = process_output
 
-        hooks = micron_plugin_compiler.compile_plugin(ConstructedPlugin())
+        hooks = flask_micron.plugin.Compiler().compile(ConstructedPlugin())
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({'process_output'}, set(hooks.keys()))
 
         # Check if the compiled hook functions can be called.
         config = MicronMethodConfig(drill=True)
-        ctx = MicronPluginContext()
+        ctx = flask_micron.plugin.Context()
         ctx.config = config
         hooks['process_output'](ctx)
         self.assertEqual(True, ctx.output)
@@ -118,25 +116,25 @@ class Tests(unittest.TestCase):
         def process_output(ctx):
             simple = ctx.config.simple
             ctx.output = simple * simple
-        plugin = {
+        dict_plugin = {
             'process_output': process_output
         }
 
-        hooks = micron_plugin_compiler.compile_plugin(plugin)
+        hooks = flask_micron.plugin.Compiler().compile(dict_plugin)
 
         # Check for extraction of the correct hook functions.
         self.assertEqual({'process_output'}, set(hooks.keys()))
 
         # Check if the compiled hook functions can be called.
         config = MicronMethodConfig(simple=11)
-        ctx = MicronPluginContext()
+        ctx = flask_micron.plugin.Context()
         ctx.config = config
         hooks['process_output'](ctx)
         self.assertEqual(121, ctx.output)
 
     def test_ModulePlugin(self):
         module = globals()
-        hooks = micron_plugin_compiler.compile_plugin(module)
+        hooks = flask_micron.plugin.Compiler().compile(module)
 
         # Check for extraction of the correct hook functions.
         self.assertEqual(
@@ -144,7 +142,7 @@ class Tests(unittest.TestCase):
             set(hooks.keys()))
 
         # Check if the compiled hook functions can be called.
-        ctx = MicronPluginContext()
+        ctx = flask_micron.plugin.Context()
         hooks['normalize_input'](ctx)
         hooks['process_output'](ctx)
         self.assertEqual(256, ctx.output)

@@ -43,18 +43,18 @@ Example::
 Members
 -------
 """
-from flask_micron.micron_plugin import MicronPlugin
+from flask_micron import plugin
 from flask_micron.compat import is_string
 
 
-class Plugin(MicronPlugin):
+class Plugin(plugin.Plugin):
     """An input normalization plugin for Micron.  """
 
     def normalize_input(self, ctx):
         """Normalizes input data.
 
         :param ctx:
-            The MicronPluginContext, containing the data to normalize.
+            The plugin context, containing the data to normalize.
         """
         if ctx.config.get('normalize', True):
             strip_strings = ctx.config.get('strip_strings', True)

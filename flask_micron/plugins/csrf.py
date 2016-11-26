@@ -126,8 +126,8 @@ Members
 import uuid
 from flask import request
 from flask import session
+from flask_micron import plugin
 from flask_micron.errors import MicronClientError
-from flask_micron.micron_plugin import MicronPlugin
 
 
 MAX_NUMBER_OF_CSRF_TOKENS_TO_STORE = 3
@@ -195,7 +195,7 @@ class CsrfTokenInvalid(MicronClientError):
     """
 
 
-class Plugin(MicronPlugin):
+class Plugin(plugin.Plugin):
     """A CSRF protection plugin for Micron."""
 
     def check_access(self, ctx):

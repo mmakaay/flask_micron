@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-from flask_micron import MicronPlugin
+from flask_micron import plugin
 from tests import MicronTestCase
 
 
-class DummyPlugin(MicronPlugin):
+class DummyPlugin(plugin.Plugin):
 
     def start_request(self, ctx):
         if ctx.config.get('dommy', None) == 'yo':

@@ -21,10 +21,10 @@ from datetime import timedelta
 from flask import json
 from flask.wrappers import Response
 from flask_micron.errors import ImplementationError
-from flask_micron.micron_plugin import MicronPlugin
+from flask_micron import plugin
 
 
-class Plugin(MicronPlugin):
+class Plugin(plugin.Plugin):
     """A plugin to create the response for a Micron method as a
     JSON-serialized message.
     """

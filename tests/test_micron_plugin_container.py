@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 import unittest
-from flask_micron import MicronPlugin
-from flask_micron.micron_method_config import MicronMethodConfig
-from flask_micron.micron_plugin_container import MicronPluginContainer
-from flask_micron.micron_plugin_context import MicronPluginContext
+from flask_micron import plugin
+from flask_micron.method import MicronMethodConfig
 
 
 class Tests(unittest.TestCase):
 
     def test_CanCheckForContainmentBasedOnType(self):
-        container = MicronPluginContainer()
+        container = plugin.Container()
         dummy = Dummy()
         dommy = Dummy()
         ducky = Ducky()
@@ -31,65 +29,65 @@ class Tests(unittest.TestCase):
         self.assertTrue(dummy in container)
         self.assertTrue(object in container)
 
-    def test_CanRegisterPluginWithMicronPluginContainer(self):
-        container = MicronPluginContainer()
+    def test_CanRegisterPluginWithContainer(self):
+        container = plugin.Container()
         container.add(Dummy())
         self.assertTrue(Dummy in container)
 
     def test_HookMethodsInPluginsCanBeRun(self):
-        container = MicronPluginContainer()
+        container = plugin.Container()
         container.add(Dummy())
         config = MicronMethodConfig(dommy='yo')
-        ctx = MicronPluginContext()
+        ctx = plugin.Context()
         ctx.config = config
         container.call_all(ctx, 'process_output')
         self.assertEqual('I made it, yo', ctx.output)
 
     def test_PluginsCanBeDuckTyped(self):
-        container = MicronPluginContainer()
+        container = plugin.Container()
         container.add(Ducky())
         config = MicronMethodConfig()
-        ctx = MicronPluginContext()
+        ctx = plugin.Context()
         ctx.config = config
         container.call_all(ctx, 'normalize_input')
         container.call_all(ctx, 'process_output')
         self.assertEqual('Quack!', ctx.output)
 
     def test_CallAllVisitsAllPlugins(self):
-        container = MicronPluginContainer()
+        container = plugin.Container()
         container.add(
             CallAllTestPlugin('A'),
             CallAllTestPlugin('B'),
             CallAllTestPlugin('C'))
-        ctx = MicronPluginContext()
+        ctx = plugin.Context()
         ctx.input = 'START';
         container.call_all(ctx, 'normalize_input');
         self.assertEqual('START|A|B|C', ctx.input);
 
     def test_CallOneFollowsChainOfCommandPattern(self):
-        container = MicronPluginContainer()
+        container = plugin.Container()
         container.add(
             CallOneTestPlugin('A', True),
             CallOneTestPlugin('B', True),
             CallOneTestPlugin('C', False))
-        ctx = MicronPluginContext()
+        ctx = plugin.Context()
         container.call_one(ctx, 'read_input', 'input');
         self.assertEqual('B', ctx.input);
 
     def test_callOneAcceptsSettingMonitorFieldToNoneValue(self):
-        container = MicronPluginContainer()
+        container = plugin.Container()
         container.add(
             CallOneTestPlugin('A', True),
             CallOneTestPlugin('B', True),
             CallOneTestPlugin(None, True))
-        ctx = MicronPluginContext()
+        ctx = plugin.Context()
         self.assertFalse(ctx.has('input'))
         container.call_one(ctx, 'read_input', 'input');
         self.assertTrue(ctx.has('input'))
         self.assertEqual(None, ctx.input);
 
 
-class Dummy(MicronPlugin):
+class Dummy(plugin.Plugin):
 
     def process_output(self, ctx):
         ctx.output = 'I made it, %s' % ctx.config.dommy
@@ -97,7 +95,7 @@ class Dummy(MicronPlugin):
 
 class Ducky(object):
     """This is a duck typed plugin, meaning that it does not derive
-    from the MicronPlugin class. Additionally, it does not implement all
+    from the Plugin class. Additionally, it does not implement all
     the expected attributes.
 
     Strictly speaking we're not duck typing, but kind of the reverse
@@ -108,7 +106,7 @@ class Ducky(object):
         ctx.output = 'Quack!'
 
 
-class CallAllTestPlugin(MicronPlugin):
+class CallAllTestPlugin(plugin.Plugin):
 
     def __init__(self, data):
         self.data = data
@@ -117,7 +115,7 @@ class CallAllTestPlugin(MicronPlugin):
         ctx.input = ctx.input + "|" + self.data
 
 
-class CallOneTestPlugin(MicronPlugin):
+class CallOneTestPlugin(plugin.Plugin):
 
     def __init__(self, data, handle=True):
         self.handle = handle

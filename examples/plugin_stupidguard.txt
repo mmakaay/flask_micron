@@ -1,12 +1,12 @@
 **Full example**
 
-Here an example of a (rather useless) MicronPlugin, used for guarding
+Here an example of a (rather useless) plugin, used for guarding
 access to Micron methods::
 
-	from flask_micron import MicronPlugin
+	import flask_micron
 	from flask_micron.errors import AccessDenied
 
-	class StupidGuard(MicronPlugin):
+	class StupidGuard(flask_micron.Plugin):
 
 		def check_access(self, ctx):
 			if ctx.config.get(guard, True):

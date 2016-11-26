@@ -1,11 +1,20 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=too-many-public-methods
+"""
+    flask_micron.plugin
+    ~~~~~~~~~~~~~~~~~~~
 
-"""This module provides the MicronPlugin class."""
+    This module provides the classes that make up the Flask-Micron
+    plugin system.
+
+    :copyright: (c) 2016 by Maurice Makaay
+    :license: BSD, see LICENSE for more details.
+"""
+
+import inspect
 
 
-class MicronPlugin(object):
-    """The MicronPlugin defines the interface that can be implemented
+class Plugin(object):
+    """The Plugin class defines the interface that can be implemented
     to create a Micron plugin. Derived classes can override methods
     to hook into specific phases of the request handling.
 
@@ -21,7 +30,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | <NOT AVAILABLE>                                   |
         +--------------+---------------------------------------------------+
@@ -35,9 +44,9 @@ class MicronPlugin(object):
         Example plugin::
 
             from datetime import datetime
-            from flask_micron import MicronPlugin
+            import flask_micron
 
-            class AddLocalTimeHeader(MicronPlugin):
+            class AddLocalTimeHeader(flask_micron.Plugin):
 
                 def start_request(self, ctx):
                     ctx.config.setdefault('add_local_time_header', True)
@@ -78,7 +87,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | <NOT AVAILABLE>                                   |
         +--------------+---------------------------------------------------+
@@ -92,13 +101,12 @@ class MicronPlugin(object):
         Example plugin::
 
             from datetime import date
-            from flask_micron import MicronPlugin
-            from flask_micron import MicronClientError
+            import flask_micron
 
-            class NoServiceToday(MicronClientError):
+            class NoServiceToday(flask_micron.MicronClientError):
                 "This web service does not provide services today."
 
-            class DayWatch(MicronPlugin):
+            class DayWatch(flask_micron.Plugin):
 
                 def check_access(self, ctx):
                     deny_day = ctx.config.get(deny_day, None)
@@ -135,7 +143,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | <NOT AVAILABLE>                                   |
         +--------------+---------------------------------------------------+
@@ -160,7 +168,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | <MUST BE SET BY THIS HOOK>                        |
         +--------------+---------------------------------------------------+
@@ -185,7 +193,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | The function input data (modifiable)              |
         +--------------+---------------------------------------------------+
@@ -209,7 +217,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | The function input data                           |
         +--------------+---------------------------------------------------+
@@ -225,7 +233,7 @@ class MicronPlugin(object):
         """A hook for calling the function that is wrapped as a Micron
         method. This is where the input data is passed to the function
         and where its return value must be stored as the output data
-        in the MicronPluginContext.
+        in the plugin context.
 
         Important:
         Since it makes sense to call the function only once, Micron will only
@@ -235,7 +243,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | The function input data                           |
         +--------------+---------------------------------------------------+
@@ -258,7 +266,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | The function input data                           |
         +--------------+---------------------------------------------------+
@@ -272,7 +280,7 @@ class MicronPlugin(object):
 
     def create_response(self, ctx):
         """A hook for creating the Flask Reponse object to return to the
-        client. This response must be stored in the MicronPluginContext.
+        client. This response must be stored in the plugin context.
 
         Important:
         Since it makes sense to create the response only once, Micron will only
@@ -282,7 +290,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | The function input data                           |
         +--------------+---------------------------------------------------+
@@ -309,7 +317,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | The function input data                           |
         +--------------+---------------------------------------------------+
@@ -324,9 +332,9 @@ class MicronPlugin(object):
         Example::
 
             from flask import Response
-            from flask_micron import MicronPlugin
+            import flask_micron
 
-            class UnderTheRug(MicronPlugin):
+            class UnderTheRug(flask_micron.Plugin):
                 "When errors occur, deny them!"
 
                 def process_error(self, ctx):
@@ -351,7 +359,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | The function input data                           |
         +--------------+---------------------------------------------------+
@@ -365,9 +373,9 @@ class MicronPlugin(object):
 
         Example::
 
-            from flask_micron import MicronPlugin
+            import flask_micron
 
-            class ForceContextTypeTextPlain(MicronPlugin):
+            class ForceContextTypeTextPlain(flask_micron.Plugin):
 
                 def process_response(self, ctx):
                     ctx.response.content_type = 'text/plain'
@@ -380,7 +388,7 @@ class MicronPlugin(object):
         +--------------+---------------------------------------------------+
         | ctx.function | The function that is wrapped as Micron method     |
         +--------------+---------------------------------------------------+
-        | ctx.config   | The MicronMethodConfig, flattened as a dict       |
+        | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
         | ctx.input    | The function input data                           |
         +--------------+---------------------------------------------------+
@@ -393,3 +401,209 @@ class MicronPlugin(object):
         | ctx.response | The Flask Response object                         |
         +--------------+---------------------------------------------------+
         """
+
+
+class Container(object):
+    """The Container class well... contains Flask-Micron plugins.
+    It is used by Flask-Micron to register plugins and to execute hook
+    functions from those plugins.
+    """
+    def __init__(self, *plugins):
+        r"""Creates a new plugin Container object.
+
+        :param \*plugins:
+            Plugins to add to the container directly. Additional plugins can
+            be added after construction using the method add(\*plugin)".
+        """
+        self._plugins = []
+        self._hook_functions = {}
+        self.add(*plugins)
+
+    def add(self, *plugins):
+        r"""Add Flask-Micron plugins to this Container.
+
+        :param \*plugins:
+            The plugin(s) to add.
+        """
+        for plugin in plugins:
+            self._compile_plugin(plugin)
+            self._plugins.append(plugin)
+
+    def _compile_plugin(self, plugin):
+        hooks = Compiler().compile(plugin)
+        for hook, hook_function in hooks.items():
+            self._hook_functions.setdefault(hook, []).append(hook_function)
+
+    def call_all(self, context, hook):
+        """Call the hook function in all registered plugins.
+
+        :param flask_micron.plugin.Context context:
+            The plugin context to pass to the plugins.
+        :param string hook:
+            The name of the hook function to call.
+        """
+        if hook in self._hook_functions:
+            for hook_function in self._hook_functions[hook]:
+                hook_function(context)
+
+    def call_one(self, context, hook, monitor_field):
+        """Call the hook function in all of the plugins, latest registered
+        plugin first, until a plugin sets the monitor_field in the plugin
+        context (Chain of Command pattern, the first plugin that handles
+        the hook wins).
+
+        :param flask_micron.plugin.Context context:
+            The plugin context to pass to the plugins.
+        :param string hook:
+            The name of the hook function to call.
+        :param string monitor_field:
+            The name of the plugin context field to monitor. When a value
+            is assigned to that field, no more hooks functions are called.
+        """
+        try:
+            for hook_function in reversed(self._hook_functions[hook]):
+                hook_function(context)
+                if (context.has(monitor_field)):
+                    return
+        except KeyError:
+            return None
+
+    def __contains__(self, type_or_instance):
+        """Checks if the plugin container contains a given plugin
+        type or instance.
+
+        Example::
+
+            >>> import flask_micron
+            >>> class MyPlugin(flask_micron.Plugin): pass
+            >>> my = MyPlugin()
+            >>> container = plugin.Container()
+            >>> container.add(my)
+            >>> my in container
+            True
+            >>> MyPlugin in container
+            True
+            >>> my2 = MyPlugin()
+            >>> my2 in container
+            False
+        """
+        if isinstance(type_or_instance, type):
+            return any([
+                p for p in self._plugins
+                if isinstance(p, type_or_instance)
+            ])
+        else:
+            return type_or_instance in self._plugins
+
+
+class Compiler(object):
+
+    def compile(self, plugin):
+        """Compiles the provided plugin.
+
+        :param flask_micron.Plugin plugin:
+            The plugin to compile.
+
+        :returns:
+            A dict of hooks that are implemented by the plugin.
+            The keys are the hook names, the values are functions that
+            can be called using a plugin context as argument.
+        """
+        functions = self._extract_functions(plugin)
+        hook_functions = [
+            (name, function)
+            for name, function, base_function in functions
+            for plugin_name, plugin_function in PLUGIN_METHODS.items()
+            if name == plugin_name and base_function != plugin_function
+        ]
+        hooks = {}
+        for name, hook_function in hook_functions:
+            hooks[name] = self._create_hook_function_call(hook_function)
+        return hooks
+
+    def _extract_functions(self, plugin):
+        if isinstance(plugin, dict):
+            functions = [
+                (n, f, f) for n, f in plugin.items()
+                if inspect.isfunction(f)
+            ]
+        else:
+            functions = [
+                (name, method, method.__func__) for name, method
+                in inspect.getmembers(plugin, inspect.ismethod)
+            ] + [
+                (name, function, function) for name, function
+                in inspect.getmembers(plugin, inspect.isfunction)
+            ]
+        return functions
+
+    def _create_hook_function_call(self, hook_function):
+        def _call(context):
+            return hook_function(context)
+        return _call
+
+
+PLUGIN_METHODS = dict((
+    (name, base_function)
+    for (name, base_function)
+    in Plugin.__dict__.items()
+    if name[0] != '_' and inspect.isfunction(base_function)
+))
+
+
+class Context(object):
+    """The flask_micron.plugin.Context is used to store the data that is
+    required for Micron during request processing. This data is initialized by
+    MicronMethod on every request and it is passed on to all plugin hooks.
+
+    For information on the data that are stored in this object, take
+    a look at :ref:`user_plugins_context`.
+    """
+
+    @property
+    def config(self):
+        return self._data.get('config', None)
+    @config.setter
+    def config(self, value):
+        self._data['config'] = value
+
+    @property
+    def function(self):
+        return self._data.get('function', None)
+    @function.setter
+    def function(self, value):
+        self._data['function'] = value
+
+    @property
+    def input(self):
+        return self._data.get('input', None)
+    @input.setter
+    def input(self, value):
+        self._data['input'] = value
+
+    @property
+    def output(self):
+        return self._data.get('output', None)
+    @output.setter
+    def output(self, value):
+        self._data['output'] = value
+
+    @property
+    def error(self):
+        return self._data.get('error', None)
+    @error.setter
+    def error(self, value):
+        self._data['error'] = value
+
+    @property
+    def response(self):
+        return self._data.get('response', None)
+    @response.setter
+    def response(self, value):
+        self._data['response'] = value
+
+    def __init__(self):
+        self._data = {}
+
+    def has(self, field):
+        return field in self._data;

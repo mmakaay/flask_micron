@@ -67,12 +67,12 @@ Members
 """
 
 import inspect
+from flask_micron import plugin
 from flask_micron.errors import MicronClientError
 from flask_micron.errors import ImplementationError
-from flask_micron.micron_plugin import MicronPlugin
 
 
-class Plugin(MicronPlugin):
+class Plugin(plugin.Plugin):
     """This plugin calls the function that is wrapped as a Micron method,
     using the input data as prepared in the context.
     """

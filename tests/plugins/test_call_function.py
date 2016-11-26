@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 from flask_micron.errors import ImplementationError
+from flask_micron import plugin
 from flask_micron.plugins.call_function import MissingInput
 from flask_micron.plugins.call_function import UnexpectedInput
 from flask_micron.plugins.call_function import Plugin
-from flask_micron.micron_plugin_context  import MicronPluginContext
 from tests import MicronTestCase
 
 
@@ -45,7 +45,7 @@ class Tests(MicronTestCase):
 
 
 def _call_plugin(function, arg):
-    ctx = MicronPluginContext()
+    ctx = plugin.Context()
     ctx.input = arg
     ctx.function = function
     Plugin().call_function(ctx)

@@ -2,7 +2,6 @@
 import unittest
 from flask import session
 from flask_micron.plugins import csrf
-from flask_micron.micron_plugin_context import MicronPluginContext
 from tests import MicronTestCase
 
 

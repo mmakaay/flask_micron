@@ -7,9 +7,9 @@ from datetime import datetime
 from datetime import timedelta
 import unittest
 from flask import json
+from flask_micron import plugin
 from flask_micron.plugins import json_output
 from flask_micron.errors import ImplementationError
-from flask_micron.micron_plugin_context import MicronPluginContext
 
 
 class JsonOutputTests(unittest.TestCase):
@@ -32,7 +32,7 @@ class JsonOutputTests(unittest.TestCase):
         self.assertEqual(arg, output)
 
     def _call_plugin(self, output, error):
-        ctx = MicronPluginContext()
+        ctx = plugin.Context()
         ctx.output = output
         ctx.error = error
         json_output.Plugin().create_response(ctx)

@@ -16,7 +16,7 @@ Hooks
 -----
 
 Flask-Micron plugins are based on a simple hook pattern. When processing a
-request, the :class:`MicronMethod <flask_micron.micron_method.MicronMethod>`
+request, the :class:`MicronMethod <flask_micron.method.MicronMethod>`
 class triggers a set of hooks that represent distinct steps within the
 request handling process.
 
@@ -102,16 +102,15 @@ module) of hook functions. Hook functions have the same name as the hook
 that they must act upon.
 
 The standard way to implement a plugin, is to derive a class from the
-:class:`MicronPlugin <flask_micron.MicronPlugin>` class. The derived plugin
-class can override methods to implement the hooks that it needs for its
-functionality.
+:class:`flask_micron.Plugin` class. The derived plugin class can override
+methods to implement the hooks that it needs for its functionality.
 
-Example: plugin as a derived MicronPlugin class::
+Example: plugin as a derived flask_micron.Plugin class::
 
-    from flask_micron import MicronPlugin
+    import flask_micron
     from flask_micron.errors import AccessDenied
 
-    class MyFirstPlugin(MicronPlugin):
+    class MyFirstPlugin(flask_micron.Plugin):
     
         def check_access(self, ctx):
             if request.remote_addr != '127.0.0.1':
@@ -122,10 +121,10 @@ explained in :ref:`user_plugins_context`.
 
 **Duck typing**
 
-It is not strictly required to derive from :class:`MicronPlugin
-<flask_micron.MicronPlugin>` in order to create a plugin. In the tradition of
-Python, Duck Typing is allowed, meaning that you can register any object
-as a plugin, as long as it provides the expected plugin hook functions.
+It is not strictly required to derive from :class:`flask_micron.Plugin` in
+order to create a plugin. In the tradition of Python, Duck Typing is
+allowed, meaning that you can register any object as a plugin, as long as it
+provides the expected plugin hook functions.
 
 In fact, Flask-Micron goes even a step further by accepting objects that
 implement only a subset of the plugin hook functions ("Crippled Duck Typing"?)
@@ -154,10 +153,9 @@ Plugin Context
 --------------
 
 Every hook function in a plugin is called with the same argument: a
-:class:`MicronPluginContext
-<flask_micron.micron_plugin_context.MicronPluginContext>` object. This object
-holds the data that are required by plugins for request handling. The following
-properties are availble in the context:
+:class:`plugin Context <flask_micron.plugin.Context>`
+object. This object holds the data that are required by plugins for request
+handling. The following properties are availble in the context:
 
 * **function**: The function that is wrapped by the MicronMethod.
 * **config**: The configuration for the MicronMethod, flattened as a dict 
@@ -170,7 +168,7 @@ properties are availble in the context:
   from a plugin.
 
 At the start of a request, a context object is created by the
-:class:`MicronMethod <flask_micron.micron_method.MicronMethod>`. Then, all
+:class:`MicronMethod <flask_micron.method.MicronMethod>`. Then, all
 plugin hook functions are called with this context object as their input. The
 hook functions are responsible for enriching the context data.
 
@@ -395,10 +393,10 @@ http://flask.pocoo.org/docs/api/#application-globals
 Here's an example of how you would use ``flask.g`` in your plugin::
 
     from flask import g, request
-    from flask_micron import MicronPlugin
+    import flask_micron
     from timeit import default_timer as timer
     
-    class RequestTimer(MicronPlugin):
+    class RequestTimer(flask_micron.Plugin):
 
         def start_request(self, ctx):
             g.start_time = timer() 

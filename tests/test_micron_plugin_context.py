@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask_micron.micron_plugin_context import MicronPluginContext
+from flask_micron import plugin
 from tests import MicronTestCase
 
 
@@ -7,7 +7,7 @@ class Tests(MicronTestCase):
 
     def setUp(self):
         super(Tests, self).setUp()
-        self.ctx = MicronPluginContext()
+        self.ctx = plugin.Context()
 
     def test_NewContextHasNoConfig(self):
         self.assertIsNone(self.ctx.config);
