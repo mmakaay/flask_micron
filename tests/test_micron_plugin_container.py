@@ -60,9 +60,9 @@ class Tests(unittest.TestCase):
             CallAllTestPlugin('B'),
             CallAllTestPlugin('C'))
         ctx = plugin.Context()
-        ctx.input = 'START';
-        container.call_all(ctx, 'normalize_input');
-        self.assertEqual('START|A|B|C', ctx.input);
+        ctx.input = 'START'
+        container.call_all(ctx, 'normalize_input')
+        self.assertEqual('START|A|B|C', ctx.input)
 
     def test_CallOneFollowsChainOfCommandPattern(self):
         container = plugin.Container()
@@ -71,8 +71,8 @@ class Tests(unittest.TestCase):
             CallOneTestPlugin('B', True),
             CallOneTestPlugin('C', False))
         ctx = plugin.Context()
-        container.call_one(ctx, 'read_input', 'input');
-        self.assertEqual('B', ctx.input);
+        container.call_one(ctx, 'read_input', 'input')
+        self.assertEqual('B', ctx.input)
 
     def test_callOneAcceptsSettingMonitorFieldToNoneValue(self):
         container = plugin.Container()
@@ -82,9 +82,9 @@ class Tests(unittest.TestCase):
             CallOneTestPlugin(None, True))
         ctx = plugin.Context()
         self.assertFalse(ctx.has('input'))
-        container.call_one(ctx, 'read_input', 'input');
+        container.call_one(ctx, 'read_input', 'input')
         self.assertTrue(ctx.has('input'))
-        self.assertEqual(None, ctx.input);
+        self.assertEqual(None, ctx.input)
 
 
 class Dummy(plugin.Plugin):

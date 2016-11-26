@@ -19,7 +19,12 @@ jobs=1
 # locally-disabled:
 #   Some minor issues are suppressed at the file level using pylint hints
 #   in the file header. I am not interested in warnings about these.
-disable=broad-except,deprecated-method,too-few-public-methods,locally-disabled
+# no-self-use
+#   I am no stranger to writing methods in classes that do not use self.
+#   Some like it better when that kind of methods are implemented as
+#   functions outside the class. I like it better when a class contains
+#   all of its functionality.
+disable=broad-except,deprecated-method,too-few-public-methods,locally-disabled,no-self-use
 
 [REPORTS]
 

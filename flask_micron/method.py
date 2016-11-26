@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
-"""This module provides the MicronMethod class."""
+"""
+    flask_micron.method
+    ~~~~~~~~~~~~~~~~~~~
+
+    This module provides the functionality for wrapping functions to
+    make them work for Flask-Micron request handling.  
+
+    :copyright: (c) 2016 by Maurice Makaay
+    :license: BSD, see LICENSE for more details.
+"""
 
 import re
 import sys
@@ -14,11 +23,11 @@ from flask_micron.errors import ImplementationError
 
 class MicronMethod(object):
     """The MicronMethod class wraps a standard function to make it work
-    for Micron request handling. If forms the glue between the Flask
-    app environment and Micron components.
+    for Flask-Micron request handling. If forms the glue between the
+    `Flask`_ app environment and Flask-Micron components.
     """
     def __init__(self, micron, function):
-        """Creates a new Flask MicronMethod object.
+        """Creates a new MicronMethod object.
 
         :param Micron micron:
             The Micron instance that creates this MicronMethod.

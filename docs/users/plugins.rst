@@ -163,9 +163,9 @@ handling. The following properties are availble in the context:
 * **input**: The input data for the function (the Flask ``request`` translated
   into a Python data structure).
 * **output**: The return value of the function.
-* **response**: The Flask ``Response`` object to return to the caller.
+* **response**: The `Flask`_ ``Response`` object to return to the caller.
 * **error**: The exception object, in case an unhandled exception is raised
-  from a plugin.
+  during the request handling.
 
 At the start of a request, a context object is created by the
 :class:`MicronMethod <flask_micron.method.MicronMethod>`. Then, all

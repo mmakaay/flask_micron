@@ -1,5 +1,13 @@
 # -*- coding: utf-8 -*-
-"""Provides exceptions used by Micron."""
+"""
+    flask_micron.errors
+    ~~~~~~~~~~~~~~~~~~~
+
+    Provides exceptions used by Flask-Micron.
+
+    :copyright: (c) 2016 by Maurice Makaay
+    :license: BSD, see LICENSE for more details.
+"""
 
 import re
 

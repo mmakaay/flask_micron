@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+# pylint: disable=too-many-public-methods
 """
     flask_micron.plugin
     ~~~~~~~~~~~~~~~~~~~
@@ -463,7 +464,7 @@ class Container(object):
         try:
             for hook_function in reversed(self._hook_functions[hook]):
                 hook_function(context)
-                if (context.has(monitor_field)):
+                if context.has(monitor_field):
                     return
         except KeyError:
             return None
@@ -497,7 +498,10 @@ class Container(object):
 
 
 class Compiler(object):
-
+    """This class provides a compiler for Flask-Micron plugins.
+    It inspects plugins and provides optimized code for calling
+    the hook functions that are implemented by those plugins.
+    """
     def compile(self, plugin):
         """Compiles the provided plugin.
 
@@ -561,21 +565,28 @@ class Context(object):
     """
 
     @property
-    def config(self):
-        return self._data.get('config', None)
-    @config.setter
-    def config(self, value):
-        self._data['config'] = value
-
-    @property
     def function(self):
+        """The function that is wrapped as a MicronMethod."""
         return self._data.get('function', None)
     @function.setter
     def function(self, value):
         self._data['function'] = value
 
     @property
+    def config(self):
+        """The configuration for the MicronMethod, flattened as a dict.
+        (see: :ref:`user_plugins_configurable`)
+        """
+        return self._data.get('config', None)
+    @config.setter
+    def config(self, value):
+        self._data['config'] = value
+
+    @property
     def input(self):
+        """The input data for the function (the `Flask`_ ``Request``
+        translated into a Python data structure).
+        """
         return self._data.get('input', None)
     @input.setter
     def input(self, value):
@@ -583,6 +594,7 @@ class Context(object):
 
     @property
     def output(self):
+        """The return value of the function."""
         return self._data.get('output', None)
     @output.setter
     def output(self, value):
@@ -590,6 +602,9 @@ class Context(object):
 
     @property
     def error(self):
+        """The exception object, in case an unhandled exception is
+        raised during the request handling.
+        """
         return self._data.get('error', None)
     @error.setter
     def error(self, value):
@@ -597,6 +612,7 @@ class Context(object):
 
     @property
     def response(self):
+        """The `Flask`_ ``Response`` object to return to the caller."""
         return self._data.get('response', None)
     @response.setter
     def response(self, value):
@@ -605,5 +621,22 @@ class Context(object):
     def __init__(self):
         self._data = {}
 
-    def has(self, field):
-        return field in self._data;
+    def has(self, property_name):
+        """Checks whether or not a value was actively assigned to
+        a property.
+
+        >>> ctx = Context()
+        >>> ctx.input is None
+        True
+        >>> ctx.has('input')
+        False
+        >>> ctx.input = None
+        >>> ctx.has('input')
+        True
+
+        :param string property_name:
+            The name of the property to check.
+        :returns:
+            True if a value was assigned, False otherwise.
+        """
+        return property_name in self._data

@@ -10,20 +10,20 @@ class Tests(MicronTestCase):
         self.ctx = plugin.Context()
 
     def test_NewContextHasNoConfig(self):
-        self.assertIsNone(self.ctx.config);
+        self.assertIsNone(self.ctx.config)
         self.assertFalse(self.ctx.has('config'))
 
     def test_ContextCanGetConfig(self):
-        self.ctx.config = 'yo' 
+        self.ctx.config = 'yo'
         self.assertEqual('yo', self.ctx.config)
         self.assertTrue(self.ctx.has('config'))
 
     def test_NewContextHasNoFunction(self):
-        self.assertIsNone(self.ctx.function);
+        self.assertIsNone(self.ctx.function)
         self.assertFalse(self.ctx.has('function'))
 
     def test_ContextCanGetFunction(self):
-        self.ctx.function = 'hey' 
+        self.ctx.function = 'hey'
         self.assertEqual('hey', self.ctx.function)
         self.assertTrue(self.ctx.has('function'))
 

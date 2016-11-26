@@ -1,5 +1,14 @@
 # -*- coding: utf-8 -*-
-"""This module provides the Micron class."""
+"""
+    flask_micron.micron
+    ~~~~~~~~~~~~~~~~~~~
+
+    This module provides the Micron class, which is used to decorate
+    functions as Micron methods.
+
+    :copyright: (c) 2016 by Maurice Makaay
+    :license: BSD, see LICENSE for more details.
+"""
 
 from flask_micron.errors import ImplementationError
 from flask_micron.method import MicronMethod
@@ -87,12 +96,12 @@ class Micron(object):
             csrf.Plugin().process_response(ctx)
             return ctx.response
 
-    def plugin(self, plugin):
+    def plugin(self, plugin_object):
         """Adds a :class:`Plugin <flask_micron.Plugin>` to this
         Micron object. See :ref:`user_plugins` for information on writing
         and using plugins.
 
-        :param flask_micron.Plugin plugin:
+        :param flask_micron.Plugin plugin_object:
             The plugin to add to this Micron object.
 
         :returns:
@@ -110,7 +119,7 @@ class Micron(object):
             my_plugin = my_stuff.Plugin()
             micron.plugin(my_plugin)
         """
-        self.plugins.add(plugin)
+        self.plugins.add(plugin_object)
         return self
 
     def configure(self, **configuration):
