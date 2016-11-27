@@ -135,9 +135,9 @@ test files follow the file naming pattern ``test_*.py``. By using this pattern,
 ``python -m unittest discover`` is able to automatically find all unit test
 files in the project.
 
-When writing tests, my ``tests/`` directory mirrors the directory structure
-of the project that I am testing. This way, it is very easy to find the tests
-that belong to a given script file in the project.
+When writing tests, I try to let my ``tests/`` directory mirror the
+directory structure of the project that I am testing. This way, it is easy
+to find the tests that relate to a given script file in the project.
 
 Here's a little project structure example, that shows the above in action::
 

@@ -15,11 +15,11 @@ class Tests(MicronTestCase):
             pass
 
     def test_AfterRequestHook_StoresNewTokenInSession(self):
-        self.assertEqual(0, len(csrf._get_tokens(session)))
+        self.assertEqual(0, len(csrf._get_tokens()))
 
         with self.client:
             self.request('/dummy')
-            tokens_in_store = csrf._get_tokens(session)
+            tokens_in_store = csrf._get_tokens()
         self.assertEqual(1, len(tokens_in_store))
         new_token = tokens_in_store[0]
         self.assertTrue(isinstance(new_token, str))
@@ -28,7 +28,7 @@ class Tests(MicronTestCase):
     def test_AfterRequestHook_AddsNewTokenToHeaders(self):
         with self.client:
             response = self.request('/dummy')
-            tokens_in_store = csrf._get_tokens(session)
+            tokens_in_store = csrf._get_tokens()
         token_in_store = tokens_in_store[-1]
         token_in_header = response.headers['X-Micron-CSRF-Token']
         self.assertEqual(token_in_store, token_in_header)
