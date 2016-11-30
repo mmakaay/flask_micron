@@ -2,8 +2,8 @@ Flask-Micron
 ============
 
 Flask-Micron is a method-oriented API framework for Python, focusing on
-security and productivity. It is built on top of the excellent Flask
-microframework.
+security and productivity. It is built on top of the excellent `Flask
+<http://flask.pocoo.org/>`_ microframework.
 
 The main goal for the project is to make it really simple for developers to
 write microservice-style JSON webservices, honoring best practices for
@@ -18,6 +18,7 @@ Here's the mandatory "Hello, world!" example for Flask-Micron::
     from flask import Flask
     from flask_micron import Micron
     app = Flask(__name__)
+    app.
     micron = Micron(app)
 
     @micron.method()
