@@ -1,7 +1,7 @@
 .. _api:
 
-Public API
-==========
+API
+===
 
 This section contains the low-level API documentation for Flask-Micron.
 
@@ -19,4 +19,3 @@ This section contains the low-level API documentation for Flask-Micron.
 
 .. automodule:: flask_micron.errors
     :members:
-
