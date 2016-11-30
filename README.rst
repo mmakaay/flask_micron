@@ -1,9 +1,6 @@
 Flask-Micron
 ============
 
-Introduction
-------------
-   
 Flask-Micron is a method-oriented API framework for Python, focusing on
 security and productivity. It is built on top of the excellent Flask
 microframework.
