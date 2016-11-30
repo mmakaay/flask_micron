@@ -4,9 +4,8 @@ Flask-Micron
 Introduction
 ------------
 
-.. image:: docs/_static/flask_micron.png
-   :alt: Flask-Micron: method-oriented webservices on top of Flask
-   :class: floatright
+raw:: html
+   <img src="docs/_static/flask_micron.png" style="float:right">
 
 Flask-Micron is a method-oriented API framework for Python, focusing on
 security and productivity. It is built on top of the excellent Flask
