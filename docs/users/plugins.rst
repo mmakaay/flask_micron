@@ -3,9 +3,9 @@
 Creating plugins
 ================
 
-Flask-Micron is in its core a plugin system. Plugins can be used to add
-extra features to the request handling. The built-in request handling is
-fully implemented using plugins as well.
+Flask-Micron is in its core a plugin system. Plugins are used to add
+extra features to the request handling. In fact, the built-in request
+handling is fully implemented using plugins as well.
 
 This section explains how to make use of the plugin system to extend the
 Flask-Micron functionality.
@@ -16,9 +16,8 @@ Hooks
 -----
 
 Flask-Micron plugins are based on a simple hook pattern. When processing a
-request, the :class:`MicronMethod <flask_micron.method.MicronMethod>`
-class triggers a set of hooks that represent distinct steps within the
-request handling process.
+request, the :any:`MicronMethod` class triggers a set of hooks that
+represent distinct steps within the request handling process.
 
 When writing a plugin, you basically write some functions for handling one
 or more of these hooks. This makes it possible to let a plugin execute
@@ -82,7 +81,7 @@ hooks however, the hook functions are called in reverse order (latest
 registered plugin first), until a hook function assigns data (possibly
 None) to the relevant property in the plugin context.
 
-First come, first serve, and we only have one serving.
+*First come, first serve, and we only have one serving.*
 
 The reason for this, is that for those steps in the request processing, it
 makes no sense to perform them multiple times. The request can only be read

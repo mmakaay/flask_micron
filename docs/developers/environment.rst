@@ -9,8 +9,10 @@ possible (since that would be your own environment, wouldn't it?)
 
 The motivation for writing this section, is to *improve the future*, by:
 
-  - preventing you from yelling "Why did nobybody tell me this years earlier?!"
-  - giving me a good laugh, looking back at my old-school development environment.
+  - preventing you from having to cry out loud: "Why did nobybody tell me
+    this years earlier?!"
+  - giving me a good laugh, looking back at my old-school development
+    environment.
 
 .. note:
   For development, I work on an Ubuntu Linux machine. Therefore, commands
@@ -22,8 +24,8 @@ The motivation for writing this section, is to *improve the future*, by:
 Python setup
 ------------
 
-I make use of Python virtualenv for setting up my Python environment. This is
-in line with the recommended way for working with Flask.  See the `Flask
+I make use of Python virtualenv for setting up my Python environment. This
+is in line with the recommended way for working with Flask.  See the `Flask
 Installation Documentation`_.
 
 Some advantages are that the dependencies and utilities are not added to the
@@ -61,11 +63,11 @@ Python 3::
 
 The packages that I install in my Python virtual environment are:
 
-  - `Flask`_: Flask-Micron is built on top of the Flask package.
-  - `Pylint`_: Strict checking of coding standards and possible errors in
-    the code. Just like jslint, Pylint will hurt your feelings, but all
-    for the greater good.
-  - `Sphinx`_: The tool that is used to produce this documentation. 
+  - `Flask`_  : Flask-Micron is built on top of the Flask package.
+  - `Pylint`_ : Strict checking of coding standards and possible errors in
+                the code. Just like jslint, Pylint will hurt your feelings,
+                but all for the greater good.
+  - `Sphinx`_ : The tool that is used to produce this documentation. 
 
 The command ``python setup.py develop`` installs Flask-Micron from the project
 source directory into the virtual environment in development mode. This means
@@ -83,9 +85,9 @@ but I will leave that up to the many fan sites.
 
 http://www.gnu.org/software/bash/
 
-The feature that I want to focus on here, is the ``alias`` command (supported
-by other shells as well), which can be used to define new commands. Below are a
-few useful ones that I use. 
+A very useful feature that I want to focus on here, is the ``alias`` command
+(supported by other shells as well), which can be used to define custom
+commands. Below are a few useful ones that I use. 
 
 ``alias ls='ls --hide=*.pyc --hide=*.egg-info --hide=*.eggs --hide=__pycache__'``
 
@@ -95,12 +97,12 @@ of the source code. Those would normally clobber your output.
 
 ``alias pytest='python -m unittest'``
 
-This alias brings down the number of keystrokes that I need to perform
-to fire up my tests. See the :ref:`testing documentation
-<dev_testing_running>` for info on this command. For example, the alias allows
-me to start all unit tests in a directory by simply typing ``pytest``.
-I also have an alias ``pywatch`` that I use for starting a continuous test
-run in the working directory:
+This alias brings down the number of keystrokes that I need to perform to
+fire up my tests. See the :ref:`testing documentation <dev_testing_running>`
+for info on this command. For example, the alias allows me to start all unit
+tests in a directory by simply typing ``pytest``. I also have an alias
+``pywatch`` that I use for starting a continuous test run in the working
+directory:
 
 ``alias pywatch='watch -n 1 "python -m unittest"'``
 

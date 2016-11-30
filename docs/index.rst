@@ -26,21 +26,7 @@ Users Guide
    users/installation
    users/quickstart
    users/plugins
-
-Bundled Plugins
----------------
-
-This section describes the plugins that come bundled with Flask-Micron
-and that are loaded by default to make up the standard request handling.
-
-.. toctree::
-   :maxdepth: 2
-
-   plugins/json_input
-   plugins/normalize_input
-   plugins/call_function
-   plugins/json_output
-   plugins/csrf
+   users/bundled_plugins
 
 Developers Guide
 ----------------

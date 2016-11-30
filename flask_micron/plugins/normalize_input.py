@@ -9,15 +9,15 @@ Mode of operation
 The plugin takes the datastructure from ``ctx.input`` and normalizes it,
 according to the following rules:
 
-* Leading and trailing whitespace are stripped from string values.
-* Strings that are empty are set to ``None``.
+  - Leading and trailing whitespace are stripped from string values.
+  - Strings that are empty are set to ``None``.
 
 Normalization is applied to:
 
-* strings
-* dicts (recursively)
-* lists (recursively)
-
+  - strings
+  - dicts (recursively)
+  - lists (recursively)
+  
 Configuration options
 ---------------------
 

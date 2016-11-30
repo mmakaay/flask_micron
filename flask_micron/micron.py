@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-    flask_micron.micron
-    ~~~~~~~~~~~~~~~~~~~
+flask_micron.micron
+===================
 
-    This module provides the Micron class, which is used to decorate
-    functions as Micron methods.
+This module provides the Micron class, which is used to decorate
+a function to make it work as a :any:`MicronMethod`.
 
-    :copyright: (c) 2016 by Maurice Makaay
-    :license: BSD, see LICENSE for more details.
+:copyright: (c) 2016 by Maurice Makaay
+:license: BSD, see LICENSE for more details.
 """
 
 from flask_micron.errors import ImplementationError
@@ -32,8 +32,8 @@ class Micron(object):
         :param Flask app:
             The Flask app (or Blueprint) to wrap.
         :param \**configuration:
-            Configuration options that define in what way Micron methods that
-            are created using this Micron instance must behave.  These
+            Configuration options that define in what way a :any:`MicronMethod`
+            that is created using this Micron instance must behave. These
             configuration options can be overridden by method-specific
             configuration options, defined in the ``@micron.method()``
             decorator.

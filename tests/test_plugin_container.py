@@ -81,9 +81,9 @@ class Tests(unittest.TestCase):
             CallOneTestPlugin('B', True),
             CallOneTestPlugin(None, True))
         ctx = plugin.Context()
-        self.assertFalse(ctx.has('input'))
+        self.assertFalse(ctx.is_assigned('input'))
         container.call_one(ctx, 'read_input', 'input')
-        self.assertTrue(ctx.has('input'))
+        self.assertTrue(ctx.is_assigned('input'))
         self.assertEqual(None, ctx.input)
 
 

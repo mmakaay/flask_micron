@@ -5,7 +5,7 @@ Stack
 
 The "image" below shows an overview of the layers that are involved in
 the Flask-Micron stack. Between the layers, you can find the interfaces
-that are used for communication between the layers::
+that are used for communication between those layers::
 
   +--------------------------------+
   |             Client             |
@@ -23,8 +23,8 @@ that are used for communication between the layers::
   |       Werkzeug / Flask         |
   +--------------------------------+
           |               ^
+       Session +       Session +
        Request         Response
-       Session         Session
           v               |
   +--------------------------------+
   |         Flask-Micron           |

@@ -135,40 +135,6 @@ test files follow the file naming pattern ``test_*.py``. By using this pattern,
 ``python -m unittest discover`` is able to automatically find all unit test
 files in the project.
 
-When writing tests, I try to let my ``tests/`` directory mirror the
-directory structure of the project that I am testing. This way, it is easy
-to find the tests that relate to a given script file in the project.
-
-Here's a little project structure example, that shows the above in action::
-
-    file1.py
-    folder1/
-        file2.py
-        file3.py
-    tests/
-        test_file1.py
-        folder1/
-            test_file2.py
-            test_file3.py
-
-So the tests for ``folder1/file3.py`` can be found by convention in
-``tests/folder1/test_file3.py``.
-
-When you find that you are writing a lot of tests for a given script file,
-then consider splitting up the tests for that file. Let's say that
-``folder1/file2.py`` requires a lot of tests, then this is how I would split
-up the test code::
-
-    tests/
-        folder1/
-            file2/
-                test_feature1.py
-                test_feature2.py
-                ...
-
-In the Flask-Micron code, an example of this is are the tests for the
-CSRF protection plugin, which can be found in ``tests/plugins/csrf/*``.
-
 PyLint
 ------
 

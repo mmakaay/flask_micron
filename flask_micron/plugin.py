@@ -464,7 +464,7 @@ class Container(object):
         try:
             for hook_function in reversed(self._hook_functions[hook]):
                 hook_function(context)
-                if context.has(monitor_field):
+                if context.is_assigned(monitor_field):
                     return
         except KeyError:
             return None
@@ -621,17 +621,17 @@ class Context(object):
     def __init__(self):
         self._data = {}
 
-    def has(self, property_name):
+    def is_assigned(self, property_name):
         """Checks whether or not a value was actively assigned to
         a property.
 
         >>> ctx = Context()
         >>> ctx.input is None
         True
-        >>> ctx.has('input')
+        >>> ctx.is_assigned('input')
         False
         >>> ctx.input = None
-        >>> ctx.has('input')
+        >>> ctx.is_assigned('input')
         True
 
         :param string property_name:

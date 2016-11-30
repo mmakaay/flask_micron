@@ -11,10 +11,10 @@ be explained.
 Method-oriented (SOAP-y), not Resource-oriented (REST, CRUD)
 ------------------------------------------------------------
 
-Let's first state: I agree, there are applications for which REST is the
-perfect back-end service style. For front-facing business applications
-however (which Flask-Micron is targeting), I highly prefer using
-method-oriented services.
+Let's first state: I agree wholeheartedly, there are applications for which
+REST is the perfect back-end service style. For front-facing business
+applications however (which Flask-Micron is targeting), I highly prefer
+using method-oriented services instead.
 
 A quick comparison of method-oriented::
 

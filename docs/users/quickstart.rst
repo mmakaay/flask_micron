@@ -12,8 +12,8 @@ then you might want to jump directly to :ref:`user_api_using_flask_micron`.
 A minimal Flask application
 ---------------------------
 
-Before explaining Flask-Micron, I first want to show you the minimal Flask
-application from the `Flask Documentation`_::
+Before explaining Flask-Micron, I first want to show you the minimal
+`Flask`_ application from the `Flask Documentation`_::
 
     from flask import Flask
     app = Flask(__name__)
@@ -138,16 +138,16 @@ Using Flask-Micron, we can greatly simplify the code from the previous section::
         return 'Hello, %s!' % name
 
 What happens here, is that ``@micron.method()`` wraps the ``hello_world()``
-function in a MicronMethod object and registers this object with the Flask
-app to be the handler for POST requests to ``/hello_world``.
+function in a :any:`MicronMethod` object and registers this object with the
+Flask app to be the handler for POST requests to ``/hello_world``.
 
-From here on, the MicronMethod will sit between Flask and the function,
-taking care of tasks like reading the JSON request, normalizing the request
-data, performing security checks, calling the wrapped function to get a result
-and creating the JSON response.
+From here on, the :any:`MicronMethod` will sit between Flask and the
+function, taking care of tasks like reading the JSON request, normalizing
+the request data, performing security checks, calling the wrapped function
+to get a result and creating the JSON response.
 
-By making the MicronMethod responsible for these tasks, we can now focus on
-actual business logic when writing and testing the API functions::
+By making the :any:`MicronMethod` responsible for these tasks, we can now
+focus on actual business logic when writing and testing the API functions::
 
     import unittest
     from hello import hello_world
@@ -349,21 +349,19 @@ support :ref:`configuration <user_plugins_configurable>`. The plugin
 that takes care of normalization provides the following configuration
 options:
 
-normalize = True (default) or False
-  Whether or not to apply normalization at all.
+**normalize**: True/False (default = True)
+    Whether or not to apply normalization to the request.
 
-strip_strings = True (default) or False
-  Whether or not leading and trailing whitespace must be stripped from
-  string fields in the input data.
+**strip_strings**: True/False (default = True)
+    Whether or not to strip leading and trailing whitespace from strings.
 
-make_empty_strings_none = True (default) or False
-  Whether or not string fields that contain an empty string must be
-  normalized to None.
+**make_empty_strings_none**: True/False (default = True)
+    Whether or not empty strings must be normalized to None.
 
 Flask-Micron provides a configuration mechanism to tweak plugin behavior at
-the level of the ``Micron`` object and/or the level of the ``@micron.method()``.
-Configuration at the ``@micron.method()`` level overrides configuration at the
-``Micron`` level::
+the level of the :any:`Micron` object and/or the level of the
+``@micron.method()``. Configuration at the ``@micron.method()`` level
+overrides configuration at the :any:`Micron` level::
 
     from flask import Flask
     from flask_micron import Micron
@@ -380,11 +378,11 @@ Configuration at the ``@micron.method()`` level overrides configuration at the
 
 Based on this configuration:
 
-- Function ``hello_world()`` will get normalized input. Trailing and
-  leading whitespace will not be stripped, but empty strings will be
-  normalized to None.
-- Function ``good_bye_world()`` will get no normalized input at all, since
-  it inherits the disabled normalization from the ``Micron`` object.
+  - Function ``hello_world()`` will get normalized input. Trailing and
+    leading whitespace will not be stripped, but empty strings will be
+    normalized to None.
+  - Function ``good_bye_world()`` will get no normalized input at all, since
+    it inherits the disabled normalization from the ``Micron`` object.
 
 For information on the possible configuration options, take a look at the
 documentation for the plugins that you use.
@@ -394,10 +392,10 @@ documentation for the plugins that you use.
 Cross-Site Request Forgery (CSRF) protection
 --------------------------------------------
 
-Cross-Site Request Forgery (CSRF) is a type of attack where a user is
-logged into site A, then visits site B which tells the browser
-"Do this bad thing on site A". Without CSRF protection, site A actually
-performs the "bad thing".
+Cross-Site Request Forgery (CSRF) is a type of attack where a user is logged
+into site A, then visits site B which tells the browser "Do this bad thing
+on site A". Without CSRF protection, site A actually performs the "bad
+thing".
 
 For more in depth info on CSRF, take a look at:
 https://www.owasp.org/index.php/Cross-Site_Request_Forgery_(CSRF)
@@ -455,7 +453,7 @@ In this example, the API provides the unprotected function
 ``give_me_a_token()``, that could be used (just like ``/ping``) for
 bootstrapping the CSRF handshake cycle.
 
-Below, a small client example that shows how one could obtain and use a
+Below, some example code that shows how one could obtain and use a
 CSRF token using the `Requests`_ Python library::
 
     import requests

@@ -1,13 +1,29 @@
 # -*- coding: utf-8 -*-
 """
-    flask_micron
-    ~~~~~~~~~~~~
+flask_micron
+============
 
-    A method-oriented microservice JSON framework on top of the excellent
-    Flask package, focusing on security and productivity.
+The ``flask_micron`` module exposes some of the important Flask-Micron
+classes as members of this module, so you can import them from one
+conventient place:
 
-    :copyright: (c) 2016 by Maurice Makaay
-    :license: BSD, see LICENSE for more details.
+* :any:`Micron`
+* :any:`MicronPlugin`
+* :any:`MicronError`
+* :any:`MicronServerError`
+* :any:`MicronClientError`
+
+So for example, instead of::
+
+    from flask_micron.micron import Micron
+
+you can make use of::
+
+    from flask_micron import Micron
+
+
+:copyright: (c) 2016 by Maurice Makaay
+:license: BSD, see :ref:`license` for more details.
 """
 
 import flask

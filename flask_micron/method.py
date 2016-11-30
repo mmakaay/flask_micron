@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
-    flask_micron.method
-    ~~~~~~~~~~~~~~~~~~~
+flask_micron.method
+===================
 
-    This module provides the functionality for wrapping functions to
-    make them work for Flask-Micron request handling.  
+This module provides the functionality for wrapping functions to
+make them work for Flask-Micron request handling.  
 
-    :copyright: (c) 2016 by Maurice Makaay
-    :license: BSD, see LICENSE for more details.
+:copyright: (c) 2016 by Maurice Makaay
+:license: BSD, see LICENSE for more details.
 """
 
 import re
@@ -123,11 +123,10 @@ class MicronMethodConfig(object):
     """This class encapsulates the configuration options that are used
     for executing a MicronMethod.
 
-    Within Micron, this configuration is peformed at two levels:
-
-    - The Micron-level configuration (defined by calling the method
+    Within Flask-Micron, this configuration is performed at two levels:
+    * The Micron-level configuration (defined by calling the method
       Micron.configure() on a Micron instance)
-    - The MicronMethod-level configuration (defined by options that were
+    * The MicronMethod-level configuration (defined by options that were
       used in the @micron.method() decorator)
 
     This class supports this multi-level configuration by making each

@@ -5,91 +5,18 @@ Public API
 
 This section contains the low-level API documentation for Flask-Micron.
 
-Micron
-------
-
-.. currentmodule:: flask_micron
-.. autoclass:: Micron
+.. automodule:: flask_micron
     :members:
 
-flask_micron.Plugin
--------------------
-
-.. currentmodule:: flask_micron
-.. autoclass:: Plugin
+.. automodule:: flask_micron.micron
     :members:
 
-flask_micron.plugin.Context
----------------------------
-
-.. currentmodule:: flask_micron.plugin
-.. autoclass:: Context
+.. automodule:: flask_micron.method
     :members:
 
-Errors
-------
-
-Base type for all Flask-Micron exceptions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. currentmodule:: flask_micron
-.. autoclass:: MicronError
-    :show-inheritance:
-
-Derive from these to create your own exceptions
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. autoclass:: MicronServerError
-    :show-inheritance:
-
-.. autoclass:: MicronClientError
-    :show-inheritance:
-
-Exceptions ready for use in your own code
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-.. currentmodule:: flask_micron.errors
-
-.. autoclass:: AccessDenied
-    :show-inheritance:
-
-.. autoclass:: AuthenticationRequired
-    :show-inheritance:
-
-.. autoclass:: AuthenticationFailed
-    :show-inheritance:
-
-.. autoclass:: AuthorizationFailed
-    :show-inheritance:
-
-.. autoclass:: ImplementationError
-    :show-inheritance:
-
-.. autoclass:: UnhandledException
-    :show-inheritance:
-
-.. _api_internal:
-
-Internal Components
-===================
-
-MicronMethod
-------------
-
-.. currentmodule:: flask_micron.method
-.. autoclass:: MicronMethod
+.. automodule:: flask_micron.plugin
     :members:
 
-MicronMethodConfig
-------------------
-
-.. currentmodule:: flask_micron.method
-.. autoclass:: MicronMethodConfig
+.. automodule:: flask_micron.errors
     :members:
 
-flask_micron.plugin.Container
------------------------------
-
-.. currentmodule:: flask_micron.plugin
-.. autoclass:: Container
-    :members:
