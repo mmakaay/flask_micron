@@ -26,6 +26,7 @@ class MicronMethod(object):
     for Flask-Micron request handling. If forms the glue between the
     `Flask`_ app environment and Flask-Micron components.
     """
+
     def __init__(self, micron, function):
         """Creates a new MicronMethod object.
 

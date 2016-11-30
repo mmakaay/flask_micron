@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""This plugin calls the function that is wrapped as a Micron method,
+"""This plugin calls the function that is wrapped by Flask-Micron,
 using ``ctx.input`` as its argument. The return value is stored in
 ``ctx.output``.
 
@@ -73,7 +73,7 @@ from flask_micron.errors import ImplementationError
 
 
 class Plugin(plugin.Plugin):
-    """This plugin calls the function that is wrapped as a Micron method,
+    """This plugin calls the function that is wrapped by Flask-Micron,
     using the input data as prepared in the context.
     """
     def call_function(self, ctx):
@@ -84,7 +84,7 @@ class Plugin(plugin.Plugin):
 
 
 def _check_function_signature(function):
-    """Checks the signature of the Micron method. This method must
+    """Checks the signature of the function. This method must
     take no or exactly one argument, possibly defined with a default
     value for it.
 

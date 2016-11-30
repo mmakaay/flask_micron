@@ -50,10 +50,10 @@ During the lifetime of a single request, the following hooks are triggered
 +------------------------+---------------------------------------------+
 | **validate_input**     | Check for valid input data.                 |
 +------------------------+---------------------------------------------+
-| **call_function**      | Call the function that is wrapped as a      |
-|                        | Micron method, feeding it the input data,   |
-|                        | and capturing the return value from that    |
-| *[Single]*             | function (called 'output data')             |
+| **call_function**      | Call the function that is wrapped by        |
+|                        | Flask-Micron, feeding it the input data,    |
+|                        | and capturing its return value (called      |
+| *[Single]*             | 'output data')                              |
 +------------------------+---------------------------------------------+
 | **process_output**     | Post-process the output data (typical use:  |
 |                        | data checking and normalization)            |
