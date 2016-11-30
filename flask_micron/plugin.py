@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # pylint: disable=too-many-public-methods
 """
-    flask_micron.plugin
-    ~~~~~~~~~~~~~~~~~~~
+flask_micron.plugin
+===================
 
-    This module provides the classes that make up the Flask-Micron
-    plugin system.
+This module provides the classes that make up the Flask-Micron plugin system.
 
-    :copyright: (c) 2016 by Maurice Makaay
-    :license: BSD, see LICENSE for more details.
+:copyright: (c) 2016 by Maurice Makaay
+:license: BSD, see LICENSE for more details.
 """
 
 import inspect
@@ -29,7 +28,7 @@ class Plugin(object):
         default configuration options.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -86,7 +85,7 @@ class Plugin(object):
         no suitable error type is available, you can create your own.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -142,7 +141,7 @@ class Plugin(object):
         returned).
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -158,7 +157,7 @@ class Plugin(object):
 
     def read_input(self, ctx):
         """A hook for reading data from the Flask request and translating it
-        into the input for the function that is wrapped as a Micron method.
+        into the input for the function that is wrapped by Flask-Micron.
         The hook must set the input property of the ctx object.
 
         Important:
@@ -167,7 +166,7 @@ class Plugin(object):
         this hook.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -192,7 +191,7 @@ class Plugin(object):
         'ctx.input' property.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -216,7 +215,7 @@ class Plugin(object):
         point. A plugin is not supposed to modify the data.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -242,7 +241,7 @@ class Plugin(object):
         this hook.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -265,7 +264,7 @@ class Plugin(object):
         or store new data in the 'ctx.output' property.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -289,7 +288,7 @@ class Plugin(object):
         this hook.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -316,7 +315,7 @@ class Plugin(object):
         a completely new response in the 'ctx.response' property.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -358,7 +357,7 @@ class Plugin(object):
         property.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+
@@ -387,7 +386,7 @@ class Plugin(object):
         This hook can be used to handle plugin teardown.
 
         +--------------+---------------------------------------------------+
-        | ctx.function | The function that is wrapped as Micron method     |
+        | ctx.function | The function that is wrapped by Flask-Micron      |
         +--------------+---------------------------------------------------+
         | ctx.config   | The method config, flattened as a dict            |
         +--------------+---------------------------------------------------+

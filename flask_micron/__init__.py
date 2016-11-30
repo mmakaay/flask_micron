@@ -8,7 +8,7 @@ classes as members of this module, so you can import them from one
 conventient place:
 
 * :any:`Micron`
-* :any:`MicronPlugin`
+* :any:`Plugin`
 * :any:`MicronError`
 * :any:`MicronServerError`
 * :any:`MicronClientError`
@@ -25,6 +25,8 @@ you can make use of::
 :copyright: (c) 2016 by Maurice Makaay
 :license: BSD, see :ref:`license` for more details.
 """
+
+# TODO Plugin -> MicronPlugin
 
 import flask
 from flask_micron.micron import Micron

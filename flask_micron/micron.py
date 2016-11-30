@@ -22,11 +22,11 @@ from flask_micron.plugins import json_output
 
 
 class Micron(object):
-    """The Micron class is used to decorate regular functions, to become all
-    singing and all dancing :class:`Micron methods
-    <flask_micron.method.MicronMethod>`, which are plugged into the
-    routing of a Flask application.
+    """Used to decorate a regular function, to become an all singing and all
+    dancing :any:`MicronMethod`, which is plugged into the routing of a
+    `Flask`_ application.
     """
+
     def __init__(self, app=None, **configuration):
         r"""
         :param Flask app:
@@ -191,14 +191,14 @@ class Micron(object):
             return func
         return _decorator
 
-def _create_url_rule(micron_method):
-    """Creates the URL rule for a Micron method.
+def _create_url_rule(func):
+    """Creates the URL rule for a function.
 
-    :param MicronMethod micron_method:
+    :param function func:
         The MicronMethod to create the route for.
 
     :returns:
         The URL rule: "/<function name>"
     """
-    name = micron_method.__name__.split('.')[-1]
+    name = func.__name__.split('.')[-1]
     return '/' + name
