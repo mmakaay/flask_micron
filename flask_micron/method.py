@@ -125,10 +125,10 @@ class MicronMethodConfig(object):
     for executing a MicronMethod.
 
     Within Flask-Micron, this configuration is performed at two levels:
-    * The Micron-level configuration (defined by calling the method
-      Micron.configure() on a Micron instance)
-    * The MicronMethod-level configuration (defined by options that were
-      used in the @micron.method() decorator)
+      - The Micron-level configuration (defined by calling the method
+        Micron.configure() on a Micron instance)
+      - The MicronMethod-level configuration (defined by options that were
+        used in the @micron.method() decorator)
 
     This class supports this multi-level configuration by making each
     MicronMethodConfig aware of its parent configuration (so basically,

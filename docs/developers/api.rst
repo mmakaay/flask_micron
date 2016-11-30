@@ -13,6 +13,7 @@ This section contains the low-level API documentation for Flask-Micron.
 
 .. automodule:: flask_micron.method
     :members:
+    :special-members: __call__
 
 .. automodule:: flask_micron.plugin
     :members:
