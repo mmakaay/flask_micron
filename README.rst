@@ -31,9 +31,9 @@ is provided, to add Python functions to the Flask-Micron request handling.
 This code adds the route ``/hello_world`` to Flask. POST requests for that
 route are handled by Flask-Micron, which takes care of:
 
-  * reading, deserialzing and normalizing the JSON request body
-  * calling the ``hello_world()`` function
-  * creating a JSON response based on the function's return value.
+* reading, deserialzing and normalizing the JSON request body
+* calling the ``hello_world()`` function
+* creating a JSON response based on the function's return value.
 
 Flask-Micron's main feature in action here, is that the function does not
 require any boiler plate code to make all this work.
@@ -42,7 +42,7 @@ Running the example code
 ------------------------
 
 To run the code, you can save the example code to ``hello.py`` and then
-start a server for it.
+start a server for it::
 
     $ export FLASK_APP=hello.py
     $ flask run
