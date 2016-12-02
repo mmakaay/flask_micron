@@ -37,8 +37,8 @@ web browser to see the function's greeting output.
 .. note::
 
   Serving the app this way is meant for development purposes only.
-  For information on deploying the app to a production environment, see
-  the Flask documentation.
+  For information on deploying the app to a production environment, see the
+  `Flask deployment documentation <http://flask.pocoo.org/docs/deploying>`_.
 
 .. _user_api_using_flask:
 
@@ -131,6 +131,7 @@ Using Flask-Micron, we can greatly simplify the code from the previous section::
     from flask import Flask
     from flask_micron import Micron
     app = Flask(__name__)
+    app.secret_key = "Key to make SecureCookieSession work for CSRF"
     micron = Micron(app)
 
     @micron.method()
@@ -424,6 +425,7 @@ disable the CSRF protection module (which I advise strongly against), you
 can make use of the ``csrf`` plugin configuration option::
 
     app = Flask(__name__)
+    app.secret_key = "Key to make SecureCookieSession work for CSRF"
     micron = Micron(app, csrf=False)
 
     @micron.method()
@@ -439,6 +441,7 @@ To disable CSRF protection for a single function, you can make use of the
 ``@micron.method()`` decorator configuration::
 
     app = Flask(__name__)
+    app.secret_key = "Key to make SecureCookieSession work for CSRF"
     micron = Micron(app)
 
     @micron.method(csrf=False)

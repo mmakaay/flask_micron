@@ -24,7 +24,7 @@ Here's the mandatory "Hello, world!" example for Flask-Micron::
     @micron.method()
     def hello_world(name='World'):
         return 'Hello, %s!' % name
-        
+
 As you can see, Flask-Micron is a layer on top of Flask. A decorator
 is provided, to add Python functions to the Flask-Micron request handling.
 

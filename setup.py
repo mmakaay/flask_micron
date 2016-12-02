@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Flask-Micron
-------------
+============
 
 A method-oriented microservice JSON framework, on top of the excellent
 Flask package, focusing on security and productivity.
 
 Just like Flask, Flask-Micron is Fun
-````````````````````````````````````
+------------------------------------
 
 Save in hello.py::
 
@@ -28,7 +28,7 @@ Save in hello.py::
         app.run()
 
 And Easy to Setup
-`````````````````
+-----------------
 
 .. code:: bash
 
@@ -37,7 +37,8 @@ And Easy to Setup
      * Running on http://localhost:5000/
 
 Ready for production?
-`````````````````````
+---------------------
+
  `Read this first <http://flask.pocoo.org/docs/deploying/>`_.
 """
 
