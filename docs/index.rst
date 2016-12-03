@@ -8,9 +8,9 @@ Introduction
    :alt: Flask-Micron: method-oriented webservices on top of Flask
    :class: floatright
 
-Flask-Micron is a method-oriented API framework for Python, focusing on
-security and productivity. It is built on top of the excellent `Flask`_
-microframework.
+Flask-Micron is a pluggable, method-oriented API framework for Python,
+focusing on security and productivity. It is built on top of the excellent
+`Flask`_ microframework.
 
 The main goal for the project is to make it really simple for developers to
 write microservice-style JSON webservices, honoring best practices for
