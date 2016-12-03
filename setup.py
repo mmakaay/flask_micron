@@ -3,8 +3,8 @@
 Flask-Micron
 ============
 
-A method-oriented microservice JSON framework, on top of the excellent
-Flask package, focusing on security and productivity.
+A pluggable, method-oriented microservice JSON framework, on top of the
+excellent Flask package, focusing on security and productivity.
 
 Just like Flask, Flask-Micron is Fun
 ------------------------------------
@@ -17,7 +17,6 @@ Save in hello.py::
     from flask_micron import Micron
 
     app = Flask(__name__)
-    app.secret_key = 'some complex key for encrypting session data'
     micron = Micron(app)
 
     @micron.method()
@@ -39,7 +38,7 @@ And Easy to Setup
 Ready for production?
 ---------------------
 
- `Read this first <http://flask.pocoo.org/docs/deploying/>`_.
+`Read this first <http://flask.pocoo.org/docs/deploying/>`_.
 """
 
 import os

@@ -48,9 +48,9 @@ displays a clean and brief result::
 
 To run all tests contained by a testing subdirectory, the second command
 from above is very useful as well. For example, to run all tests for the
-CSRF protection plugin, you can do::
+plugins, you can do::
 
-    $ cd tests/plugins/csrf
+    $ cd tests/plugins
     $ python -m unittest discover
     .....................
     ----------------------------------------------------------------------

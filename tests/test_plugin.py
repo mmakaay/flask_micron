@@ -17,6 +17,6 @@ class Tests(MicronTestCase):
 
     def test_HookMethodsInPluginsAreCalledViaMicron(self):
         self.micron.plugin(DummyPlugin())
-        self.decorate(lambda: 'hi', rule='/hi', dommy='yo', csrf=False)
+        self.decorate(lambda: 'hi', rule='/hi', dommy='yo')
         response = self.request('/hi')
         self.assertEqual('I made it, mister', response.output)

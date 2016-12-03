@@ -36,7 +36,7 @@ class Tests(MicronTestCase):
     def test_integration(self):
         # The 'call_function' plugin is loaded by default by Micron,
         # so we only need to setup a test method here.
-        @self.micron.method(csrf=False)
+        @self.micron.method()
         def echo(arg):
             return arg
 

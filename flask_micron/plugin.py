@@ -468,6 +468,9 @@ class Container(object):
         except KeyError:
             return None
 
+    def __len__(self):
+        return len(self._plugins)
+
     def __contains__(self, type_or_instance):
         """Checks if the plugin container contains a given plugin
         type or instance.

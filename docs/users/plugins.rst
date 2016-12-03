@@ -414,9 +414,7 @@ for a request that uses the above plugin::
 
     HTTP/1.0 200 OK
     Content-Type: application/json
-    X-Micron-CSRF-Token: 90dfd8d6-31e6-47f2-a153-ea68b866a6a5
     X-Micron-RequestTimer: 1.36 ms
-    Server: Werkzeug/0.11.11 Python/3.5.2
 
 Self-Shunt: Quick 'n Dirty Pluggin'
 -----------------------------------

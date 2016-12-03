@@ -72,7 +72,7 @@ class Tests(MicronTestCase):
             normalize_input._normalize(arg, True, True))
 
     def test_Integration(self):
-        @self.micron.method(csrf=False)
+        @self.micron.method()
         def echo(arg):
             return arg
 
@@ -81,7 +81,6 @@ class Tests(MicronTestCase):
 
     def test_Configuration_Normalize(self):
         @self.micron.method(
-            csrf=False,
             normalize=False)
         def echo(arg):
             return arg
@@ -91,7 +90,6 @@ class Tests(MicronTestCase):
 
     def test_Configuration_StripStrings(self):
         @self.micron.method(
-            csrf=False,
             strip_strings=False,
             make_empty_strings_none=True)
         def echo(arg):
@@ -102,7 +100,6 @@ class Tests(MicronTestCase):
 
     def test_Configuration_MakeEmptyNone(self):
         @self.micron.method(
-            csrf=False,
             strip_string=True,
             make_empty_strings_none=False)
         def echo(arg):

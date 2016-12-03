@@ -14,9 +14,13 @@ class Tests(MicronTestCase):
     def setUp(self):
         super(Tests, self).setUp()
 
-        @self.micron.method(csrf=True)
+        @self.micron.method()
         def greet(who='World'):
             return 'Hello, %s' % who
+
+        @self.micron.method()
+        def ping():
+            return 'pong'
 
     def test_GivenMicronWrappedApp_PingReturnsPong(self):
         response = self.request('/ping')
@@ -27,9 +31,5 @@ class Tests(MicronTestCase):
         self.assertEqual('405 METHOD NOT ALLOWED', response.status)
 
     def test_GivenMicronMethod_ResponseIsReturned(self):
-        # This ping fetches a valid CSRF token.
-        self.request('/ping')
-        # This CSRF token is automatically included in this request
-        # by self.request(), based on the ping from above.
         response = self.request('/greet', "you")
         self.assertEqual('Hello, you', response.output)

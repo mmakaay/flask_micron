@@ -6,7 +6,7 @@ class Tests(MicronTestCase):
 
     def setUp(self):
         super(Tests, self).setUp()
-        @self.micron.method(csrf=False, normalize=False)
+        @self.micron.method(normalize=False)
         def echo(arg=None):
             return arg
 

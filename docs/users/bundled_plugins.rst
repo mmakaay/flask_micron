@@ -10,4 +10,3 @@ Bundled Plugins
    ../plugins/normalize_input
    ../plugins/call_function
    ../plugins/json_output
-   ../plugins/csrf

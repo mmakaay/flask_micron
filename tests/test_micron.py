@@ -4,17 +4,21 @@ from flask import Flask
 from flask import json
 from flask_micron import Micron
 from flask_micron.errors import ImplementationError
-from flask_micron.plugins import csrf
+from flask_micron.plugins import json_input
 from flask_micron.plugins import normalize_input
+from flask_micron.plugins import call_function
+from flask_micron.plugins import json_output
 
 
 class Tests(unittest.TestCase):
 
-    def test_MicronLoadsCrsfPluginAutomatically(self):
-        self.assertTrue(csrf.Plugin in Micron().plugins)
-
-    def test_MicronLoadNormalizeInputluginAutomatically(self):
-        self.assertTrue(normalize_input.Plugin in Micron().plugins)
+    def test_AutoloadedPlugins(self):
+        autoloaded_plugins = Micron().plugins
+        self.assertEqual(4, len(autoloaded_plugins))
+        self.assertTrue(json_input.Plugin in autoloaded_plugins)
+        self.assertTrue(normalize_input.Plugin in autoloaded_plugins)
+        self.assertTrue(call_function.Plugin in autoloaded_plugins)
+        self.assertTrue(json_output.Plugin in autoloaded_plugins)
 
     def test_DecoratorCanOnlyBeUsedWhenFlaskAppIsLinkedToMicron(self):
         micron = Micron()
@@ -25,8 +29,7 @@ class Tests(unittest.TestCase):
 
     def test_SettingsArePassedToDecoratedMethods(self):
         app = Flask('TestApp')
-        app.secret_key = "Let's see this config trick"
-        micron = Micron(app, csrf=False, option1='y', option2='z')
+        micron = Micron(app, option1='y', option2='z')
         micron.plugin(ConfigSpy())
 
         @micron.method()
@@ -37,15 +40,13 @@ class Tests(unittest.TestCase):
         config = json.loads(response.data)
 
         self.assertEqual({
-            'csrf': False,
             'option1': 'y',
             'option2': 'z'
         }, config)
 
     def test_SettingsCanBeOverriddenInDecorator(self):
         app = Flask('TestApp')
-        app.secret_key = "Let's see this config trick"
-        micron = Micron(app, csrf=False, option1='y', option2='z')
+        micron = Micron(app, option1='x', option2='y', option3='z')
         micron.plugin(ConfigSpy())
 
         @micron.method(option1='b', option2=None)
@@ -56,9 +57,9 @@ class Tests(unittest.TestCase):
         config = json.loads(response.data)
 
         self.assertEqual({
-            'csrf': False,
             'option1': 'b',
-            'option2': None
+            'option2': None,
+            'option3': 'z'
         }, config)
 
 

@@ -14,7 +14,6 @@ from flask_micron.errors import ImplementationError
 from flask_micron.method import MicronMethod
 from flask_micron.method import MicronMethodConfig
 from flask_micron import plugin
-from flask_micron.plugins import csrf
 from flask_micron.plugins import json_input
 from flask_micron.plugins import normalize_input
 from flask_micron.plugins import call_function
@@ -44,7 +43,7 @@ class Micron(object):
             from flask_micron import Micron
 
             app = Flask(__name__)
-            micron = Micron(app, csrf=True)
+            micron = Micron(app)
 
             @micron.method()
             def hello():
@@ -53,7 +52,6 @@ class Micron(object):
         self.config = MicronMethodConfig(**configuration)
 
         self.plugins = plugin.Container(
-            csrf.Plugin(),
             json_input.Plugin(),
             normalize_input.Plugin(),
             call_function.Plugin(),
@@ -80,21 +78,6 @@ class Micron(object):
             micron.init_app(app)
         """
         self.app = app
-        self._add_ping_method()
-
-    def _add_ping_method(self):
-        """The ping method is provided as a standard means for clients to
-        bootstrap the CSRF protection schema. In this implementation, as
-        little as possible is done to provide the client with a fresh
-        CSRF token when requesting /ping.
-        """
-        @self.app.route('/ping', methods=['POST'])
-        def _ping():
-            ctx = plugin.Context()
-            ctx.output = 'pong'
-            self.plugins.call_one(ctx, 'create_response', 'response')
-            csrf.Plugin().process_response(ctx)
-            return ctx.response
 
     def plugin(self, plugin_object):
         """Adds a :class:`Plugin <flask_micron.Plugin>` to this
@@ -141,11 +124,11 @@ class Micron(object):
             from flask_micron import Micron
 
             app = Flask(__name__)
-            micron = Micron(app).configure(csrf=False)
+            micron = Micron(app).configure(option_name=some_value)
 
         Note: the last line is equivalent to::
 
-            micron = Micron(app, csrf=False)
+            micron = Micron(app, option_name=some_value)
         """
         self.config.configure(**configuration)
         return self
@@ -172,9 +155,9 @@ class Micron(object):
             from flask_micron import Micron
 
             app = Flask(__name__)
-            micron = Micron(app, csrf=True)
+            micron = Micron(app, x="default config value")
 
-            @micron.method(csrf=False)
+            @micron.method(x="function-specific config value")
             def hello(who='World'):
                 return 'Hello, %s' % who
         """
