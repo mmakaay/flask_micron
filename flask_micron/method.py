@@ -137,8 +137,8 @@ class MicronMethodConfig(object):
     Example:
 
         >>> level1 = MicronMethodConfig(x=False, y=True)
-        >>> level2 = MicronMethodConfig(level2, x=True, y=True)
-        >>> level3 = MicronMethodConfig(level3, y=None)
+        >>> level2 = MicronMethodConfig(level1, x=True, y=True)
+        >>> level3 = MicronMethodConfig(level2, y=None)
         >>> level1.x
         False
         >>> level2.x
